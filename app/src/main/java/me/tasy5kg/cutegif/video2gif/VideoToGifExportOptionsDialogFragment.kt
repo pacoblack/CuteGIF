@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.video2gif
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -16,9 +16,16 @@ import androidx.core.graphics.get
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.arthenica.ffmpegkit.FFmpegKit
-import me.tasy5kg.cutegif.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
-import me.tasy5kg.cutegif.MyConstants.VIDEO_TO_GIF_PREVIEW_CACHE_DIR
+import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.activity.VideoToGifActivity
+import me.tasy5kg.cutegif.activity.VideoToGifPerformerActivity
+import me.tasy5kg.cutegif.components.TextRender
 import me.tasy5kg.cutegif.databinding.DialogFragmentVideoToGifExportOptionsBinding
+import me.tasy5kg.cutegif.model.HapticFeedbackType
+import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
+import me.tasy5kg.cutegif.model.MyConstants.VIDEO_TO_GIF_PREVIEW_CACHE_DIR
+import me.tasy5kg.cutegif.task.TaskBuilderVideoToGif
+import me.tasy5kg.cutegif.task.TaskBuilderVideoToGifForPreview
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
 import me.tasy5kg.cutegif.toolbox.MediaTools.getVideoSingleFrame
 import me.tasy5kg.cutegif.toolbox.MediaTools.gifsicleLossy

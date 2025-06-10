@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.model
 
 import android.os.Build
 import com.tencent.mmkv.MMKV

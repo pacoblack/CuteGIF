@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,10 +15,13 @@ import androidx.core.view.children
 import androidx.core.widget.addTextChangedListener
 import com.bumptech.glide.Glide
 import com.google.android.material.radiobutton.MaterialRadioButton
-import me.tasy5kg.cutegif.MyConstants.EXTRA_TEXT_RENDER
-import me.tasy5kg.cutegif.MyConstants.EXTRA_VIDEO_PATH
-import me.tasy5kg.cutegif.MyConstants.EXTRA_VIDEO_POSITION
+import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.components.TextRender
 import me.tasy5kg.cutegif.databinding.ActivityAddTextBinding
+import me.tasy5kg.cutegif.model.HapticFeedbackType
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_TEXT_RENDER
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_VIDEO_PATH
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_VIDEO_POSITION
 import me.tasy5kg.cutegif.toolbox.MediaTools.getVideoSingleFrame
 import me.tasy5kg.cutegif.toolbox.Toolbox
 import me.tasy5kg.cutegif.toolbox.Toolbox.constraintBy

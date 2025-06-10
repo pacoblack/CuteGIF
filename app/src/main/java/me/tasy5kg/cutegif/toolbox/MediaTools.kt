@@ -9,7 +9,7 @@ import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFprobeKit
 import com.arthenica.ffmpegkit.MediaInformation
 import me.tasy5kg.cutegif.MyApplication
-import me.tasy5kg.cutegif.MyConstants
+import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.toolbox.Toolbox.swapIf
 import me.tasy5kg.cutegif.toolbox.Toolbox.toEmptyStringIf

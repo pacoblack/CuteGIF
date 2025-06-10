@@ -1,9 +1,13 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import me.tasy5kg.cutegif.BuildConfig
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityWhatsNewBinding
+import me.tasy5kg.cutegif.model.HapticFeedbackType
+import me.tasy5kg.cutegif.model.MySettings
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 
 class WhatsNewActivity : BaseActivity() {

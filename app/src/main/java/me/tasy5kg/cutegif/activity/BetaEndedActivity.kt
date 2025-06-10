@@ -1,9 +1,11 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import me.tasy5kg.cutegif.BuildConfig
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityBetaEndedBinding
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 

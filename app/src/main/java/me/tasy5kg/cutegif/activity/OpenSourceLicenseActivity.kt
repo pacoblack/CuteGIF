@@ -1,9 +1,10 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import me.tasy5kg.cutegif.databinding.ActivityOpenSourceLicenseBinding
+import me.tasy5kg.cutegif.model.HapticFeedbackType
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 
 class OpenSourceLicenseActivity : BaseActivity() {

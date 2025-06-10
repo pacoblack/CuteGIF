@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.model
 
 import me.tasy5kg.cutegif.MyApplication.Companion.appContext
 

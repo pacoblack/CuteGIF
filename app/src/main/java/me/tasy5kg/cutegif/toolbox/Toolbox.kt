@@ -37,8 +37,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.google.android.material.slider.RangeSlider
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.MyApplication.Companion.appContext
-import me.tasy5kg.cutegif.MyConstants
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.model.MyConstants
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader

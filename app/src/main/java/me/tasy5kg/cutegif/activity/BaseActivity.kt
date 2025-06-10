@@ -1,8 +1,12 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.arthenica.ffmpegkit.FFmpegKit
+import me.tasy5kg.cutegif.BuildConfig
+import me.tasy5kg.cutegif.model.ActivityCollector
+import me.tasy5kg.cutegif.model.MyConstants
+import me.tasy5kg.cutegif.model.MySettings
 import me.tasy5kg.cutegif.toolbox.FileTools
 import kotlin.system.exitProcess
 

@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.components
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.core.view.drawToBitmap
 import me.tasy5kg.cutegif.MyApplication.Companion.appContext
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.toolbox.MediaTools.generateTransparentBitmap
 import me.tasy5kg.cutegif.toolbox.OutlineSpan
 import me.tasy5kg.cutegif.toolbox.Toolbox.appGetString

@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
@@ -7,13 +7,14 @@ import androidx.activity.OnBackPressedCallback
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
 import me.tasy5kg.cutegif.MyApplication.Companion.appContext
-import me.tasy5kg.cutegif.MyConstants.EXTRA_GIF_PATH
-import me.tasy5kg.cutegif.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityGifToVideoBinding
+import me.tasy5kg.cutegif.model.MyConstants
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_GIF_PATH
+import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
 import me.tasy5kg.cutegif.toolbox.FileTools
 import me.tasy5kg.cutegif.toolbox.FileTools.createNewFile
 import me.tasy5kg.cutegif.toolbox.MediaTools.getVideoDurationMsByFFmpeg
-import me.tasy5kg.cutegif.toolbox.Toolbox
 import me.tasy5kg.cutegif.toolbox.Toolbox.constraintBy
 import me.tasy5kg.cutegif.toolbox.Toolbox.getExtra
 import me.tasy5kg.cutegif.toolbox.Toolbox.keepScreenOn
@@ -25,7 +26,7 @@ import kotlin.math.roundToInt
 
 class GifToVideoActivity : BaseActivity() {
   private val binding by lazy { ActivityGifToVideoBinding.inflate(layoutInflater) }
-  private val inputGifPath by lazy { intent.getExtra<String>(EXTRA_GIF_PATH) }
+  private val inputGifPath by lazy { intent.getExtra<String>(MyConstants.EXTRA_GIF_PATH) }
   private var taskThread: Thread? = null
   private var taskQuitOrFailed = false
 

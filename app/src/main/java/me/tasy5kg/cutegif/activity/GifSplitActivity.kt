@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
@@ -8,8 +8,10 @@ import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.View.GONE
 import com.arthenica.ffmpegkit.FFmpegKit
-import me.tasy5kg.cutegif.MyConstants.OUTPUT_SPLIT_DIR
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityGifSplitBinding
+import me.tasy5kg.cutegif.model.MyConstants
+import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_SPLIT_DIR
 import me.tasy5kg.cutegif.toolbox.FileTools.copyFile
 import me.tasy5kg.cutegif.toolbox.FileTools.createNewFile
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory

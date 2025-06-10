@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
@@ -8,10 +8,13 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
-import me.tasy5kg.cutegif.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL
-import me.tasy5kg.cutegif.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
-import me.tasy5kg.cutegif.MyConstants.VIDSTABDETECT_RESULT_PATH
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityImportMvimgBinding
+import me.tasy5kg.cutegif.model.HapticFeedbackType
+import me.tasy5kg.cutegif.model.MyConstants
+import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL
+import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
+import me.tasy5kg.cutegif.model.MyConstants.VIDSTABDETECT_RESULT_PATH
 import me.tasy5kg.cutegif.toolbox.FileTools
 import me.tasy5kg.cutegif.toolbox.MediaTools
 import me.tasy5kg.cutegif.toolbox.Toolbox.getExtra

@@ -1,8 +1,11 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.task
 
-import me.tasy5kg.cutegif.MyConstants.ADD_TEXT_RENDER_PNG_PATH
-import me.tasy5kg.cutegif.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
-import me.tasy5kg.cutegif.MyConstants.OUTPUT_GIF_TEMP_PATH
+import me.tasy5kg.cutegif.components.TextRender
+import me.tasy5kg.cutegif.model.CropParams
+import me.tasy5kg.cutegif.model.MyConstants
+import me.tasy5kg.cutegif.model.MyConstants.ADD_TEXT_RENDER_PNG_PATH
+import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
+import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_GIF_TEMP_PATH
 import me.tasy5kg.cutegif.toolbox.MediaTools.saveToPng
 import me.tasy5kg.cutegif.toolbox.Toolbox.toEmptyStringIf
 import java.io.Serializable

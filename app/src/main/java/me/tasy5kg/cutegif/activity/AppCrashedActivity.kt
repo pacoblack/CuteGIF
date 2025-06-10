@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.app.ActivityManager
 import android.content.Context
@@ -7,9 +7,11 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.arthenica.ffmpegkit.FFmpegKit
+import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.MyApplication.Companion.appContext
-import me.tasy5kg.cutegif.MyConstants.EXTRA_STACK_TRACE_STRING
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityAppCrashedBinding
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_STACK_TRACE_STRING
 import me.tasy5kg.cutegif.toolbox.Toolbox
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 

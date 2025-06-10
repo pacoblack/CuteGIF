@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.video2gif
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.activity.VideoToGifActivity
 import me.tasy5kg.cutegif.databinding.BottomSheetVideoToGifCropRatioBinding
+import me.tasy5kg.cutegif.model.HapticFeedbackType
 import me.tasy5kg.cutegif.toolbox.Toolbox.appGetString
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.swapIf

@@ -6,8 +6,8 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import me.tasy5kg.cutegif.MyApplication
-import me.tasy5kg.cutegif.MyConstants
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.toolbox.Toolbox.keepNDecimalPlaces
 import me.tasy5kg.cutegif.toolbox.Toolbox.toEmptyStringIf
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast

@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
@@ -6,10 +6,12 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
-import me.tasy5kg.cutegif.MyConstants.EXTRA_TASK_BUILDER_VIDEO_TO_GIF
-import me.tasy5kg.cutegif.MyConstants.OUTPUT_GIF_TEMP_PATH
-import me.tasy5kg.cutegif.MyConstants.VIDEO_TO_GIF_EXTRACTED_FRAMES_PATH
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityVideoToGifPerformerBinding
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_TASK_BUILDER_VIDEO_TO_GIF
+import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_GIF_TEMP_PATH
+import me.tasy5kg.cutegif.model.MyConstants.VIDEO_TO_GIF_EXTRACTED_FRAMES_PATH
+import me.tasy5kg.cutegif.task.TaskBuilderVideoToGif
 import me.tasy5kg.cutegif.toolbox.FileTools
 import me.tasy5kg.cutegif.toolbox.FileTools.copyFile
 import me.tasy5kg.cutegif.toolbox.FileTools.createNewFile

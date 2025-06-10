@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.model
 
 import android.content.res.Resources
 import android.graphics.Bitmap

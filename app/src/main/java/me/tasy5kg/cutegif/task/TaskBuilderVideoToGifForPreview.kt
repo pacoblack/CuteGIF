@@ -1,5 +1,6 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.task
 
+import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.toolbox.Toolbox.toEmptyStringIf
 import java.io.Serializable
 

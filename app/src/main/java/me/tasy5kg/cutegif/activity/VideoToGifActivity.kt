@@ -1,4 +1,4 @@
-package me.tasy5kg.cutegif
+package me.tasy5kg.cutegif.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,9 +12,13 @@ import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
-import me.tasy5kg.cutegif.MyConstants.EXTRA_ADD_TEXT_RENDER
-import me.tasy5kg.cutegif.MyConstants.EXTRA_VIDEO_PATH
+import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.components.TextRender
 import me.tasy5kg.cutegif.databinding.ActivityVideoToGifBinding
+import me.tasy5kg.cutegif.model.CropParams
+import me.tasy5kg.cutegif.model.HapticFeedbackType
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_ADD_TEXT_RENDER
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_VIDEO_PATH
 import me.tasy5kg.cutegif.toolbox.MediaTools.getVideoDurationByAndroidSystem
 import me.tasy5kg.cutegif.toolbox.Toolbox.boundRange
 import me.tasy5kg.cutegif.toolbox.Toolbox.constraintBy
@@ -24,6 +28,9 @@ import me.tasy5kg.cutegif.toolbox.Toolbox.newRunnableWithSelf
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.onSliderTouch
 import me.tasy5kg.cutegif.toolbox.Toolbox.sceneTransitionAnimationOptionBuilder
+import me.tasy5kg.cutegif.video2gif.BottomSheetVideoToGifCropRatio
+import me.tasy5kg.cutegif.video2gif.BottomSheetVideoToGifPlaybackSpeed
+import me.tasy5kg.cutegif.video2gif.VideoToGifExportOptionsDialogFragment
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
