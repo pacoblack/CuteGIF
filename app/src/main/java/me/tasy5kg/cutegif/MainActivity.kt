@@ -2,6 +2,7 @@ package me.tasy5kg.cutegif
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -24,6 +25,7 @@ import me.tasy5kg.cutegif.model.MySettings.INT_FILE_OPEN_WAY_GALLERY
 import me.tasy5kg.cutegif.toolbox.FileTools.copyToInputFileDir
 import me.tasy5kg.cutegif.toolbox.Toolbox.enableDropFile
 import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
+import me.tasy5kg.cutegif.toolbox.Toolbox.logGreen
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 
@@ -38,6 +40,18 @@ class MainActivity : BaseActivity() {
       e.printStackTrace()
       runOnUiThread { toast(R.string.import_file_failed_please_try) }
     }
+  }
+
+  private val arlImportVideoToGifDocumentMulti= registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
+      uris: List<Uri> ->
+        if (uris.isNotEmpty()) {
+          importFileTryCatch {
+            // 遍历所有选中的视频 Uri
+            uris.forEach { uri ->
+              VideoToGifActivity.start(this, uri.copyToInputFileDir())
+            }
+          }
+        }
   }
 
   private val arlImportVideoToGifDocument = registerForActivityResult(ActivityResultContracts.GetContent()) {
@@ -81,7 +95,8 @@ class MainActivity : BaseActivity() {
       }
     }
     binding.mcvMergeVideo.apply {
-      onClick { importVideoToGif() }
+      //TODO:视频合并
+      onClick { mergeVideo() }
       enableDropFile(this@MainActivity, "video/*") {
         VideoToGifActivity.start(
           this@MainActivity, it.copyToInputFileDir()
@@ -136,6 +151,21 @@ class MainActivity : BaseActivity() {
     }
   }
   private fun mergeVideo(){
+    logGreen("mergeVideo", MySettings.fileOpenWay)
+    when (MySettings.fileOpenWay) {
+      INT_FILE_OPEN_WAY_DOCUMENT -> arlImportVideoToGifDocumentMulti.launch("video/*")
+      INT_FILE_OPEN_WAY_GALLERY -> arlImportVideoToGifElse.launch(Intent(
+        Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+      ).apply {
+        type = "video/*"
+        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+      })
+
+      INT_FILE_OPEN_WAY_13 -> arlImportVideoToGifElse.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply {
+        type = "video/*"
+        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+      })
+    }
     //TODO:合并视频
   }
 

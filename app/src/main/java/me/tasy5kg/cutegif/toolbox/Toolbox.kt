@@ -193,6 +193,18 @@ object Toolbox {
   } catch (_: Exception) {
   }
 
+  fun logGreen(tag: Any?, msg: Any?){
+    if (BuildConfig.DEBUG) {
+      Log.d(tag.toString(), msg.toString())
+    }
+  }
+
+  fun logYellow(tag: Any?, msg: Any?) {
+    if (BuildConfig.DEBUG) {
+      Log.w(tag.toString(), msg.toString())
+    }
+  }
+
   fun logRed(tag: Any?, msg: Any?) {
     if (BuildConfig.DEBUG) {
       Log.e(tag.toString(), msg.toString())
