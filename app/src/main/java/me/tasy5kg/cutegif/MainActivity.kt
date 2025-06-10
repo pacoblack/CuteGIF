@@ -71,6 +71,14 @@ class MainActivity : BaseActivity() {
         )
       }
     }
+    binding.mcvMergeVideo.apply {
+      onClick { importVideoToGif() }
+      enableDropFile(this@MainActivity, "video/*") {
+        VideoToGifActivity.start(
+          this@MainActivity, it.copyToInputFileDir()
+        )
+      }
+    }
     binding.mcvGifSplit.apply {
       onClick { importForGifSplit() }
       enableDropFile(this@MainActivity, "image/gif") {
@@ -117,6 +125,9 @@ class MainActivity : BaseActivity() {
         type = "video/*"
       })
     }
+  }
+  private fun mergeVideo(){
+    //TODO:合并视频
   }
 
   private fun importForGifSplit(intFileOpenWay: Int = MySettings.fileOpenWay) {

@@ -137,4 +137,5 @@
   <string name="import_file_failed_please_try">文件读取失败，请尝试在菜单中切换文件选取器</string>
   <string name="save_as_video">另存为视频</string>
   <string name="speed_warning_slower">ℹ️ 由于性能原因，当前预览画面的播放速度慢于您选择的速度。稍后导出时，将会按照您选择的速度生成 GIF。</string>
+  <string name="video_merge">视频合并</string>
 </resources>
