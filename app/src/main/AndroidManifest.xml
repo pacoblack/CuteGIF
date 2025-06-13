@@ -126,11 +126,11 @@
       android:exported="true"
       android:launchMode="singleTask"
       android:resizeableActivity="true">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+<!--      <intent-filter>-->
+<!--        <action android:name="android.intent.action.MAIN" />-->
 
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
+<!--        <category android:name="android.intent.category.LAUNCHER" />-->
+<!--      </intent-filter>-->
       <intent-filter tools:ignore="AppLinkUrlError">
         <action android:name="android.intent.action.VIEW" />
 
@@ -144,6 +144,18 @@
         <category android:name="android.intent.category.DEFAULT" />
 
         <data android:mimeType="video/*" />
+      </intent-filter>
+    </activity>
+    <activity android:name=".activity.MainActivity"
+      android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
+      android:exported="true"
+      android:launchMode="singleTask"
+      android:resizeableActivity="true"
+      android:theme="@style/Theme.CuteGif.Dialog">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+
+        <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
   </application>

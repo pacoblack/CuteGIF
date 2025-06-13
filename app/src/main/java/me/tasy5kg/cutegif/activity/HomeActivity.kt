@@ -1,6 +1,7 @@
 package me.tasy5kg.cutegif.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -12,7 +13,7 @@ import me.tasy5kg.cutegif.R
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    setContentView(R.layout.activity_home)
 
     val navView = findViewById<BottomNavigationView>(R.id.navigation)
 
