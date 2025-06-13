@@ -13,108 +13,108 @@
     android:usesCleartextTraffic="false"
     tools:targetApi="tiramisu">
     <activity
-      android:name=".ImportMvimgActivity"
+      android:name=".activity.ImportMvimgActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".BetaEndedActivity"
+      android:name=".activity.BetaEndedActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".FollowWechatActivity"
+      android:name=".activity.FollowWechatActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".OpenSourceLicenseActivity"
+      android:name=".activity.OpenSourceLicenseActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".WhatsNewActivity"
+      android:name=".activity.WhatsNewActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".DonateActivity"
+      android:name=".activity.DonateActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".GifToVideoActivity"
+      android:name=".activity.GifToVideoActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".VideoToGifVideoFallbackActivity"
+      android:name=".activity.VideoToGifVideoFallbackActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".AboutActivity"
+      android:name=".activity.AboutActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".VideoToGifPerformerActivity"
+      android:name=".activity.VideoToGifPerformerActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".GifSplitActivity"
+      android:name=".activity.GifSplitActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true" />
     <activity
-      android:name=".AddTextActivity"
+      android:name=".activity.AddTextActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".VideoToGifActivity"
+      android:name=".activity.VideoToGifActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true" />
     <activity
-      android:name=".EulaActivity"
+      android:name=".activity.EulaActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
       android:resizeableActivity="true" />
     <activity
-      android:name=".AppCrashedActivity"
+      android:name=".activity.AppCrashedActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
-      android:name=".FileSavedActivity"
+      android:name=".activity.FileSavedActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
