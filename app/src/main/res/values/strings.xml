@@ -145,4 +145,7 @@
   <string name="save_as_video">Save as video</string>
   <string name="speed_warning_slower">ℹ️ For performance reasons, the current preview plays slower than the speed you selected. When exported later, the GIF will be generated at the speed you selected.</string>
   <string name="video_merge">Video Merge</string>
+  <string name="title_home">Home</string>
+  <string name="title_dashboard">Dash</string>
+  <string name="title_notifications">Person</string>
 </resources>
