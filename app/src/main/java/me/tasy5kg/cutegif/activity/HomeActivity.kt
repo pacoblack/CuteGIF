@@ -8,7 +8,7 @@ import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityHomeBinding
 
 
-class MainActivity : BaseActivity() {
+class HomeActivity : BaseActivity() {
   private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {

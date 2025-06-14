@@ -16,4 +16,5 @@
   <color name="launcher_background">#59bf76</color>
   <color name="launcher_foreground">#f8faf5</color>
   <color name="transparent">#00000000</color>
+  <color name="full_white">#FFFFFF</color>
 </resources>

@@ -146,12 +146,11 @@
         <data android:mimeType="video/*" />
       </intent-filter>
     </activity>
-    <activity android:name=".activity.MainActivity"
+    <activity android:name=".activity.HomeActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="true"
       android:launchMode="singleTask"
-      android:resizeableActivity="true"
-      android:theme="@style/Theme.CuteGif.Dialog">
+      android:resizeableActivity="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
