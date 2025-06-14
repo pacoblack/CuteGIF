@@ -22,7 +22,7 @@ class HomeActivity : BaseActivity() {
 
     // 使用AppBarConfiguration来配置顶层目的地，如果有的话
     val appBarConfiguration: AppBarConfiguration = AppBarConfiguration.Builder(
-      R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+      R.id.mainFragment, R.id.videoFragment, R.id.infoFragment
     ).build()
 
 
