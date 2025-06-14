@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.databinding.FragmentVideoBinding
 
 class VideoFragment: Fragment() {
+  private var binding: FragmentVideoBinding? = null
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return inflater.inflate(R.layout.fragment_video, container, false);
+    binding = FragmentVideoBinding.inflate(layoutInflater, container, false)
+    return binding!!.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -17,5 +20,10 @@ class VideoFragment: Fragment() {
     if (arguments != null) {
 
     }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    binding = null
   }
 }

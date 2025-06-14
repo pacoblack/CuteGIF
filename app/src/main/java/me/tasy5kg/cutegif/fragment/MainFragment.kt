@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.databinding.FragmentMainBinding
 
 public class MainFragment:Fragment() {
+  private var binding:FragmentMainBinding? = null
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return inflater.inflate(R.layout.fragment_main, container, false);
+    binding = FragmentMainBinding.inflate(layoutInflater, container, false)
+    return binding!!.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -18,5 +20,10 @@ public class MainFragment:Fragment() {
     if (arguments != null) {
 
     }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    binding = null
   }
 }
