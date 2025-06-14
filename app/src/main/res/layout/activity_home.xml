@@ -5,7 +5,6 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  android:background="@color/full_white"
   tools:context=".activity.HomeActivity">
 
   <com.google.android.material.appbar.MaterialToolbar
@@ -19,6 +18,8 @@
     app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
     app:titleTextColor="@color/dark"
     tools:subtitle="Version X" />
+
+  <include layout="@layout/view_divider_horizontal" />
 
   <!-- NavHostFragment 作为Fragment容器 -->
   <androidx.fragment.app.FragmentContainerView
