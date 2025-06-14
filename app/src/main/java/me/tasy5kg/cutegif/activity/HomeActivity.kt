@@ -1,21 +1,18 @@
 package me.tasy5kg.cutegif.activity
 
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.databinding.ActivityHomeBinding
 
 
-class MainActivity : AppCompatActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_home)
+class MainActivity : BaseActivity() {
+  private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
-    val navView = findViewById<BottomNavigationView>(R.id.navigation)
+  override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
+    setContentView(binding.root)
 
     // 找到NavHostFragment并获取NavController
     val navHostFragment = supportFragmentManager
@@ -30,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
 
     // 将BottomNavigationView与NavController连接
-    setupWithNavController(navView, navController)
+    setupWithNavController(binding.navigation, navController)
   }
 
 }
