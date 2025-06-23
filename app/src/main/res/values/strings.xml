@@ -148,4 +148,5 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dash</string>
     <string name="title_notifications">Person</string>
+    <string name="gif_merge">GIF Merge</string>
 </resources>

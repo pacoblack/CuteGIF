@@ -113,6 +113,15 @@ class MainFragment:Fragment() {
           )
         }
       }
+
+      binding?.mcvGifMerge?.apply {
+        onClick { importForGifMerge() }
+        enableDropFile(a, "image/gif") {
+          GifSplitActivity.start(
+            a, it.copyToInputFileDir()
+          )
+        }
+      }
       binding?.mcvGifToVideo?.apply {
         onClick { importForGifToVideo() }
         enableDropFile(a, "image/gif") {
@@ -163,6 +172,19 @@ class MainFragment:Fragment() {
       })
 
       else -> importForGifSplit(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) INT_FILE_OPEN_WAY_13 else INT_FILE_OPEN_WAY_DOCUMENT
+      )
+    }
+  }
+
+  private fun importForGifMerge(intFileOpenWay: Int = MySettings.fileOpenWay){
+    when (intFileOpenWay) {
+      INT_FILE_OPEN_WAY_DOCUMENT -> arlImportGifSplitDocument.launch("image/gif")
+      INT_FILE_OPEN_WAY_13 -> arlImportGifSplit13.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply {
+        type = "image/gif"
+      })
+
+      else -> importForGifMerge(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) INT_FILE_OPEN_WAY_13 else INT_FILE_OPEN_WAY_DOCUMENT
       )
     }

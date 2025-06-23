@@ -141,4 +141,5 @@
   <string name="title_home">首页</string>
   <string name="title_dashboard">面板</string>
   <string name="title_notifications">个人</string>
+  <string name="gif_merge">GIF 合并</string>
 </resources>
