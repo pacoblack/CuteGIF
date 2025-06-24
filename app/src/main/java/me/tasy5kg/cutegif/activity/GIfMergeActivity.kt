@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.View.GONE
@@ -77,6 +78,12 @@ class GIfMergeActivity : BaseActivity() {
       Intent(
         context, GIfMergeActivity::class.java
       ).putExtra(MyConstants.EXTRA_GIF_PATH, gifPath)
+    )
+
+    fun start(context: Context, gifPath: ArrayList<out Parcelable>?) = context.startActivity(
+      Intent(
+        context, GIfMergeActivity::class.java
+      ).putParcelableArrayListExtra(MyConstants.EXTRA_GIF_PATH, gifPath)
     )
   }
 }

@@ -15,6 +15,7 @@ import me.tasy5kg.cutegif.MainActivity
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.activity.BetaEndedActivity
 import me.tasy5kg.cutegif.activity.GifSplitActivity
+import me.tasy5kg.cutegif.activity.GifMergeActivity
 import me.tasy5kg.cutegif.activity.GifToVideoActivity
 import me.tasy5kg.cutegif.activity.ImportMvimgActivity
 import me.tasy5kg.cutegif.activity.VideoToGifActivity
@@ -54,14 +55,11 @@ class MainFragment:Fragment() {
   }
 
   private val arlImportVideoToGifDocumentMulti= registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
-      uris: List<Uri> ->
-    if (uris.isNotEmpty()) {
-      importFileTryCatch {
-        // 遍历所有选中的视频 Uri
-        uris.forEach { uri ->
-          activity?.let { VideoToGifActivity.start(it, uri.copyToInputFileDir()) }
+      uris: ArrayList<Uri>? -> {
+        importFileTryCatch {
+          // 遍历所有选中的视频 Uri
+            activity?.let { VideoToGifActivity.start(it, uris) }
         }
-      }
     }
   }
 
@@ -117,7 +115,7 @@ class MainFragment:Fragment() {
       binding?.mcvGifMerge?.apply {
         onClick { importForGifMerge() }
         enableDropFile(a, "image/gif") {
-          GifSplitActivity.start(
+          GifMergeActivity.start(
             a, it.copyToInputFileDir()
           )
         }
