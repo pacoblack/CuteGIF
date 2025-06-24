@@ -92,6 +92,28 @@ object Toolbox {
     })
   }
 
+  inline fun View.enableDropFiles(
+    activity: Activity, mimeType: String, crossinline onReceiveContentListener: (List<Uri>?) -> Unit
+  ) {
+    configureView(activity, this, arrayOf(mimeType), Options.Builder().build(), OnReceiveContentListener { _, payload ->
+      if (payload.source == ContentInfoCompat.SOURCE_DRAG_AND_DROP && payload.clip.description.getMimeType(
+          0
+        ).contains(mimeType.replace("*", ""))
+      ) {
+        val fileUris = mutableListOf<Uri>()
+        val clipData = payload.clip
+        for (i in 0 until clipData.itemCount) {
+          val uri = clipData.getItemAt(i).uri
+          fileUris.add(uri)
+        }
+        onReceiveContentListener(fileUris)
+        return@OnReceiveContentListener null
+      } else {
+        return@OnReceiveContentListener payload
+      }
+    })
+  }
+
   // Usage: Add ```lifecycle.logRedOnLifecycleEvent()``` to onCreate() method of a activity
   fun logRedOnLifecycleEvent(): LifecycleEventObserver {
     return LifecycleEventObserver { source, event ->

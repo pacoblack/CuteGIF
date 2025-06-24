@@ -157,7 +157,7 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
-    <activity android:name="me.tasy5kg.cutegif.activity.GIfMergeActivity"
+    <activity android:name="me.tasy5kg.cutegif.activity.GifMergeActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"
       android:launchMode="singleTask"
