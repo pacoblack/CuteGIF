@@ -5,18 +5,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import me.tasy5kg.cutegif.MainActivity
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.activity.BetaEndedActivity
-import me.tasy5kg.cutegif.activity.GifSplitActivity
 import me.tasy5kg.cutegif.activity.GifMergeActivity
+import me.tasy5kg.cutegif.activity.GifSplitActivity
 import me.tasy5kg.cutegif.activity.GifToVideoActivity
 import me.tasy5kg.cutegif.activity.ImportMvimgActivity
 import me.tasy5kg.cutegif.activity.VideoToGifActivity
@@ -32,7 +32,7 @@ import me.tasy5kg.cutegif.toolbox.Toolbox.enableDropFiles
 import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
-import java.util.ArrayList
+
 
 class MainFragment:Fragment() {
   private var binding:FragmentMainBinding? = null
@@ -73,25 +73,10 @@ class MainFragment:Fragment() {
   private val arlImportGifMergeDocument = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
       uris: List<Uri>? -> importFileTryCatch { activity?.let { GifMergeActivity.start(it, uris) } }
   }
-  private val arlImportGifMerge13 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-    when{
-      it?.data?.clipData != null -> { // 多选
-        it.data?.clipData.let { uris ->
-          val uriList = ArrayList<Uri>(uris!!.itemCount)
-          for (i in 0 until uris.itemCount) {
-            uriList.add(uris.getItemAt(i).uri)
-          }
-          importFileTryCatch { activity?.let { a->GifMergeActivity.start(a, uriList) } } }
-      }
-      it?.data?.data != null -> { // 单选
-        it.data?.data?.let { uri -> {
-          val arrayList = ArrayList<Uri>(1)
-          arrayList.add(uri)
-          importFileTryCatch { activity?.let { a->GifMergeActivity.start(a, arrayList) }}
-        } }
-      }
-    }
+  private val arlImportGifMerge13 = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(2)) {
+    uris: List<Uri>? ->importFileTryCatch { activity?.let { GifMergeActivity.start(it, uris) } }
   }
+
   private val arlImportGifToVideoDocument = registerForActivityResult(ActivityResultContracts.GetContent()) {
     it?.let { _ -> importFileTryCatch { activity?.let {a->GifToVideoActivity.start(a, it.copyToInputFileDir()) } } }
   }
@@ -191,10 +176,9 @@ class MainFragment:Fragment() {
   private fun importForGifMerge(intFileOpenWay: Int = MySettings.fileOpenWay){
     when (intFileOpenWay) {
       INT_FILE_OPEN_WAY_DOCUMENT -> arlImportGifMergeDocument.launch("image/gif")
-      INT_FILE_OPEN_WAY_13 -> arlImportGifMerge13.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply {
-        type = "image/gif"
-        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-      })
+      INT_FILE_OPEN_WAY_13 -> arlImportGifMerge13.launch(PickVisualMediaRequest(
+        mediaType = ActivityResultContracts.PickVisualMedia.SingleMimeType("image/gif")
+      ))
 
       else -> importForGifMerge(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) INT_FILE_OPEN_WAY_13 else INT_FILE_OPEN_WAY_DOCUMENT
