@@ -42,7 +42,7 @@ class GifMergeActivity : BaseActivity() {
 
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
-
+    binding.mbClose.onClick { finish() }
     setViewPager()
 
     //TODO:保存实现
@@ -63,7 +63,6 @@ class GifMergeActivity : BaseActivity() {
 
   private fun setViewPager(){
     viewPager = binding.viewPager
-    binding.dotsIndicator.attachTo(viewPager)
 
     // 设置适配器
     viewPager.adapter = PageAdapter()
@@ -75,6 +74,7 @@ class GifMergeActivity : BaseActivity() {
 
       }
     })
+    binding.dotsIndicator.attachTo(viewPager)
   }
 
   override fun onDestroy() {
