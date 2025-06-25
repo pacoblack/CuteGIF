@@ -11,6 +11,7 @@ object MyConstants {
   val GET_VIDEO_SINGLE_FRAME_WITH_FFMPEG_TEMP_PATH = "$CACHE_DIR_PATH/get_video_single_frame_with_ffmpeg_temp_path.jpg"
   val OUTPUT_GIF_TEMP_PATH = "$CACHE_DIR_PATH/output_temp.gif"
   val OUTPUT_SPLIT_DIR = "$CACHE_DIR_PATH/split_dir/"
+  val OUTPUT_MERGE_DIR = "$CACHE_DIR_PATH/merge_dir/"
   val VIDEO_TO_GIF_PREVIEW_CACHE_DIR = "$CACHE_DIR_PATH/video_to_gif_preview_cache_dir/"
   val VIDSTABDETECT_RESULT_PATH = "$CACHE_DIR_PATH/transforms.trf"
   val VIDEO_TO_GIF_EXTRACTED_FRAMES_PATH = "$CACHE_DIR_PATH/extracted_frames/"
