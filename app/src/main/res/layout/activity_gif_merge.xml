@@ -57,7 +57,7 @@
     android:layout_marginBottom="16dp"/>
 
   <!-- 页面指示器 -->
-  <LinearLayout
+  <androidx.appcompat.widget.LinearLayoutCompat
     android:id="@+id/indicatorContainer"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -65,21 +65,7 @@
     android:gravity="center"
     android:layout_gravity="center_horizontal"
     android:layout_marginBottom="8dp">
-
-    <ImageView
-      android:id="@+id/indicator1"
-      android:layout_width="12dp"
-      android:layout_height="12dp"
-      android:layout_margin="4dp"
-      android:src="@drawable/indicator_selected"/>
-
-    <ImageView
-      android:id="@+id/indicator2"
-      android:layout_width="12dp"
-      android:layout_height="12dp"
-      android:layout_margin="4dp"
-      android:src="@drawable/indicator_normal"/>
-  </LinearLayout>
+  </androidx.appcompat.widget.LinearLayoutCompat>
 
   <androidx.viewpager2.widget.ViewPager2
     android:id="@+id/view_pager"

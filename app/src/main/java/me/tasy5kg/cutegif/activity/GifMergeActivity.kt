@@ -67,6 +67,22 @@ class GifMergeActivity : BaseActivity() {
 //    }
   }
 
+  private fun setViewPager(){
+    viewPager = binding.viewPager
+
+    // 设置适配器
+    viewPager.adapter = PageAdapter()
+    viewPager.offscreenPageLimit = 1
+
+    // 设置页面切换监听器
+    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+      override fun onPageSelected(position: Int) {
+        updateIndicators(position)
+      }
+    })
+//    updateIndicators(0)
+  }
+
   private fun setupIndicators() {
     // 清除现有指示器
     binding.indicatorContainer.removeAllViews()
@@ -76,21 +92,6 @@ class GifMergeActivity : BaseActivity() {
       val indicator = createIndicator(i == 0)
       binding.indicatorContainer.addView(indicator)
     }
-  }
-
-  private fun setViewPager(){
-    viewPager = binding.viewPager
-
-    // 设置适配器
-    viewPager.adapter = PageAdapter()
-
-    // 设置页面切换监听器
-    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-      override fun onPageSelected(position: Int) {
-        updateIndicators(position)
-      }
-    })
-    updateIndicators(0)
   }
 
   private fun updateIndicators(position: Int) {
