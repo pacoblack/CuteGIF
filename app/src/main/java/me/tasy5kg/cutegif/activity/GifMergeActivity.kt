@@ -22,9 +22,7 @@ import me.tasy5kg.cutegif.databinding.ActivityGifMergeBinding
 import me.tasy5kg.cutegif.databinding.ItemMergePageBinding
 import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_MERGE_DIR
-import me.tasy5kg.cutegif.toolbox.FileTools.copyFile
 import me.tasy5kg.cutegif.toolbox.FileTools.copyToInputFileDir
-import me.tasy5kg.cutegif.toolbox.FileTools.createNewFile
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
