@@ -8,27 +8,39 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.arthenica.ffmpegkit.FFmpegKit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityGifMergeBinding
 import me.tasy5kg.cutegif.databinding.ItemMergePageBinding
 import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_MERGE_DIR
+import me.tasy5kg.cutegif.model.MySettings.MAX_FILE_SIZE
 import me.tasy5kg.cutegif.toolbox.FileTools.copyToInputFileDir
+import me.tasy5kg.cutegif.toolbox.FileTools.fileSize
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 import java.io.File
 
 class GifMergeActivity : BaseActivity() {
+  private val scope = lifecycleScope
+  private val gifUris = mutableListOf<Uri>()
   private val binding by lazy { ActivityGifMergeBinding.inflate(layoutInflater) }
   private lateinit var viewPager: ViewPager2
 
@@ -43,7 +55,7 @@ class GifMergeActivity : BaseActivity() {
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
     binding.mbClose.onClick { finish() }
-    setViewPager()
+    filterUri()
 
     //TODO:保存实现
 //    binding.mbSave.onClick {
@@ -61,9 +73,13 @@ class GifMergeActivity : BaseActivity() {
 //    }
   }
 
-  private fun setViewPager(){
+  private fun onCheckIsDone(){
+    if(gifUris.isEmpty()) {
+      toast("无符合要求的文件，请重新选择！")
+      finish()
+      return
+    }
     viewPager = binding.viewPager
-
     // 设置适配器
     viewPager.adapter = PageAdapter()
     viewPager.offscreenPageLimit = 1
@@ -77,9 +93,34 @@ class GifMergeActivity : BaseActivity() {
     binding.dotsIndicator.attachTo(viewPager)
   }
 
+  private fun filterUri(){
+    if ((inputGifPaths?.size ?: 0) == 0) return
+    val jobs = inputGifPaths!!.map { uri->
+      scope.launch {
+        val fileSize = withContext(Dispatchers.IO) {
+          uri.fileSize()
+        }
+        if (fileSize <= MAX_FILE_SIZE) {
+          synchronized(gifUris) {
+            gifUris.add(uri)
+          }
+          toast("处理文件个数 ${gifUris.size}")
+        } else {
+          toast("当前文件大小$fileSize, 不会处理！")
+        }
+      }
+    }
+    scope.launch {
+      jobs.joinAll()
+
+      onCheckIsDone()
+    }
+  }
+
   override fun onDestroy() {
     super.onDestroy()
     resetDirectory(OUTPUT_MERGE_DIR)
+    scope.cancel()
   }
 
   companion object {
@@ -114,8 +155,9 @@ class GifMergeActivity : BaseActivity() {
     }
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
-      val inputGifPath = inputGifPaths?.get(position)?.copyToInputFileDir()
-      if (inputGifPath.isNullOrBlank()) {
+      val uriItem = gifUris[position]
+      val inputGifPath = uriItem.copyToInputFileDir()
+      if (inputGifPath.isBlank()) {
         return
       }
       holder.binding.mbSliderMinus.onClick { if (holder.binding.slider.value > holder.binding.slider.valueFrom) holder.binding.slider.value-- }
@@ -157,7 +199,7 @@ class GifMergeActivity : BaseActivity() {
 //      }
     }
 
-    override fun getItemCount(): Int = inputGifPaths?.size ?: 0
+    override fun getItemCount(): Int = gifUris.size
   }
 
 }

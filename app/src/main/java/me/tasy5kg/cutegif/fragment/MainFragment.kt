@@ -26,6 +26,7 @@ import me.tasy5kg.cutegif.model.MySettings
 import me.tasy5kg.cutegif.model.MySettings.INT_FILE_OPEN_WAY_13
 import me.tasy5kg.cutegif.model.MySettings.INT_FILE_OPEN_WAY_DOCUMENT
 import me.tasy5kg.cutegif.model.MySettings.INT_FILE_OPEN_WAY_GALLERY
+import me.tasy5kg.cutegif.model.MySettings.MAX_SELECT_FILE
 import me.tasy5kg.cutegif.toolbox.FileTools.copyToInputFileDir
 import me.tasy5kg.cutegif.toolbox.Toolbox.enableDropFile
 import me.tasy5kg.cutegif.toolbox.Toolbox.enableDropFiles
@@ -73,7 +74,7 @@ class MainFragment:Fragment() {
   private val arlImportGifMergeDocument = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
       uris: List<Uri>? -> importFileTryCatch { activity?.let { GifMergeActivity.start(it, uris) } }
   }
-  private val arlImportGifMerge13 = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(2)) {
+  private val arlImportGifMerge13 = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(MAX_SELECT_FILE)) {
     uris: List<Uri>? ->importFileTryCatch { activity?.let { GifMergeActivity.start(it, uris) } }
   }
 
