@@ -3,12 +3,14 @@ package me.tasy5kg.cutegif.activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.fragment.app.Fragment
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.components.FragmentAdapter
 import me.tasy5kg.cutegif.databinding.ActivityHomeBinding
+import me.tasy5kg.cutegif.fragment.InfoFragment
+import me.tasy5kg.cutegif.fragment.MainFragment
+import me.tasy5kg.cutegif.fragment.VideoFragment
 
 
 class HomeActivity : BaseActivity() {
@@ -18,20 +20,32 @@ class HomeActivity : BaseActivity() {
     setContentView(binding.root)
     setSupportActionBar(binding.materialToolbar)
     binding.materialToolbar.subtitle = getString(R.string.version_X, BuildConfig.VERSION_NAME)
-    // 找到NavHostFragment并获取NavController
-    val navHostFragment = supportFragmentManager
-      .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
-    val navController = navHostFragment!!.navController
 
+    setupViewPager();
 
-    // 使用AppBarConfiguration来配置顶层目的地，如果有的话
-    val appBarConfiguration: AppBarConfiguration = AppBarConfiguration.Builder(
-      R.id.mainFragment, R.id.videoFragment, R.id.infoFragment
-    ).build()
+    binding.navigation.setOnItemSelectedListener { item ->
+      var position = 0
+      when(item.itemId) {
+        R.id.mainFragment -> position = 0
+        R.id.videoFragment -> position = 1
+        R.id.infoFragment -> position = 2
+      }
+      binding.viewPager.setCurrentItem(position, true)
+      true
+    }
 
+  }
+  private fun setupViewPager() {
+    val fragments: MutableList<Fragment> = ArrayList<Fragment>()
+    fragments.add(MainFragment())
+    fragments.add(VideoFragment())
+    fragments.add(InfoFragment())
 
-    // 将BottomNavigationView与NavController连接
-    setupWithNavController(binding.navigation, navController)
+    val adapter = FragmentAdapter(this, fragments)
+    binding.viewPager.setAdapter(adapter)
+
+    // 设置预加载页面数
+    binding.viewPager.setOffscreenPageLimit(3)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {

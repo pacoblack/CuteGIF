@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -12,6 +12,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#191C19"
+    app:layout_constraintTop_toTopOf="parent"
     app:subtitleTextAppearance="@style/TextAppearance.Material3.LabelLarge"
     app:subtitleTextColor="@color/grey"
     app:title="@string/app_name"
@@ -19,23 +20,37 @@
     app:titleTextColor="@color/dark"
     tools:subtitle="Version X" />
 
-  <include layout="@layout/view_divider_horizontal" />
+  <include layout="@layout/view_divider_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_anchor="@id/materialToolbar"
+    app:layout_anchorGravity="bottom"/>
 
   <!-- NavHostFragment 作为Fragment容器 -->
-  <androidx.fragment.app.FragmentContainerView
-    android:id="@+id/nav_host_fragment"
-    android:name="androidx.navigation.fragment.NavHostFragment"
+<!--  <androidx.fragment.app.FragmentContainerView-->
+<!--    android:id="@+id/nav_host_fragment"-->
+<!--    android:name="androidx.navigation.fragment.NavHostFragment"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="0dp"-->
+<!--    android:layout_weight="1"-->
+<!--    app:defaultNavHost="true"-->
+<!--    app:navGraph="@navigation/mobile_navigation" />-->
+  <androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/view_pager"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    app:defaultNavHost="true"
-    app:navGraph="@navigation/mobile_navigation" />
+    android:layout_height="match_parent"
+    android:overScrollMode="never"
+    android:background="@color/white"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
   <!-- BottomNavigationView -->
   <com.google.android.material.bottomnavigation.BottomNavigationView
     android:id="@+id/navigation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/transparent"
     app:menu="@menu/bottom_nav_menu"
-    app:labelVisibilityMode="unlabeled"/>
-</androidx.appcompat.widget.LinearLayoutCompat>
+    app:labelVisibilityMode="unlabeled"
+    app:layout_behavior=".components.BottomNavigationBehavior"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
