@@ -32,24 +32,18 @@ class GifMergeActivity : BaseActivity() {
   private val binding by lazy { ActivityGifMergeBinding.inflate(layoutInflater) }
   private lateinit var viewPager: ViewPager2
 
-  private val inputGifPath by lazy {
+  private val inputGifPaths by lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       intent.getParcelableArrayListExtra(MyConstants.EXTRA_GIF_PATH, Uri::class.java)
     } else {
       intent.getParcelableArrayListExtra(MyConstants.EXTRA_GIF_PATH)
     }
   }
-  //TODO：数量待定
-  private val pageData = listOf(
-    PageData("产品A", inputGifPath?.get(0)),
-    PageData("产品B", inputGifPath?.get(1))
-  )
 
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
 
     setViewPager()
-    setupIndicators()
 
     //TODO:保存实现
 //    binding.mbSave.onClick {
@@ -69,6 +63,7 @@ class GifMergeActivity : BaseActivity() {
 
   private fun setViewPager(){
     viewPager = binding.viewPager
+    binding.dotsIndicator.attachTo(viewPager)
 
     // 设置适配器
     viewPager.adapter = PageAdapter()
@@ -77,64 +72,9 @@ class GifMergeActivity : BaseActivity() {
     // 设置页面切换监听器
     viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
       override fun onPageSelected(position: Int) {
-        updateIndicators(position)
+
       }
     })
-//    updateIndicators(0)
-  }
-
-  private fun setupIndicators() {
-    // 清除现有指示器
-    binding.indicatorContainer.removeAllViews()
-
-    // 为每个页面创建指示器
-    for (i in pageData.indices) {
-      val indicator = createIndicator(i == 0)
-      binding.indicatorContainer.addView(indicator)
-    }
-  }
-
-  private fun updateIndicators(position: Int) {
-    // 更新所有指示器状态
-    for (i in 0 until binding.indicatorContainer.childCount) {
-      val indicator = binding.indicatorContainer.getChildAt(i)
-      val drawable = indicator.background as GradientDrawable
-
-      if (i == position) {
-        // 当前页面指示器
-        drawable.setColor(ContextCompat.getColor(this, R.color.indicator_selected))
-      } else {
-        // 其他页面指示器
-        drawable.setColor(ContextCompat.getColor(this, R.color.indicator_normal))
-      }
-    }
-  }
-
-  private fun createIndicator(isSelected: Boolean): View {
-    // 使用代码创建指示器视图
-    val indicator = View(this)
-
-    // 设置大小
-    val size = resources.getDimensionPixelSize(R.dimen.indicator_size)
-    val margin = resources.getDimensionPixelSize(R.dimen.indicator_margin)
-    val params = android.widget.LinearLayout.LayoutParams(size, size)
-    params.setMargins(margin, 0, margin, 0)
-    indicator.layoutParams = params
-
-    // 设置背景（可绘制对象）
-    val drawable = GradientDrawable()
-    drawable.shape = GradientDrawable.OVAL
-
-    if (isSelected) {
-      // 选中状态
-      drawable.setColor(ContextCompat.getColor(this, R.color.indicator_selected))
-    } else {
-      // 未选中状态
-      drawable.setColor(ContextCompat.getColor(this, R.color.indicator_normal))
-    }
-
-    indicator.background = drawable
-    return indicator
   }
 
   override fun onDestroy() {
@@ -174,10 +114,13 @@ class GifMergeActivity : BaseActivity() {
     }
 
     override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
-      val inputGifPath = pageData[position].imageUri?.copyToInputFileDir()
+      val inputGifPath = inputGifPaths?.get(position)?.copyToInputFileDir()
+      if (inputGifPath.isNullOrBlank()) {
+        return
+      }
       holder.binding.mbSliderMinus.onClick { if (holder.binding.slider.value > holder.binding.slider.valueFrom) holder.binding.slider.value-- }
       holder.binding.mbSliderPlus.onClick { if (holder.binding.slider.value < holder.binding.slider.valueTo) holder.binding.slider.value++ }
-        resetDirectory(OUTPUT_MERGE_DIR)
+      resetDirectory(OUTPUT_MERGE_DIR)
       FFmpegKit.execute("${MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN} -i \"$inputGifPath\" \"$OUTPUT_MERGE_DIR%06d.png\"")
       val frameCount = File(OUTPUT_MERGE_DIR).listFiles()?.size
       if (frameCount == null) {
@@ -214,8 +157,7 @@ class GifMergeActivity : BaseActivity() {
 //      }
     }
 
-    override fun getItemCount(): Int = pageData.size
+    override fun getItemCount(): Int = inputGifPaths?.size ?: 0
   }
 
-  data class PageData(val title: String, val imageUri: Uri?)
 }
