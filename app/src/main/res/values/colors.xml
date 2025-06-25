@@ -17,4 +17,6 @@
   <color name="launcher_foreground">#f8faf5</color>
   <color name="transparent">#00000000</color>
   <color name="full_white">#FFFFFF</color>
+  <color name="indicator_selected">#4CAF50</color>
+  <color name="indicator_normal">#BDBDBD</color>
 </resources>

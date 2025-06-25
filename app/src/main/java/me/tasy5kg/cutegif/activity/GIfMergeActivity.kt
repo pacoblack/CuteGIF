@@ -3,6 +3,7 @@ package me.tasy5kg.cutegif.activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.arthenica.ffmpegkit.FFmpegKit
@@ -31,7 +33,7 @@ import java.io.File
 class GifMergeActivity : BaseActivity() {
   private val binding by lazy { ActivityGifMergeBinding.inflate(layoutInflater) }
   private lateinit var viewPager: ViewPager2
-  private var currentPage = 0
+
   private val inputGifPath by lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       intent.getParcelableArrayListExtra(MyConstants.EXTRA_GIF_PATH, Uri::class.java)
@@ -48,18 +50,8 @@ class GifMergeActivity : BaseActivity() {
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
 
-    viewPager = binding.viewPager
-
-    // 设置适配器
-    viewPager.adapter = PageAdapter()
-
-    // 设置页面切换监听器
-    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-      override fun onPageSelected(position: Int) {
-        updateIndicators(position)
-      }
-    })
-    updateIndicators(0)
+    setViewPager()
+    setupIndicators()
 
     //TODO:保存实现
 //    binding.mbSave.onClick {
@@ -77,18 +69,73 @@ class GifMergeActivity : BaseActivity() {
 //    }
   }
 
-  private fun updateIndicators(position: Int) {
-    //TODO: 个数不确定时
-    when (position) {
-      0 -> {
-        binding.indicator1.setImageResource(R.drawable.indicator_selected)
-        binding.indicator2.setImageResource(R.drawable.indicator_normal)
+  private fun setupIndicators() {
+    // 清除现有指示器
+    binding.indicatorContainer.removeAllViews()
+
+    // 为每个页面创建指示器
+    for (i in pageData.indices) {
+      val indicator = createIndicator(i == 0)
+      binding.indicatorContainer.addView(indicator)
+    }
+  }
+
+  private fun setViewPager(){
+    viewPager = binding.viewPager
+
+    // 设置适配器
+    viewPager.adapter = PageAdapter()
+
+    // 设置页面切换监听器
+    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+      override fun onPageSelected(position: Int) {
+        updateIndicators(position)
       }
-      1 -> {
-        binding.indicator1.setImageResource(R.drawable.indicator_normal)
-        binding.indicator2.setImageResource(R.drawable.indicator_selected)
+    })
+    updateIndicators(0)
+  }
+
+  private fun updateIndicators(position: Int) {
+    // 更新所有指示器状态
+    for (i in 0 until binding.indicatorContainer.childCount) {
+      val indicator = binding.indicatorContainer.getChildAt(i)
+      val drawable = indicator.background as GradientDrawable
+
+      if (i == position) {
+        // 当前页面指示器
+        drawable.setColor(ContextCompat.getColor(this, R.color.indicator_selected))
+      } else {
+        // 其他页面指示器
+        drawable.setColor(ContextCompat.getColor(this, R.color.indicator_normal))
       }
     }
+  }
+
+  private fun createIndicator(isSelected: Boolean): View {
+    // 使用代码创建指示器视图
+    val indicator = View(this)
+
+    // 设置大小
+    val size = resources.getDimensionPixelSize(R.dimen.indicator_size)
+    val margin = resources.getDimensionPixelSize(R.dimen.indicator_margin)
+    val params = android.widget.LinearLayout.LayoutParams(size, size)
+    params.setMargins(margin, 0, margin, 0)
+    indicator.layoutParams = params
+
+    // 设置背景（可绘制对象）
+    val drawable = GradientDrawable()
+    drawable.shape = GradientDrawable.OVAL
+
+    if (isSelected) {
+      // 选中状态
+      drawable.setColor(ContextCompat.getColor(this, R.color.indicator_selected))
+    } else {
+      // 未选中状态
+      drawable.setColor(ContextCompat.getColor(this, R.color.indicator_normal))
+    }
+
+    indicator.background = drawable
+    return indicator
   }
 
   override fun onDestroy() {
