@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.components.FragmentAdapter
@@ -46,6 +47,16 @@ class HomeActivity : BaseActivity() {
 
     // 设置预加载页面数
     binding.viewPager.setOffscreenPageLimit(3)
+    binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+      override fun onPageSelected(position: Int) {
+        binding.navigation.selectedItemId = when(position) {
+          0 -> R.id.mainFragment
+          1 ->  R.id.videoFragment
+          2 -> R.id.infoFragment
+          else -> R.id.mainFragment
+        }
+      }
+    })
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
