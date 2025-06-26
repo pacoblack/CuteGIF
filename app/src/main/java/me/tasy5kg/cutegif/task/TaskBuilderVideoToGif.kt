@@ -56,10 +56,20 @@ data class TaskBuilderVideoToGif(
   }
 
   // 第一步 配置视频的各种参数
+  /**
+   * -hwaccel auto -hide_banner -benchmark -an -ss 0ms -to 5745ms
+   * -i "/data/data/me.tasy5kg.cutegif/cache/input_file_dir/1000002320.mp4"
+   * -i "/data/data/me.tasy5kg.cutegif/cache/add_text.png"
+   * -filter_complex
+   *    "[0:v] setpts=PTS/1.0,fps=fps=10 [0vPreprocessed]; [0vPreprocessed][1:v] overlay=0:0,crop=1280:720:0:0,scale=-2:240:flags=lanczos"
+   * "/data/data/me.tasy5kg.cutegif/cache/extracted_frames/%06d.bmp"
+   */
   fun getCommandExtractFrame() =
     "$FFMPEG_COMMAND_PREFIX_FOR_ALL_AN ${trimTime?.let { "-ss ${trimTime.first}ms -to ${trimTime.second}ms " } ?: ""}" + // 配置视频的开始时间和截止时间
       " -i \"$inputVideoPath\" -i \"$ADD_TEXT_RENDER_PNG_PATH\" " + // 给视频配置文字
-      "-filter_complex \"[0:v] setpts=PTS/$outputSpeed,fps=fps=$outputFps [0vPreprocessed]; " + // 配置视频的播放速度
+      "-filter_complex \"[0:v] " +
+      "split[original][reverse];[reverse]reverse[reversed];[original][reversed]concat=n=2:v=1:a=0[concat_output]; [concat_output] " +
+      "setpts=PTS/$outputSpeed,fps=fps=$outputFps [0vPreprocessed]; " + // 配置视频的播放速度
       "[0vPreprocessed][1:v] overlay=0:0," + cropParams.toFFmpegCropCommand() + resolutionParams(cropParams, shortLength) +  // 配置视频的宽高
       (colorKey?.let { ",colorkey=#${it.first}:${it.second / 100f}:0" } ?: "") + // 配置视频的抠图
       (",reverse").toEmptyStringIf { !reverse } + //  配置视频是否倒放
@@ -71,5 +81,7 @@ data class TaskBuilderVideoToGif(
 
   // 第三步 使用调色板生成gif
   fun getCommandVideoToGif() =
-    "$FFMPEG_COMMAND_PREFIX_FOR_ALL_AN -framerate $outputFps -i \"${MyConstants.VIDEO_TO_GIF_EXTRACTED_FRAMES_PATH}%06d.bmp\" -i \"${MyConstants.PALETTE_PATH}\" " + "-filter_complex paletteuse=dither=bayer -final_delay $finalDelay -y \"$OUTPUT_GIF_TEMP_PATH\""
+    "$FFMPEG_COMMAND_PREFIX_FOR_ALL_AN -framerate $outputFps " +
+      "-i \"${MyConstants.VIDEO_TO_GIF_EXTRACTED_FRAMES_PATH}%06d.bmp\" -i \"${MyConstants.PALETTE_PATH}\" " +
+      "-filter_complex paletteuse=dither=bayer -final_delay $finalDelay -y \"$OUTPUT_GIF_TEMP_PATH\""
 }
