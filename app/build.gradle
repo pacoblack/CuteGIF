@@ -2,7 +2,7 @@ plugins {
   id 'com.android.application'
   id 'org.jetbrains.kotlin.android'
 }
-
+apply from: "../common.gradle"
 android {
   signingConfigs {
     release {}
@@ -25,12 +25,10 @@ android {
   defaultConfig {
     applicationId "me.tasy5kg.cutegif"
     minSdk 29
-    targetSdk 34
-    compileSdk 34
     versionCode 202404010
     versionName '2024.4'
     signingConfig signingConfigs.debug
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     setProperty "archivesBaseName", "CuteGIF_${versionName}_${versionCode}"
 
     buildConfigField "String", "WECHAT_APP_ID", "\"${WECHAT_APP_ID}\""
@@ -53,13 +51,7 @@ android {
     viewBinding true
     buildConfig true
   }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_17.toString()
-  }
+
   namespace 'me.tasy5kg.cutegif'
 }
 
@@ -70,13 +62,12 @@ dependencies {
 
   // OutlineSpan.kt was cloned from https://github.com/santaevpavel/OutlineSpan on February 1, 2024.
   implementation files('libs/ffmpeg-kit-6.0.aar')
-  implementation 'androidx.core:core-ktx:1.13.1'
-  implementation 'androidx.appcompat:appcompat:1.6.1'
+
   implementation "androidx.activity:activity-ktx:1.9.3"
   implementation 'androidx.draganddrop:draganddrop:1.0.0'
   implementation "androidx.navigation:navigation-fragment-ktx:2.9.0"
   implementation "androidx.navigation:navigation-ui-ktx:2.9.0"
-  implementation 'com.google.android.material:material:1.12.0'
+
   implementation 'com.github.bumptech.glide:glide:4.16.0'
   implementation "com.vanniktech:android-image-cropper:4.5.0"
 //  implementation "com.arthenica:ffmpeg-kit-full-gpl:6.0-2.LTS"
@@ -90,11 +81,6 @@ dependencies {
   implementation "androidx.viewpager2:viewpager2:1.1.0"
 //  implementation 'com.airbnb.android:lottie:6.6.6'
   implementation 'com.tbuonomo:dotsindicator:4.3'
-
-  testImplementation 'junit:junit:4.13.2'
-
-  androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
   api 'com.tencent.mm.opensdk:wechat-sdk-android:+'
 }
