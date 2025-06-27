@@ -21,7 +21,6 @@ class HomeActivity : BaseActivity() {
     setContentView(binding.root)
     setSupportActionBar(binding.materialToolbar)
     binding.materialToolbar.subtitle = getString(R.string.version_X, BuildConfig.VERSION_NAME)
-
     setupViewPager();
 
     binding.navigation.setOnItemSelectedListener { item ->

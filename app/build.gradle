@@ -64,7 +64,7 @@ android {
 }
 
 dependencies {
-
+  implementation project(':nativelib')
   // libgifsicle.so has been imported into the jniLibs directory.
   // It was cloned and compiled from https://github.com/kohler/gifsicle on January 9, 2024.
 
