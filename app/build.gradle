@@ -68,7 +68,8 @@ dependencies {
   implementation "androidx.navigation:navigation-fragment-ktx:2.9.0"
   implementation "androidx.navigation:navigation-ui-ktx:2.9.0"
 
-  implementation 'com.github.bumptech.glide:glide:4.16.0'
+  implementation "androidx.viewpager2:viewpager2:1.1.0"
+
   implementation "com.vanniktech:android-image-cropper:4.5.0"
 //  implementation "com.arthenica:ffmpeg-kit-full-gpl:6.0-2.LTS"
   implementation 'com.tencent:mmkv:2.2.2'
@@ -77,8 +78,6 @@ dependencies {
   implementation files('libs/smart-exception-java-0.2.1.jar')
   implementation files('libs/smart-exception-logback-0.2.1.jar')
 
-  annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
-  implementation "androidx.viewpager2:viewpager2:1.1.0"
 //  implementation 'com.airbnb.android:lottie:6.6.6'
   implementation 'com.tbuonomo:dotsindicator:4.3'
 
