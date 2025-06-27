@@ -3,11 +3,13 @@ package me.tasy5kg.cutegif
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 class MyApplication : Application() {
   override fun onCreate() {
     super.onCreate()
     appContext = applicationContext
+    WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APP_ID, true)?.registerApp(BuildConfig.WECHAT_APP_ID)
   }
 
   companion object {

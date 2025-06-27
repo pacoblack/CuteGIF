@@ -35,15 +35,15 @@ object MySettings {
     defaultMMKV.encode(key, value ?: INT_NULL_VALUE)
   }
 
-  private fun getFloat(key: String) = defaultMMKV.decodeFloat(key, FLOAT_NULL_VALUE).toNullable()
+  fun getFloat(key: String) = defaultMMKV.decodeFloat(key, FLOAT_NULL_VALUE).toNullable()
 
-  private fun setFloat(key: String, value: Float?) {
+  fun setFloat(key: String, value: Float?) {
     defaultMMKV.encode(key, value ?: FLOAT_NULL_VALUE)
   }
 
-  private fun getString(key: String) = defaultMMKV.decodeString(key)
+  fun getString(key: String) = defaultMMKV.decodeString(key)
 
-  private fun setString(key: String, value: String?) {
+  fun setString(key: String, value: String?) {
     defaultMMKV.encode(key, value)
   }
 
