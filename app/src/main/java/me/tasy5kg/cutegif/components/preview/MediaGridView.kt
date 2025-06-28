@@ -10,8 +10,6 @@ import androidx.core.content.withStyledAttributes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.tasy5kg.cutegif.R
-import kotlin.math.ceil
-import kotlin.math.min
 
 
 class MediaGridView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -122,38 +120,19 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
       outRect: Rect, view: View,
       parent: RecyclerView,state: State
     ) {
-      val position = parent.getChildAdapterPosition(view)
-      val column = position % spanCount
+      val position = parent.getChildAdapterPosition(view) // item position
+      val column = position % spanCount // item column
 
-      // 统一垂直间距
       outRect.top = spacing
       outRect.bottom = spacing
-
-      // 水平间距处理
       if (includeEdge) {
-        outRect.left = spacing - column * spacing / spanCount
-        outRect.right = (column + 1) * spacing / spanCount
+        outRect.left = spacing - column * spacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
+        outRect.right = (column + 1) * spacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
       } else {
-        outRect.left = column * spacing / spanCount
-        outRect.right = spacing - (column + 1) * spacing / spanCount
+        outRect.left = column * spacing / spanCount // column * ((1f / spanCount) * spacing)
+        outRect.right = spacing - (column + 1) * spacing / spanCount // spacing - (column + 1) * ((1f /    spanCount) * spacing)
       }
     }
-  }
-
-  override fun onMeasure(widthSpec: Int, heightSpec: Int) {
-    // 计算所需高度
-    val rowCount = ceil(getItemCount().toDouble() / maxColumns).toInt()
-    val actualRows = min(rowCount.toDouble(), maxRows.toDouble()).toInt()
-
-    val height = actualRows * itemSize + (actualRows + 1) * itemSpacing + paddingTop + paddingBottom
-
-    // 设置测量尺寸
-    val resolvedHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
-    super.onMeasure(widthSpec, resolvedHeightSpec)
-  }
-
-  private fun getItemCount(): Int {
-    return this.mediaItems.size
   }
 
   companion object {
