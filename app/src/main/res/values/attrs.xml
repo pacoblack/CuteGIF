@@ -12,7 +12,7 @@
     <!-- 类型标签高度 -->
     <attr name="labelHeight" format="dimension" />
     <!-- 类型标签文本大小 -->
-    <attr name="labelTextSize" format="dimension" />
+    <attr name="labelTextSize" format="integer" />
     <!-- 播放按钮尺寸 -->
     <attr name="playButtonSize" format="dimension" />
   </declare-styleable>

@@ -54,7 +54,7 @@
     app:itemSize="120dp"
     app:itemSpacing="8dp"
     app:labelHeight="28dp"
-    app:labelTextSize="12sp"
+    app:labelTextSize="16"
     app:playButtonSize="40dp"/>
 
   <!-- 页面指示器 -->

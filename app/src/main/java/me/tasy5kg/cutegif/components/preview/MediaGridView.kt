@@ -51,9 +51,9 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
         dpToPx(context, DEFAULT_LABEL_HEIGHT_DP)
       )
 
-      labelTextSize = getDimensionPixelSize(
+      labelTextSize = getInt(
         R.styleable.MediaGridView_labelTextSize,
-        spToPx(context, DEFAULT_LABEL_TEXT_SIZE_SP)
+        DEFAULT_LABEL_TEXT_SIZE_SP
       )
 
       playButtonSize = getDimensionPixelSize(
