@@ -31,7 +31,7 @@ android {
 
     setProperty "archivesBaseName", "CuteGIF_${versionName}_${versionCode}"
 
-    buildConfigField "String", "WECHAT_APP_ID", "\"${WECHAT_APP_ID}\""
+    buildConfigField "String", "SOME_ID", ""
   }
 
   buildTypes {

@@ -8,7 +8,12 @@ class NativeLib {
      */
     external fun stringFromJNI(): String
 
-    companion object {
+    external fun getWxAppIdFromJNI(): String
+
+    external fun encryptString(input: String): ByteArray
+
+
+  companion object {
         // Used to load the 'nativelib' library on application startup.
         init {
             System.loadLibrary("nativelib")
