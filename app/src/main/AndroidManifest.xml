@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools">
+  <!-- 网络权限 -->
+  <uses-permission android:name="android.permission.INTERNET" />
+
+  <!-- 允许WebView加载本地文件 -->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+  <!-- 允许WebView访问位置（如果需要） -->
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
   <application
     android:name=".MyApplication"
@@ -11,6 +19,7 @@
     android:supportsRtl="true"
     android:theme="@style/Theme.CuteGif"
     android:usesCleartextTraffic="false"
+    android:networkSecurityConfig="@xml/network_security_config"
     tools:targetApi="tiramisu">
     <activity
       android:name=".activity.ImportMvimgActivity"
@@ -179,6 +188,18 @@
     <meta-data
       android:name="WECHAT_APPID"
       android:value="YOUR_WECHAT_APP_ID" />
+
+    <!-- WebView 文件访问权限 -->
+    <provider
+      android:name="androidx.core.content.FileProvider"
+      android:authorities="${applicationId}.fileprovider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
+    </provider>
+
   </application>
 
 </manifest>

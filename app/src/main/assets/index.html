@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Android-WebView通信</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+    }
+    .container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #34495e;
+    }
+    input, button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+    }
+    button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #2980b9;
+    }
+    #webMessages, #appMessages {
+        background: #f9f9f9;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 15px;
+        min-height: 150px;
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 10px;
+        font-family: monospace;
+    }
+    .message {
+        padding: 8px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+    }
+    .from-web {
+        background-color: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+    .from-app {
+        background-color: #d1ecf1;
+        border-left: 4px solid #17a2b8;
+    }
+    .info {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Android ↔ WebView 通信演示</h1>
+
+  <div class="form-group">
+    <label for="messageToApp">发送消息到 Android 应用：</label>
+    <input type="text" id="messageToApp" placeholder="输入要发送的消息...">
+    <button onclick="sendMessageToApp()">发送到 Android</button>
+  </div>
+
+  <div class="form-group">
+    <label>来自 Android 的消息：</label>
+    <div id="appMessages"></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="form-group">
+    <button onclick="getDeviceInfo()">获取设备信息</button>
+    <button onclick="showToast()">显示 Toast</button>
+    <button onclick="openDialog()">打开对话框</button>
+  </div>
+
+  <div class="form-group">
+    <label>设备信息：</label>
+    <pre id="deviceInfo"></pre>
+  </div>
+</div>
+
+<script>
+  // 接收来自 Android 的消息
+  function receiveMessageFromApp(data) {
+      try {
+
+          const messageData = JSON.parse(data);
+          const message = messageData.message;
+          const timestamp = new Date(messageData.timestamp).toLocaleTimeString();
+
+          const messageElement = document.createElement('div');
+          messageElement.className = 'message from-app';
+          messageElement.innerHTML = `<strong>${timestamp}</strong>: ${message}`;
+
+          document.getElementById('appMessages').appendChild(messageElement);
+      } catch (e) {
+          console.error('Error parsing message from app:', e);
+      }
+  }
+
+  // 发送消息到 Android
+  function sendMessageToApp() {
+      const messageInput = document.getElementById('messageToApp');
+      const message = messageInput.value.trim();
+
+      if (message) {
+          Android.sendMessageToApp(message);
+          messageInput.value = '';
+      }
+  }
+
+  // 获取设备信息
+  function getDeviceInfo() {
+      try {
+          const info = JSON.parse(Android.getDeviceInfo());
+          const infoDiv = document.getElementById('deviceInfo');
+          infoDiv.innerHTML = `
+              Model: ${info.model}\n
+              Manufacturer: ${info.manufacturer}\n
+              OS Version: ${info.osVersion}\n
+              App Version: ${info.appVersion}
+          `;
+      } catch (e) {
+          console.error('Error getting device info:', e);
+      }
+  }
+
+  // 显示 Toast
+  function showToast() {
+      Android.showToast("来自 WebView 的 Toast 消息!");
+  }
+
+  // 打开对话框
+  function openDialog() {
+      Android.openDialog(
+          "WebView 对话框",
+          "这是从 WebView 触发的原生对话框!"
+      );
+  }
+
+  // 初始化时发送欢迎消息
+  window.onload = function() {
+      const welcomeElement = document.createElement('div');
+      welcomeElement.className = 'message info';
+      welcomeElement.textContent = 'WebView 已加载完成，等待消息...';
+      document.getElementById('appMessages').appendChild(welcomeElement);
+  };
+</script>
+</body>
+</html>
