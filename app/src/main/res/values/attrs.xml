@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="MediaGridView">
+    <!-- 最大行数 -->
+    <attr name="maxRows" format="integer" />
+    <!-- 每行最大列数 -->
+    <attr name="maxColumns" format="integer" />
+    <!-- 项目尺寸 -->
+    <attr name="itemSize" format="dimension" />
+    <!-- 项目间距 -->
+    <attr name="itemSpacing" format="dimension" />
+    <!-- 类型标签高度 -->
+    <attr name="labelHeight" format="dimension" />
+    <!-- 类型标签文本大小 -->
+    <attr name="labelTextSize" format="dimension" />
+    <!-- 播放按钮尺寸 -->
+    <attr name="playButtonSize" format="dimension" />
+  </declare-styleable>
+</resources>
