@@ -6,10 +6,12 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import androidx.core.content.withStyledAttributes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.tasy5kg.cutegif.R
-import androidx.core.content.withStyledAttributes
+import kotlin.math.ceil
+import kotlin.math.min
 
 
 class MediaGridView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -36,8 +38,6 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
       maxRows = getInt(R.styleable.MediaGridView_maxRows, DEFAULT_MAX_ROWS)
       maxColumns = getInt(R.styleable.MediaGridView_maxColumns, DEFAULT_MAX_COLUMNS)
 
-
-      // 尺寸单位转换
       itemSize = getDimensionPixelSize(
         R.styleable.MediaGridView_itemSize,
         dpToPx(context, DEFAULT_ITEM_SIZE_DP)
@@ -65,24 +65,24 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     }
 
-
     // 设置布局管理器
     val layoutManager = GridLayoutManager(context, maxColumns)
     layoutManager.setOrientation(HORIZONTAL)
     setLayoutManager(layoutManager)
 
-
     // 设置适配器
     adapter = MediaGridAdapter(context, mediaItems, itemSize, labelHeight, labelTextSize, playButtonSize)
     setAdapter(adapter)
 
-
     // 添加间距装饰
     addItemDecoration(GridSpacingItemDecoration(maxColumns, itemSpacing, true))
+
+    // 设置固定高度
+    setHasFixedSize(true)
   }
 
   @SuppressLint("NotifyDataSetChanged")
-  fun setMediaItems(items: MutableList<MediaItem>) {
+  fun setMediaItems(items: List<MediaItem>) {
     this.mediaItems.clear()
     this.mediaItems.addAll(items)
 
@@ -120,27 +120,40 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
   private class GridSpacingItemDecoration(private val spanCount: Int, private val spacing: Int, private val includeEdge: Boolean) : ItemDecoration() {
     override fun getItemOffsets(
       outRect: Rect, view: View,
-      parent: RecyclerView, state: State
+      parent: RecyclerView,state: State
     ) {
       val position = parent.getChildAdapterPosition(view)
       val column = position % spanCount
 
+      // 统一垂直间距
+      outRect.top = spacing
+      outRect.bottom = spacing
+
+      // 水平间距处理
       if (includeEdge) {
         outRect.left = spacing - column * spacing / spanCount
         outRect.right = (column + 1) * spacing / spanCount
-
-        if (position < spanCount) {
-          outRect.top = spacing
-        }
-        outRect.bottom = spacing
       } else {
         outRect.left = column * spacing / spanCount
         outRect.right = spacing - (column + 1) * spacing / spanCount
-        if (position >= spanCount) {
-          outRect.top = spacing
-        }
       }
     }
+  }
+
+  override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+    // 计算所需高度
+    val rowCount = ceil(getItemCount().toDouble() / maxColumns).toInt()
+    val actualRows = min(rowCount.toDouble(), maxRows.toDouble()).toInt()
+
+    val height = actualRows * itemSize + (actualRows + 1) * itemSpacing + paddingTop + paddingBottom
+
+    // 设置测量尺寸
+    val resolvedHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+    super.onMeasure(widthSpec, resolvedHeightSpec)
+  }
+
+  private fun getItemCount(): Int {
+    return this.mediaItems.size
   }
 
   companion object {

@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
+  xmlns:tools="http://schemas.android.com/tools"
   android:background="?android:attr/selectableItemBackground"
   android:clipToPadding="false"
   android:foreground="?android:attr/selectableItemBackgroundBorderless">
@@ -13,7 +14,7 @@
     android:scaleType="centerCrop" />
 
   <!-- 底部类型标签容器 -->
-  <LinearLayout
+  <androidx.appcompat.widget.LinearLayoutCompat
     android:id="@+id/type_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,8 +37,10 @@
       android:paddingHorizontal="4dp"
       android:paddingVertical="2dp"
       android:textColor="#FFFFFF"
-      android:textStyle="bold" />
-  </LinearLayout>
+      android:textStyle="bold"
+      tools:text="123"
+      tools:textSize="12sp"/>
+  </androidx.appcompat.widget.LinearLayoutCompat>
 
   <!-- 视频/动态照片播放按钮 -->
   <ImageView

@@ -25,23 +25,19 @@ internal class MediaGridAdapter(
   override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
     val item = mediaItems[position]
 
-
     // 设置视图尺寸
     val layoutParams = holder.itemView.layoutParams
     layoutParams.width = itemSize
     layoutParams.height = itemSize
     holder.itemView.setLayoutParams(layoutParams)
 
-
     // 设置标签高度
     val labelParams = holder.typeContainer.layoutParams
     labelParams.height = labelHeight
     holder.typeContainer.setLayoutParams(labelParams)
 
-
     // 设置标签文本大小
     holder.typeLabel.textSize = labelTextSize.toFloat()
-
 
     // 设置播放按钮尺寸
     val playParams = holder.playButton.layoutParams
@@ -49,17 +45,14 @@ internal class MediaGridAdapter(
     playParams.height = playButtonSize
     holder.playButton.setLayoutParams(playParams)
 
-
     // 加载媒体内容
     Glide.with(context)
       .load(item.url)
       .transition(DrawableTransitionOptions.withCrossFade())
       .into(holder.mediaImage)
 
-
     // 设置类型标签
     holder.typeLabel.text = item.title
-
 
     // 根据类型设置标签颜色和图标
     when (item.type) {

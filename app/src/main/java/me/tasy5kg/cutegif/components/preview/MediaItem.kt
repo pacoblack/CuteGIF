@@ -1,6 +1,6 @@
 package me.tasy5kg.cutegif.components.preview
 
-class MediaItem(val url: String?, val title: String?, val type: Int) {
+class MediaItem(val url: String, val title: String?, val type: Int) {
   companion object {
     const val TYPE_IMAGE: Int = 0
     const val TYPE_GIF: Int = 1

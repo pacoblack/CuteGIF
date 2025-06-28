@@ -3,19 +3,14 @@ package me.tasy5kg.cutegif.activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -26,6 +21,8 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.components.preview.MediaItem
+import me.tasy5kg.cutegif.components.preview.MediaItem.Companion.TYPE_GIF
 import me.tasy5kg.cutegif.databinding.ActivityGifMergeBinding
 import me.tasy5kg.cutegif.databinding.ItemMergePageBinding
 import me.tasy5kg.cutegif.model.MyConstants
@@ -55,7 +52,8 @@ class GifMergeActivity : BaseActivity() {
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
     binding.mbClose.onClick { finish() }
-    filterUri()
+    initMediaGrid()
+//    filterUri()
 
     //TODO:保存实现
 //    binding.mbSave.onClick {
@@ -73,24 +71,9 @@ class GifMergeActivity : BaseActivity() {
 //    }
   }
 
-  private fun onCheckIsDone(){
-    if(gifUris.isEmpty()) {
-      toast("无符合要求的文件，请重新选择！")
-      finish()
-      return
-    }
-    viewPager = binding.viewPager
-    // 设置适配器
-    viewPager.adapter = PageAdapter()
-    viewPager.offscreenPageLimit = 1
-
-    // 设置页面切换监听器
-    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-      override fun onPageSelected(position: Int) {
-
-      }
-    })
-    binding.dotsIndicator.attachTo(viewPager)
+  private fun initMediaGrid(){
+    var list = inputGifPaths?.mapIndexed { index, uri-> MediaItem(uri.toString(), ""+index, TYPE_GIF) } ?: emptyList()
+    binding.mediaGrid.setMediaItems(list)
   }
 
   private fun filterUri(){
@@ -115,6 +98,26 @@ class GifMergeActivity : BaseActivity() {
 
       onCheckIsDone()
     }
+  }
+
+  private fun onCheckIsDone(){
+    if(gifUris.isEmpty()) {
+      toast("无符合要求的文件，请重新选择！")
+      finish()
+      return
+    }
+    viewPager = binding.viewPager
+    // 设置适配器
+    viewPager.adapter = PageAdapter()
+    viewPager.offscreenPageLimit = 1
+
+    // 设置页面切换监听器
+    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+      override fun onPageSelected(position: Int) {
+
+      }
+    })
+    binding.dotsIndicator.attachTo(viewPager)
   }
 
   override fun onDestroy() {

@@ -45,6 +45,17 @@
       android:text="@string/save_this_frame"
       app:icon="@drawable/baseline_camera_24" />
   </androidx.appcompat.widget.LinearLayoutCompat>
+  <me.tasy5kg.cutegif.components.preview.MediaGridView
+    android:id="@+id/mediaGrid"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:maxRows="3"
+    app:maxColumns="3"
+    app:itemSize="120dp"
+    app:itemSpacing="8dp"
+    app:labelHeight="28dp"
+    app:labelTextSize="12sp"
+    app:playButtonSize="40dp"/>
 
   <!-- 页面指示器 -->
   <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
