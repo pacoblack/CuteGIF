@@ -7,11 +7,25 @@
   android:clipToPadding="false"
   android:foreground="?android:attr/selectableItemBackgroundBorderless">
 
-  <ImageView
-    android:id="@+id/media_image"
+  <FrameLayout
+    android:id="@+id/media_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scaleType="centerCrop" />
+    android:layout_height="match_parent">
+
+    <!-- 图片/GIF视图 -->
+    <ImageView
+      android:id="@+id/media_image"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop" />
+
+    <!-- 视频播放器 -->
+    <me.tasy5kg.cutegif.components.preview.VideoPlayerView
+      android:id="@+id/video_player"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="gone" />
+  </FrameLayout>
 
   <!-- 底部类型标签容器 -->
   <androidx.appcompat.widget.LinearLayoutCompat
