@@ -17,9 +17,7 @@ class InfoFragment: Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    if (arguments != null) {
 
-    }
   }
 
   override fun onDestroyView() {

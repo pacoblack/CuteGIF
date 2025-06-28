@@ -31,7 +31,7 @@ android {
 
     setProperty "archivesBaseName", "CuteGIF_${versionName}_${versionCode}"
 
-    buildConfigField "String", "SOME_ID", ""
+    buildConfigField "String", "SOME_ID", "\"abc\""
   }
 
   buildTypes {

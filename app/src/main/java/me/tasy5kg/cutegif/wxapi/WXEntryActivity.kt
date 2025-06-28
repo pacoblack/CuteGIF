@@ -12,6 +12,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.databinding.ActivityWxEntryBinding
+import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.WX_LOGIN_CODE
 import me.tasy5kg.cutegif.model.MySettings
 
@@ -23,7 +24,7 @@ class WXEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
     super.onCreate(savedInstanceState)
     setContentView(binding.root)
 
-    api = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APP_ID, true)
+    api = WXAPIFactory.createWXAPI(this, MyConstants.WECHAT_APP_ID, true)
     api?.handleIntent(intent, this)
   }
 

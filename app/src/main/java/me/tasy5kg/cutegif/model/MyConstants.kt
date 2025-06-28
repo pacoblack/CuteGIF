@@ -1,5 +1,6 @@
 package me.tasy5kg.cutegif.model
 
+import com.cv.pic.nativelib.NativeLib
 import me.tasy5kg.cutegif.MyApplication.Companion.appContext
 
 object MyConstants {
@@ -37,4 +38,10 @@ object MyConstants {
     "mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26jump_from%3Dwebapi%26k%3D$5Frn_d8p0OxBX6NwtTAhAhDQh2FTCcI9"
 
   const val WX_LOGIN_CODE="my_wx_login_code"
+  /**
+   * 获取新的appid后，先试用下面的语句生成，然后更新到nativelib中去
+   * var encrypted = nativeLib.encryptString("wx1234567890abcdef")
+   * NativeLib.printAsHexArray(encrypted, "encryptedAppId")
+   */
+  var WECHAT_APP_ID = NativeLib().getWxAppIdFromJNI()
 }

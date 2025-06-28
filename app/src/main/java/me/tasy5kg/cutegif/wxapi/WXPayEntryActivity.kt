@@ -13,6 +13,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.databinding.ActivityWxPayEntryBinding
+import me.tasy5kg.cutegif.model.MyConstants
 
 class WXPayEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
   private val binding by lazy { ActivityWxPayEntryBinding.inflate(layoutInflater) }
@@ -22,7 +23,7 @@ class WXPayEntryActivity : AppCompatActivity(), IWXAPIEventHandler {
     super.onCreate(savedInstanceState)
     setContentView(binding.root)
 
-    api = WXAPIFactory.createWXAPI(this, BuildConfig.WECHAT_APP_ID)
+    api = WXAPIFactory.createWXAPI(this, MyConstants.WECHAT_APP_ID)
     api?.handleIntent(intent, this)
   }
 
