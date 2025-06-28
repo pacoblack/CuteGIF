@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- 网络错误信息 -->
+  <string name="network_error_server">服务器错误</string>
+  <string name="network_error_timeout">请求超时，请检查您的网络连接</string>
+  <string name="network_error_dns">无法解析服务器地址</string>
+  <string name="network_error_no_internet">网络连接不可用，请检查网络设置</string>
+  <string name="network_error_io">网络数据传输错误</string>
+  <string name="network_error_unknown">未知网络错误</string>
+</resources>

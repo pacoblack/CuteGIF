@@ -10,7 +10,7 @@ class NativeLib {
 
     external fun getWxAppIdFromJNI(): String
 
-    external fun encryptString(input: String): ByteArray
+//    external fun encryptString(input: String): ByteArray
 
 
   companion object {

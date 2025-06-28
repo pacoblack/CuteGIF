@@ -1,35 +1,43 @@
 package com.cv.pic.mvvm.usage
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cv.pic.mvvm.core.ApiResult
-import com.cv.pic.mvvm.core.BaseViewModel
-import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.coroutines.Job
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserViewModel constructor(
-  private val userRepo: UserRemoteDataSource
-) : BaseViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+  private val repository: UserRepository
+) : ViewModel() {
 
-  private val _userState = MutableLiveData<ApiResult<User>>()
-  val userState: LiveData<ApiResult<User>> = _userState
+  private val _userState = MutableStateFlow<ApiResult<User>>(ApiResult.Loading)
+  val userState: StateFlow<ApiResult<User>> = _userState
 
-  fun fetchUser(userId: String) {
-    userRepo.getUser(userId)
-      .subscribe { result ->
-        _userState.value = result
-      }
-      .addToDisposable()
-  }
+  private val _usersState = MutableStateFlow<ApiResult<List<User>>>(ApiResult.Loading)
+  val usersState: StateFlow<ApiResult<List<User>>> = _usersState
 
-  private fun Disposable.addToDisposable() {
-    viewModelScope.coroutineContext[Job]?.invokeOnCompletion {
-      dispose()
+  fun loadUser(userId: String) {
+    viewModelScope.launch {
+      _userState.value = ApiResult.Loading
+      _userState.value = repository.getUser(userId)
     }
   }
 
-  override fun handleError(throwable: Throwable) {
-    TODO("Not yet implemented")
+  fun loadUsers() {
+    viewModelScope.launch {
+      _usersState.value = ApiResult.Loading
+      _usersState.value = repository.getUsers()
+    }
+  }
+
+  fun updateUser(user: User) {
+    viewModelScope.launch {
+      _userState.value = ApiResult.Loading
+      _userState.value = repository.updateUser(user)
+    }
   }
 }

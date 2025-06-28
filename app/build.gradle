@@ -63,7 +63,6 @@ dependencies {
   // OutlineSpan.kt was cloned from https://github.com/santaevpavel/OutlineSpan on February 1, 2024.
   implementation files('libs/ffmpeg-kit-6.0.aar')
 
-  implementation "androidx.activity:activity-ktx:1.9.3"
   implementation 'androidx.draganddrop:draganddrop:1.0.0'
   implementation "androidx.navigation:navigation-fragment-ktx:2.9.0"
   implementation "androidx.navigation:navigation-ui-ktx:2.9.0"

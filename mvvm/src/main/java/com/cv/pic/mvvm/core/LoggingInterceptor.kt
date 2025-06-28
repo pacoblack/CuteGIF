@@ -4,8 +4,9 @@ import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer
+import javax.inject.Inject
 
-class LoggingInterceptor constructor() : Interceptor {
+class LoggingInterceptor @Inject constructor() : Interceptor {
 
   override fun intercept(chain: Interceptor.Chain): Response {
     val request = chain.request()

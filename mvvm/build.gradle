@@ -1,11 +1,22 @@
 plugins {
   id 'com.android.library'
   id 'org.jetbrains.kotlin.android'
-  id 'kotlin-kapt'
 }
 apply from: "../common.gradle"
 android {
-    namespace 'com.cv.pic.mvvm'
+  namespace 'com.cv.pic.mvvm'
+  defaultConfig {
+    buildConfigField "boolean", "LOG_NETWORK", "true"
+  }
+
+  buildTypes {
+    release {
+      buildConfigField "boolean", "LOG_NETWORK", "false"
+    }
+  }
+  buildFeatures {
+    buildConfig true
+  }
 }
 dependencies {
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1"
@@ -22,12 +33,4 @@ dependencies {
 
   implementation 'com.google.code.gson:gson:2.13.1'
 
-// Dagger 核心库
-  implementation 'com.google.dagger:dagger:2.48.1'
-  kapt 'com.google.dagger:dagger-compiler:2.48.1'
-
-  // Dagger-Android 扩展
-  implementation 'com.google.dagger:dagger-android:2.48.1'
-  implementation 'com.google.dagger:dagger-android-support:2.48.1'
-  kapt 'com.google.dagger:dagger-android-processor:2.48.1'
 }
