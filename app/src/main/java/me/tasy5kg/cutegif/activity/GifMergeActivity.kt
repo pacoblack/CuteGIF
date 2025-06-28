@@ -133,6 +133,10 @@ class GifMergeActivity : BaseActivity() {
         arrayList.addAll(uriList)
         arrayList
       }
+      if (parcelableArrayList.isNullOrEmpty() == true) {
+        toast("请选择至少一张符合要求的gif")
+        return
+      }
       context.startActivity(
         Intent(
           context, GifMergeActivity::class.java
