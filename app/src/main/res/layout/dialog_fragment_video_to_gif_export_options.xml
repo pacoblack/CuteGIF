@@ -286,6 +286,11 @@
                 android:text="@string/reverse" />
 
               <com.google.android.material.chip.Chip
+                android:id="@+id/chipEnableCycle"
+                style="@style/Theme.CuteGif.Chip"
+                android:text="@string/cycle" />
+
+              <com.google.android.material.chip.Chip
                 android:id="@+id/chipEnableFinalDelay"
                 style="@style/Theme.CuteGif.Chip"
                 android:text="@string/final_pause" />

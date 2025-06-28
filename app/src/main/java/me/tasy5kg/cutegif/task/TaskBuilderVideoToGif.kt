@@ -23,6 +23,7 @@ data class TaskBuilderVideoToGif(
   val outputFps: Int,
   val colorQuality: Int,
   val reverse: Boolean,
+  val cycle: Boolean,
   val textRender: TextRender?,
   val lossy: Int?,
   val videoWH: Pair<Int, Int>,
@@ -68,7 +69,7 @@ data class TaskBuilderVideoToGif(
     "$FFMPEG_COMMAND_PREFIX_FOR_ALL_AN ${trimTime?.let { "-ss ${trimTime.first}ms -to ${trimTime.second}ms " } ?: ""}" + // 配置视频的开始时间和截止时间
       " -i \"$inputVideoPath\" -i \"$ADD_TEXT_RENDER_PNG_PATH\" " + // 给视频配置文字
       "-filter_complex \"[0:v] " +
-      "split[original][reverse];[reverse]reverse[reversed];[original][reversed]concat=n=2:v=1:a=0[concat_output]; [concat_output] " +
+      ("split[original][reverse];[reverse]reverse[reversed];[original][reversed]concat=n=2:v=1:a=0[concat_output]; [concat_output] ").toEmptyStringIf { !cycle } +
       "setpts=PTS/$outputSpeed,fps=fps=$outputFps [0vPreprocessed]; " + // 配置视频的播放速度
       "[0vPreprocessed][1:v] overlay=0:0," + cropParams.toFFmpegCropCommand() + resolutionParams(cropParams, shortLength) +  // 配置视频的宽高
       (colorKey?.let { ",colorkey=#${it.first}:${it.second / 100f}:0" } ?: "") + // 配置视频的抠图

@@ -180,6 +180,7 @@ class VideoToGifExportOptionsDialogFragment : DialogFragment() {
         binding.mbColorQualityMax.id -> 256
         else -> throw IllegalArgumentException()
       },
+      cycle = binding.chipEnableCycle.isChecked,
       reverse = binding.chipEnableReverse.isChecked,
       textRender = textRender,
       lossy = when (binding.mbtgImageQuality.checkedButtonId) {

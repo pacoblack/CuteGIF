@@ -149,4 +149,5 @@
     <string name="title_dashboard">Dash</string>
     <string name="title_notifications">Person</string>
     <string name="gif_merge">GIF Merge</string>
+    <string name="cycle">cycle</string>
 </resources>
