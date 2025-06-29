@@ -63,25 +63,21 @@ internal class MediaGridAdapter(
       MediaItem.TYPE_IMAGE -> {
         holder.typeContainer.setBackgroundColor("#4CAF50".toColorInt())
         holder.typeIcon.setImageResource(R.drawable.ic_media_image)
-        holder.playButton.setVisibility(View.GONE)
       }
 
       MediaItem.TYPE_GIF -> {
         holder.typeContainer.setBackgroundColor("#FFC107".toColorInt())
         holder.typeIcon.setImageResource(R.drawable.ic_media_gif)
-        holder.playButton.setVisibility(View.GONE)
       }
 
       MediaItem.TYPE_VIDEO -> {
         holder.typeContainer.setBackgroundColor("#2196F3".toColorInt())
         holder.typeIcon.setImageResource(R.drawable.ic_media_video)
-        holder.playButton.setVisibility(View.GONE)
       }
 
       MediaItem.TYPE_MOTION_PHOTO -> {
         holder.typeContainer.setBackgroundColor("#9C27B0".toColorInt())
         holder.typeIcon.setImageResource(R.drawable.ic_media_motion_photo)
-        holder.playButton.setVisibility(View.VISIBLE)
       }
     }
   }
@@ -132,7 +128,7 @@ internal class MediaGridAdapter(
     // 显示图片视图，隐藏视频视图
     holder.mediaImage.setVisibility(VISIBLE)
     holder.videoPlayer.setVisibility(GONE)
-    holder.playButton.setVisibility(VISIBLE) // 显示播放按钮
+    holder.playButton.setVisibility(GONE) // 显示播放按钮
 
 
     // 加载动态照片
