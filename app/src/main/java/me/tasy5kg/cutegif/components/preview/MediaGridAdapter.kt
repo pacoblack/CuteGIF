@@ -75,7 +75,7 @@ internal class MediaGridAdapter(
       MediaItem.TYPE_VIDEO -> {
         holder.typeContainer.setBackgroundColor("#2196F3".toColorInt())
         holder.typeIcon.setImageResource(R.drawable.ic_media_video)
-        holder.playButton.setVisibility(View.VISIBLE)
+        holder.playButton.setVisibility(View.GONE)
       }
 
       MediaItem.TYPE_MOTION_PHOTO -> {
