@@ -5,7 +5,7 @@ import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 class MediaItem(val url: String, val title: String?, val type: Int) {
 
   init {
-      logRed("####### type:$type", url)
+//      logRed("####### type:$type", url)
   }
 
   companion object {

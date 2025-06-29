@@ -88,7 +88,6 @@ internal class MediaGridAdapter(
     holder.videoPlayer.setVisibility(GONE)
     holder.playButton.setVisibility(GONE)
 
-
     // 加载图片
     Glide.with(context)
       .load(item.url)
@@ -102,7 +101,6 @@ internal class MediaGridAdapter(
     holder.mediaImage.setVisibility(VISIBLE)
     holder.videoPlayer.setVisibility(GONE)
     holder.playButton.setVisibility(GONE)
-
 
     // 加载GIF
     Glide.with(context)
@@ -119,9 +117,10 @@ internal class MediaGridAdapter(
     holder.videoPlayer.setVisibility(VISIBLE)
     holder.playButton.setVisibility(GONE) // 视频有自己的播放按钮
 
-
     // 设置视频URL
     holder.videoPlayer.setVideoUrl(item.url)
+
+    holder.bind { holder.videoPlayer.startPlayback() }
   }
 
   private fun setupMotionPhotoView(holder: MediaViewHolder, item: MediaItem) {
@@ -129,7 +128,6 @@ internal class MediaGridAdapter(
     holder.mediaImage.setVisibility(VISIBLE)
     holder.videoPlayer.setVisibility(GONE)
     holder.playButton.setVisibility(GONE) // 显示播放按钮
-
 
     // 加载动态照片
     Glide.with(context)
@@ -150,5 +148,11 @@ internal class MediaGridAdapter(
     var typeIcon: ImageView = binding.typeIcon
     var typeLabel: TextView = binding.typeLabel
     var playButton: ImageView = binding.playButton
+
+    fun bind(clickListener: () -> Unit) {
+      itemView.setOnClickListener {
+        clickListener()
+      }
+    }
   }
 }

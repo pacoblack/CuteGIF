@@ -94,8 +94,8 @@ class VideoPlayerView : FrameLayout {
       .into(thumbnailView)
   }
 
-  private fun startPlayback() {
-    progressBar.setVisibility(VISIBLE)
+  fun startPlayback() {
+//    progressBar.setVisibility(VISIBLE)
     playButton.setVisibility(GONE)
     VideoPlayerActivity.start(context, videoUrl!!)
 

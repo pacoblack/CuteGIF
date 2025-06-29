@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -193,10 +194,12 @@ class VideoPlayerActivity : AppCompatActivity() {
 
   companion object {
     const val EXTRA_VIDEO_URI ="extra_video_uri"
-    fun start(context: Context, uri: String) = context.startActivity(
-      Intent(
-        context, VideoPlayerActivity::class.java
-      ).putExtra(EXTRA_VIDEO_URI, uri.toString())
-    )
+    fun start(context: Context, uri: String) {
+      context.startActivity(
+        Intent(
+          context, VideoPlayerActivity::class.java
+        ).putExtra(EXTRA_VIDEO_URI, uri)
+      )
+    }
   }
 }
