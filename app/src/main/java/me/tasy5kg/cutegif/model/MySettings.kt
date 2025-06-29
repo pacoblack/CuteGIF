@@ -74,6 +74,6 @@ object MySettings {
     get() = INT_WHATS_NEW_VERSION_LATEST == getInt(KEY_INT_WHATS_NEW_READ_VERSION)
     set(value) = setInt(KEY_INT_WHATS_NEW_READ_VERSION, if (value) INT_WHATS_NEW_VERSION_LATEST else null)
 
-  const val MAX_SELECT_FILE = 10
+  const val MAX_SELECT_FILE = 50
   const val MAX_FILE_SIZE = 1024*1024*10
 }
