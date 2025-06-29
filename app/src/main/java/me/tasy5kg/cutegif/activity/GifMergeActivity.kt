@@ -21,8 +21,8 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.components.preview.MediaExtensions.getMediaType
 import me.tasy5kg.cutegif.components.preview.MediaItem
-import me.tasy5kg.cutegif.components.preview.MediaItem.Companion.TYPE_GIF
 import me.tasy5kg.cutegif.databinding.ActivityGifMergeBinding
 import me.tasy5kg.cutegif.databinding.ItemMergePageBinding
 import me.tasy5kg.cutegif.model.MyConstants
@@ -72,7 +72,7 @@ class GifMergeActivity : BaseActivity() {
   }
 
   private fun initMediaGrid(){
-    var list = inputGifPaths?.mapIndexed { index, uri-> MediaItem(uri.toString(), ""+index, TYPE_GIF) } ?: emptyList()
+    var list = inputGifPaths?.mapIndexed { index, uri-> MediaItem(uri.toString(), ""+index, uri.getMediaType(this))} ?: emptyList()
     binding.mediaGrid.setMediaItems(list)
   }
 

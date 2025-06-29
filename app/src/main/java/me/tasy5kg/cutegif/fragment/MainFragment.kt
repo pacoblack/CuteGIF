@@ -176,9 +176,9 @@ class MainFragment:Fragment() {
 
   private fun importForGifMerge(intFileOpenWay: Int = MySettings.fileOpenWay){
     when (intFileOpenWay) {
-      INT_FILE_OPEN_WAY_DOCUMENT -> arlImportGifMergeDocument.launch("image/gif")
+      INT_FILE_OPEN_WAY_DOCUMENT -> arlImportGifMergeDocument.launch("*/*")
       INT_FILE_OPEN_WAY_13 -> arlImportGifMerge13.launch(PickVisualMediaRequest(
-        mediaType = ActivityResultContracts.PickVisualMedia.SingleMimeType("image/gif")
+        mediaType = ActivityResultContracts.PickVisualMedia.SingleMimeType("*/*")
       ))
 
       else -> importForGifMerge(
