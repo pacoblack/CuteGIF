@@ -47,16 +47,13 @@ android {
       debuggable true
     }
   }
-  buildFeatures {
-    viewBinding true
-    buildConfig true
-  }
 
   namespace 'me.tasy5kg.cutegif'
 }
 
 dependencies {
   implementation project(':nativelib')
+  implementation project(':exo-video-play')
   // libgifsicle.so has been imported into the jniLibs directory.
   // It was cloned and compiled from https://github.com/kohler/gifsicle on January 9, 2024.
 

@@ -18,3 +18,4 @@ rootProject.name = "CuteGIF"
 include ':app'
 include ':nativelib'
 include ':mvvm'
+include ':exo-video-play'

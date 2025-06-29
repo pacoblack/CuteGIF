@@ -1,7 +1,6 @@
 package me.tasy5kg.cutegif.components.preview
 
 import android.content.Context
-import android.drm.DrmRights
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import android.media.MediaPlayer.OnPreparedListener
@@ -14,9 +13,9 @@ import android.widget.ProgressBar
 import android.widget.VideoView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cv.pic.exo.video.VideoPlayerActivity
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.MediaVideoPlayerLayoutBinding
-import androidx.core.net.toUri
 
 
 class VideoPlayerView : FrameLayout {
@@ -96,13 +95,12 @@ class VideoPlayerView : FrameLayout {
   }
 
   private fun startPlayback() {
-    if (videoUrl.isNullOrEmpty()) return
-
     progressBar.setVisibility(VISIBLE)
     playButton.setVisibility(GONE)
+    VideoPlayerActivity.start(context, videoUrl!!)
 
-    videoView.setVideoURI(videoUrl!!.toUri())
-    videoView.requestFocus()
+//    videoView.setVideoURI(videoUrl!!.toUri())
+//    videoView.requestFocus()
   }
 
   private fun resetPlayer() {
