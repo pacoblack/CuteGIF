@@ -1,10 +1,16 @@
 package me.tasy5kg.cutegif.toolbox
 
 import android.content.ContentValues
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Environment
+import android.os.Environment.DIRECTORY_PICTURES
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
+import androidx.core.content.ContextCompat.getExternalFilesDirs
 import me.tasy5kg.cutegif.MyApplication
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.model.MyConstants
@@ -14,9 +20,11 @@ import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import kotlin.math.nextUp
+
 
 object FileTools {
 
@@ -181,6 +189,36 @@ object FileTools {
     "content" -> MyApplication.appContext.contentResolver.getType(this)
     "file" -> MimeTypeMap.getSingleton().getMimeTypeFromExtension(FileName(this).extension)
     else -> null
+  }
+
+  fun getExternalDir(context: Context): File? {
+    var externalDirs = getExternalFilesDirs(context, DIRECTORY_PICTURES);
+    var sdCardDir:File? = null;
+
+    externalDirs?.forEach {
+      if (it.absolutePath.contains("extSdCard")) {
+        sdCardDir = it;
+      }
+    }
+
+    if (sdCardDir == null) {
+      sdCardDir = Environment.getExternalStorageDirectory();
+    }
+
+    val splitDir = File(sdCardDir, "split")
+    if (!splitDir.exists()) splitDir.mkdirs()
+
+    val imageFile = File(splitDir, "photo.jpg")
+    try {
+      FileOutputStream(imageFile).use { fos ->
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.raw.donate_wechat)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+      }
+    } catch (e: IOException) {
+      e.printStackTrace()
+    }
+
+    return splitDir
   }
 
 }
