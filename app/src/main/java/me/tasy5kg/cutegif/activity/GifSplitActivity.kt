@@ -12,9 +12,11 @@ import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.databinding.ActivityGifSplitBinding
 import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_SPLIT_DIR
+import me.tasy5kg.cutegif.toolbox.Callback
 import me.tasy5kg.cutegif.toolbox.FileTools.copyFile
 import me.tasy5kg.cutegif.toolbox.FileTools.createNewFile
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
+import me.tasy5kg.cutegif.toolbox.PermissionTools
 import me.tasy5kg.cutegif.toolbox.Toolbox.getExtra
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
@@ -29,6 +31,24 @@ class GifSplitActivity : BaseActivity() {
     binding.mbClose.onClick { finish() }
     binding.mbSliderMinus.onClick { if (binding.slider.value > binding.slider.valueFrom) binding.slider.value-- }
     binding.mbSliderPlus.onClick { if (binding.slider.value < binding.slider.valueTo) binding.slider.value++ }
+    requestPermission()
+  }
+
+  fun requestPermission(){
+    PermissionTools.requestStorage(this,object : Callback<Void, Void> {
+      override fun call(p: Void?): Void? {
+        initData()
+        return null
+      }
+    }, object : Callback<List<String>, Void> {
+      override fun call(p: List<String>?): Void? {
+        finish()
+        return null
+      }
+    })
+  }
+
+  fun initData(){
     resetDirectory(OUTPUT_SPLIT_DIR)
     FFmpegKit.execute("${MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN} -i \"$inputGifPath\" \"$OUTPUT_SPLIT_DIR%06d.png\"")
     val frameCount = File(OUTPUT_SPLIT_DIR).listFiles()?.size
