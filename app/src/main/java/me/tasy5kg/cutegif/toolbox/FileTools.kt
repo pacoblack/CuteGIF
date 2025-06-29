@@ -2,8 +2,6 @@ package me.tasy5kg.cutegif.toolbox
 
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.os.Environment.DIRECTORY_PICTURES
@@ -11,12 +9,17 @@ import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
 import androidx.core.content.ContextCompat.getExternalFilesDirs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.tasy5kg.cutegif.MyApplication
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.toolbox.Toolbox.keepNDecimalPlaces
+import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.toolbox.Toolbox.toEmptyStringIf
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -191,12 +194,12 @@ object FileTools {
     else -> null
   }
 
-  fun getExternalDir(context: Context): File? {
+  fun getExternalDir(context: Context, dir:String): File {
     var externalDirs = getExternalFilesDirs(context, DIRECTORY_PICTURES);
     var sdCardDir:File? = null;
 
-    externalDirs?.forEach {
-      if (it.absolutePath.contains("extSdCard")) {
+    externalDirs.forEach {
+      if (isExternalSdCard(it)) {
         sdCardDir = it;
       }
     }
@@ -205,20 +208,47 @@ object FileTools {
       sdCardDir = Environment.getExternalStorageDirectory();
     }
 
-    val splitDir = File(sdCardDir, "split")
+    val splitDir = File(sdCardDir, dir)
     if (!splitDir.exists()) splitDir.mkdirs()
 
-    val imageFile = File(splitDir, "photo.jpg")
+    return splitDir
+  }
+
+  private fun isExternalSdCard(file: File): Boolean {
+    val path = file.absolutePath
+    // 常见SD卡路径标识
+    val patterns = arrayOf(
+      "extSdCard", "sdcard1", "external_sd",
+      "ext_sd", "external", "microSd"
+    )
+    return patterns.any { path.contains(it, ignoreCase = true) }
+  }
+
+  suspend fun copyToExternalDir(
+    sourceFile: String,
+    targetDir: File,
+    targetName: String
+  ): Boolean = withContext(Dispatchers.IO) {
+    if (File(sourceFile).isDirectory) {
+      return@withContext false
+    }
+    val targetFile = File(targetDir, targetName)
+
     try {
-      FileOutputStream(imageFile).use { fos ->
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.raw.donate_wechat)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+      FileInputStream(sourceFile).use { fis ->
+        BufferedInputStream(fis).use { bis ->
+          FileOutputStream(targetFile).use { fos ->
+            BufferedOutputStream(fos).use { bos ->
+              bis.copyTo(bos, bufferSize = 8192)
+              true // 拷贝成功
+            }
+          }
+        }
       }
     } catch (e: IOException) {
-      e.printStackTrace()
+      logRed("FileCopy", "Copy failed: ${e.message}")
+      false
     }
-
-    return splitDir
   }
 
 }

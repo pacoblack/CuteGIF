@@ -2,7 +2,13 @@ package me.tasy5kg.cutegif.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.arthenica.ffmpegkit.FFmpegKit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.model.ActivityCollector
 import me.tasy5kg.cutegif.model.MyConstants
@@ -11,7 +17,7 @@ import me.tasy5kg.cutegif.toolbox.FileTools
 import kotlin.system.exitProcess
 
 abstract class BaseActivity : AppCompatActivity() {
-
+  private val scope = lifecycleScope
   abstract fun onCreateIfEulaAccepted(savedInstanceState: Bundle?)
 
   final override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +49,16 @@ abstract class BaseActivity : AppCompatActivity() {
       FFmpegKit.cancel()
       FileTools.resetDirectory(MyConstants.CACHE_DIR_PATH)
     }
+    scope.cancel()
   }
+
+  open fun addBackgroundTask(task: Runnable, callback: Runnable){
+    scope.launch {
+      withContext(Dispatchers.IO) {
+        task.run()
+      }
+    }.invokeOnCompletion { callback.run() }
+  }
+
 
 }
