@@ -9,7 +9,6 @@ import me.tasy5kg.cutegif.databinding.ActivityWebBinding
 import me.tasy5kg.cutegif.fragment.WebFragment
 import me.tasy5kg.cutegif.fragment.WebFragment.Companion.FRAGMENT_WEB_URL
 import me.tasy5kg.cutegif.toolbox.Toolbox.getExtra
-import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 
 class WebActivity: BaseActivity() {
   private val binding by lazy { ActivityWebBinding.inflate(layoutInflater) }

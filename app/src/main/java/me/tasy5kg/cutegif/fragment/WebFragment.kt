@@ -9,6 +9,7 @@ import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import me.tasy5kg.cutegif.databinding.FragmentWebBinding
+import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.webview.MyWebChromeClient
 import me.tasy5kg.cutegif.webview.MyWebViewClient
 import me.tasy5kg.cutegif.webview.WebAppInterface
@@ -20,7 +21,7 @@ class WebFragment: Fragment() , WebBridge {
   private lateinit var webView: WebView
   private lateinit var webViewClient: MyWebViewClient
   private lateinit var webChromeClient: MyWebChromeClient
-  private val webUrl by lazy{ arguments?.getString("", "")}
+  private val webUrl by lazy{ arguments?.getString(FRAGMENT_WEB_URL, "")}
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = FragmentWebBinding.inflate(layoutInflater, container, false)
@@ -65,7 +66,7 @@ class WebFragment: Fragment() , WebBridge {
     webView.webChromeClient = webChromeClient
 
     // 加载页面
-    webView.loadUrl((webUrl?.isNotEmpty() ?: "file:///android_asset/index.html").toString())
+    webUrl?.let { webView.loadUrl(it) }
   }
 
   // 发送消息到 WebView
