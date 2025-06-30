@@ -8,13 +8,15 @@ import androidx.viewpager2.widget.ViewPager2
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.components.FragmentAdapter
+import me.tasy5kg.cutegif.components.OnSelectFragment
 import me.tasy5kg.cutegif.databinding.ActivityHomeBinding
+import me.tasy5kg.cutegif.fragment.BaseFragment
 import me.tasy5kg.cutegif.fragment.InfoFragment
 import me.tasy5kg.cutegif.fragment.MainFragment
 import me.tasy5kg.cutegif.fragment.VideoFragment
 
 
-class HomeActivity : BaseActivity() {
+class HomeActivity : BaseActivity() , OnSelectFragment {
   private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
@@ -36,10 +38,10 @@ class HomeActivity : BaseActivity() {
 
   }
   private fun setupViewPager() {
-    val fragments: MutableList<Fragment> = ArrayList<Fragment>()
-    fragments.add(MainFragment())
-    fragments.add(VideoFragment())
-    fragments.add(InfoFragment())
+    val fragments: MutableList<Fragment> = ArrayList()
+    fragments.add((MainFragment() as BaseFragment).apply { setSelectFragment(this@HomeActivity) })
+    fragments.add((VideoFragment() as BaseFragment).apply { setSelectFragment(this@HomeActivity) })
+    fragments.add((InfoFragment() as BaseFragment).apply { setSelectFragment(this@HomeActivity) })
 
     val adapter = FragmentAdapter(this, fragments)
     binding.viewPager.setAdapter(adapter)
@@ -68,6 +70,12 @@ class HomeActivity : BaseActivity() {
       R.id.menu_item_about -> AboutActivity.start(this)
     }
     return true
+  }
+
+  override fun goto(page: Int) {
+    when(page) {
+      0,1,2 ->binding.viewPager.setCurrentItem(page, true)
+    }
   }
 
 }

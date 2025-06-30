@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import androidx.fragment.app.Fragment
 import me.tasy5kg.cutegif.databinding.FragmentVideoBinding
 
-class VideoFragment: Fragment() {
+class VideoFragment: BaseFragment() {
   private lateinit var binding: FragmentVideoBinding
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

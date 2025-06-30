@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.Fragment
 import me.tasy5kg.cutegif.MainActivity
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.activity.BetaEndedActivity
@@ -35,7 +34,7 @@ import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 
 
-class MainFragment:Fragment() {
+class MainFragment:BaseFragment() {
   private var binding:FragmentMainBinding? = null
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
