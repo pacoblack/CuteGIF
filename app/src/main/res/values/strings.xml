@@ -150,4 +150,10 @@
     <string name="title_notifications">Person</string>
     <string name="gif_merge">GIF Merge</string>
     <string name="cycle">cycle</string>
+    <string name="select_type_prompt">Select</string>
+    <string-array name="page_types">
+      <item>Web</item>
+      <item>Video</item>
+      <item>Other</item>
+    </string-array>
 </resources>

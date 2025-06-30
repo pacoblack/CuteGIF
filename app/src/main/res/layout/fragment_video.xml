@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical"
-  android:gravity="center">
-  <TextView
-    android:id="@+id/title_text_view"
+  android:layout_height="wrap_content"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:orientation="horizontal"
+  android:layout_gravity="center"
+  android:padding="16dp">
+
+  <!-- 类型选择下拉菜单 -->
+  <Spinner
+    android:id="@+id/Spinner"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:entries="@array/page_types"
+    android:prompt="@string/select_type_prompt"/>
+
+  <!-- 地址输入栏 -->
+  <EditText
+    android:id="@+id/etAddress"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:minLines="1"
+    android:maxLines="10"
+    android:ellipsize="end"
+    android:hint="输入"
+    android:inputType="textUri|textMultiLine"
+    android:imeOptions="actionGo"
+    tools:text="123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf"/>
+
+  <!-- 跳转按钮 -->
+  <Button
+    android:id="@+id/btnGo"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textSize="24sp"
-    android:textStyle="bold"
-    android:textColor="#000000"
-    android:text="Video"/>
-
+    android:text="跳转"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

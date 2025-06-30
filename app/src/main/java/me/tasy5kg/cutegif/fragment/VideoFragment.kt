@@ -4,26 +4,36 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import me.tasy5kg.cutegif.databinding.FragmentVideoBinding
 
 class VideoFragment: Fragment() {
-  private var binding: FragmentVideoBinding? = null
+  private lateinit var binding: FragmentVideoBinding
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = FragmentVideoBinding.inflate(layoutInflater, container, false)
-    return binding!!.root
+    return binding.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    if (arguments != null) {
+    binding.Spinner.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
+      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+      }
 
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
     }
+    binding.btnGo.setOnClickListener({
+      when (binding.Spinner.selectedItemPosition) {
+        //TODO：
+
+      }
+    })
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    binding = null
   }
 }

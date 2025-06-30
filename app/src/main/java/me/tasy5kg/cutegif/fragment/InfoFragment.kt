@@ -1,6 +1,5 @@
 package me.tasy5kg.cutegif.fragment
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +14,6 @@ import me.tasy5kg.cutegif.webview.MyWebViewClient
 import me.tasy5kg.cutegif.webview.WebAppInterface
 import me.tasy5kg.cutegif.webview.WebBridge
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class InfoFragment: Fragment() , WebBridge {
   private lateinit var binding: FragmentInfoBinding
