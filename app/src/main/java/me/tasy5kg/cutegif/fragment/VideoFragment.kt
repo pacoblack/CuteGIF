@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import com.cv.pic.exo.video.VideoPlayerActivity
 import me.tasy5kg.cutegif.activity.WebActivity
 import me.tasy5kg.cutegif.databinding.FragmentVideoBinding
 
@@ -27,7 +28,8 @@ class VideoFragment: BaseFragment() {
     }
     binding.btnGo.setOnClickListener {
       when (binding.Spinner.selectedItemPosition) {
-        0, 1, 2 -> WebActivity.start(requireActivity(), "https://m.bilibili.com/")
+        0-> VideoPlayerActivity.start(requireActivity(), binding.urlInput.text.toString())
+        1 -> WebActivity.start(requireActivity(), binding.urlInput.text.toString())
       }
     }
   }
