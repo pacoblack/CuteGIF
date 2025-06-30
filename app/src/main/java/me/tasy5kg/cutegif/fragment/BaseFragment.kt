@@ -1,6 +1,5 @@
 package me.tasy5kg.cutegif.fragment
 
-import android.R
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -8,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import me.tasy5kg.cutegif.components.OnSelectFragment
 
 
-open class BaseFragment: Fragment() {
-  private val sharedViewModel: SharedViewModel by lazy { ViewModelProvider(requireActivity()).get(SharedViewModel::class.java) }
+abstract class BaseFragment: Fragment() {
+  private val sharedViewModel: SharedViewModel by lazy { ViewModelProvider(requireActivity())[SharedViewModel::class.java] }
   private var selectFragment: OnSelectFragment? = null
   fun setSelectFragment(select: OnSelectFragment) {
     this.selectFragment = select
@@ -23,9 +22,11 @@ open class BaseFragment: Fragment() {
     // 观察数据变化
     sharedViewModel.getPositionData().observe(viewLifecycleOwner) { data ->
       if (data != null) {
-
+        onDataChange(data.get(getFragmentPosition()).toString())
       }
     }
   }
+  abstract fun getFragmentPosition():Int
+  open fun onDataChange(data:String){}
 
 }

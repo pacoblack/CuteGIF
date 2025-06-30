@@ -19,5 +19,5 @@
     android:id="@+id/infoFragment"
     android:name="me.tasy5kg.cutegif.fragment.InfoFragment"
     android:label="InfoFragment"
-    tools:layout="@layout/fragment_info"/>
+    tools:layout="@layout/fragment_web"/>
 </navigation>

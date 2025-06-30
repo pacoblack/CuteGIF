@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import me.tasy5kg.cutegif.activity.WebActivity
 import me.tasy5kg.cutegif.databinding.FragmentVideoBinding
+import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 
 class VideoFragment: BaseFragment() {
   private lateinit var binding: FragmentVideoBinding
@@ -24,12 +26,18 @@ class VideoFragment: BaseFragment() {
       override fun onNothingSelected(parent: AdapterView<*>?) {
       }
     }
-    binding.btnGo.setOnClickListener({
-      this.callFragment(binding.Spinner.selectedItemPosition)
-    })
+    binding.btnGo.setOnClickListener {
+      when (binding.Spinner.selectedItemPosition) {
+        0, 1, 2 -> WebActivity.start(requireActivity(), "https://www.baidu.com")
+      }
+    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+  }
+
+  override fun getFragmentPosition(): Int {
+    return 1
   }
 }

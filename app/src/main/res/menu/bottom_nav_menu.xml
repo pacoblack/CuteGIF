@@ -6,10 +6,10 @@
     android:title="@string/title_home" />
   <item
     android:id="@+id/videoFragment"
-    android:icon="@drawable/ic_baseline_18_up_rating_24"
+    android:icon="@drawable/ic_tool_fill"
     android:title="@string/title_dashboard" />
   <item
     android:id="@+id/infoFragment"
-    android:icon="@drawable/ic_baseline_3p_24"
+    android:icon="@drawable/ic_global_fill"
     android:title="@string/title_notifications" />
 </menu>

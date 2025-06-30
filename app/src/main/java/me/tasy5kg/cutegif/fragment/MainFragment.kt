@@ -144,6 +144,10 @@ class MainFragment:BaseFragment() {
     }
   }
 
+  override fun getFragmentPosition(): Int {
+    return 0
+  }
+
   private fun importVideoToGif() {
     when (MySettings.fileOpenWay) {
       INT_FILE_OPEN_WAY_DOCUMENT -> arlImportVideoToGifDocument.launch("video/*")
