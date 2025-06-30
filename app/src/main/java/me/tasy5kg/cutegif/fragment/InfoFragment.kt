@@ -63,7 +63,7 @@ class InfoFragment: BaseFragment() , WebBridge {
     webView.webChromeClient = webChromeClient
 
     // 加载页面
-    webView.loadUrl("file:///android_asset/index.html")
+    webView.loadUrl("https://m.bilibili.com")
   }
 
 //  private fun setupControls() {
