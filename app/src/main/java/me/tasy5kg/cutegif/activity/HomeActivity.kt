@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.R
@@ -13,11 +14,13 @@ import me.tasy5kg.cutegif.databinding.ActivityHomeBinding
 import me.tasy5kg.cutegif.fragment.BaseFragment
 import me.tasy5kg.cutegif.fragment.InfoFragment
 import me.tasy5kg.cutegif.fragment.MainFragment
+import me.tasy5kg.cutegif.fragment.SharedViewModel
 import me.tasy5kg.cutegif.fragment.VideoFragment
 
 
 class HomeActivity : BaseActivity() , OnSelectFragment {
   private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
+  private val sharedViewModel: SharedViewModel by lazy { ViewModelProvider(this)[SharedViewModel::class.java] }
 
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
@@ -72,7 +75,8 @@ class HomeActivity : BaseActivity() , OnSelectFragment {
     return true
   }
 
-  override fun goto(page: Int) {
+  override fun goto(page: Int, data: String) {
+    sharedViewModel.setPositionData(page, data)
     when(page) {
       0,1,2 ->binding.viewPager.setCurrentItem(page, true)
     }

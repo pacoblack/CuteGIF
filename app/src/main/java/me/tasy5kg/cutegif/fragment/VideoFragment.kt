@@ -25,10 +25,7 @@ class VideoFragment: BaseFragment() {
       }
     }
     binding.btnGo.setOnClickListener({
-      when (binding.Spinner.selectedItemPosition) {
-        //TODO：
-
-      }
+      this.callFragment(binding.Spinner.selectedItemPosition)
     })
   }
 
