@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+apply from: "../common.gradle"
+android {
+    namespace 'com.cv.pic.ai'
+}
+
+dependencies {
+  api project(':mvvm')
+
+  // Markdown 渲染
+  implementation "io.noties.markwon:core:4.6.2"
+  implementation "io.noties.markwon:recycler:4.6.2"
+
+  // 图片加载（用于 Markdown 图片）
+  implementation "io.coil-kt:coil:2.4.0"
+  implementation "io.noties.markwon:image-coil:4.6.2"
+
+  implementation 'com.squareup.retrofit2:retrofit:2.12.0'
+}
