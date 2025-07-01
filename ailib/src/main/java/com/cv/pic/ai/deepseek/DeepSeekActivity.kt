@@ -1,5 +1,7 @@
 package com.cv.pic.ai.deepseek
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,6 +71,12 @@ class DeepSeekActivity : AppCompatActivity() {
           addMessage("assistant", "❌ 请求失败: ${e.localizedMessage}")
         }
       }
+    }
+  }
+
+  companion object {
+    fun start(context: Context) {
+      context.startActivity(Intent(context, DeepSeekActivity::class.java))
     }
   }
 }
