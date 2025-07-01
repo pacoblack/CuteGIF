@@ -7,7 +7,7 @@ class SharedViewModel : ViewModel() {
   private val fragmentData: MutableLiveData<HashMap<Int, String>> = MutableLiveData(HashMap())
 
   fun setPositionData(position:Int, data: String) {
-    fragmentData.value.set(position, data)
+    fragmentData.value?.set(position, data)
   }
 
   fun getPositionData(): MutableLiveData<HashMap<Int, String>> {

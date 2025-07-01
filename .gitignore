@@ -19,3 +19,4 @@ captures/
 .cxx/
 *.apk
 output.json
+.kotlin/
