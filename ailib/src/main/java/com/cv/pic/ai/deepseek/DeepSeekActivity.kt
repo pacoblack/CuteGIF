@@ -3,17 +3,23 @@ package com.cv.pic.ai.deepseek
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cv.pic.ai.databinding.ActivityDeepseekBinding
-import kotlinx.coroutines.Dispatchers
+import com.cv.pic.ai.deepseek.viewmodel.DeepSeekViewModel
+import com.cv.pic.ai.deepseek.viewmodel.Message
+import com.cv.pic.mvvm.core.NetworkResult
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-// MainActivity.kt
+@AndroidEntryPoint
 class DeepSeekActivity : AppCompatActivity() {
-
+  private val viewModel: DeepSeekViewModel by viewModels()
   private lateinit var binding: ActivityDeepseekBinding
   private val adapter = ChatAdapter()
   private val messages = mutableListOf<Message>()
@@ -40,9 +46,28 @@ class DeepSeekActivity : AppCompatActivity() {
       if (userInput.isNotEmpty()) {
         addMessage("user", userInput)
         binding.etInput.setText("")
-        getDeepSeekResponse(userInput)
       }
     }
+    viewModelWatch()
+  }
+
+  private fun viewModelWatch(){
+    lifecycleScope.launch {
+      repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewModel.chatState.collect { result ->
+          when (result) {
+            is NetworkResult.Loading -> Log.e(TAG, "login is Loading")
+            is NetworkResult.Success -> {
+              Log.e(TAG, "登录成功")
+            }
+            is NetworkResult.Error -> {
+              Log.e(TAG, "登录失败: ${result.message}")
+            }
+          }
+        }
+      }
+    }
+
   }
 
   private fun addMessage(role: String, content: String) {
@@ -51,30 +76,8 @@ class DeepSeekActivity : AppCompatActivity() {
     binding.recyclerView.smoothScrollToPosition(messages.size - 1)
   }
 
-  private fun getDeepSeekResponse(query: String) {
-    lifecycleScope.launch(Dispatchers.IO) {
-      try {
-        val response = RetrofitClient.instance.chatCompletion(
-          token = "Bearer $apiKey",
-          request = ChatRequest(messages = listOf(
-            Message("user", query)
-          ))
-        )
-
-        withContext(Dispatchers.Main) {
-          response.choices.firstOrNull()?.let {
-            addMessage("assistant", it.message.content)
-          }
-        }
-      } catch (e: Exception) {
-        withContext(Dispatchers.Main) {
-          addMessage("assistant", "❌ 请求失败: ${e.localizedMessage}")
-        }
-      }
-    }
-  }
-
   companion object {
+    const val TAG = "DeepSeekActivity"
     fun start(context: Context) {
       context.startActivity(Intent(context, DeepSeekActivity::class.java))
     }

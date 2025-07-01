@@ -12,25 +12,25 @@ import javax.inject.Inject
 
 class NetworkErrorHandler @Inject constructor(private val context: Context) {
 
-  fun handle(throwable: Throwable): ApiResult.Error {
+  fun handle(throwable: Throwable): NetworkResult.Error {
     return when (throwable) {
       is HttpException -> {
         val errorBody = throwable.response()?.errorBody()?.string()
-        ApiResult.Error(
+        NetworkResult.Error(
           code = throwable.code(),
           message = parseErrorMessage(errorBody) ?: context.getString(R.string.network_error_server)
         )
       }
-      is SocketTimeoutException -> ApiResult.Error(message = context.getString(R.string.network_error_timeout))
+      is SocketTimeoutException -> NetworkResult.Error(message = context.getString(R.string.network_error_timeout))
       is UnknownHostException -> {
         if (isNetworkAvailable(context)) {
-          ApiResult.Error(message = context.getString(R.string.network_error_dns))
+          NetworkResult.Error(message = context.getString(R.string.network_error_dns))
         } else {
-          ApiResult.Error(message = context.getString(R.string.network_error_no_internet))
+          NetworkResult.Error(message = context.getString(R.string.network_error_no_internet))
         }
       }
-      is IOException -> ApiResult.Error(message = context.getString(R.string.network_error_io))
-      else -> ApiResult.Error(message = context.getString(R.string.network_error_unknown))
+      is IOException -> NetworkResult.Error(message = context.getString(R.string.network_error_io))
+      else -> NetworkResult.Error(message = context.getString(R.string.network_error_unknown))
     }
   }
 
@@ -54,7 +54,7 @@ class NetworkErrorHandler @Inject constructor(private val context: Context) {
   }
 
   companion object {
-    fun handle(context: Context, throwable: Throwable): ApiResult.Error {
+    fun handle(context: Context, throwable: Throwable): NetworkResult.Error {
       // 简化处理，实际项目应注入Context
       return NetworkErrorHandler(context).handle(throwable)
     }

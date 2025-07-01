@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.cv.pic.ai.databinding.ItemChatMessageBinding
+import com.cv.pic.ai.deepseek.viewmodel.Message
 import io.noties.markwon.Markwon
 
 // ChatAdapter.kt
