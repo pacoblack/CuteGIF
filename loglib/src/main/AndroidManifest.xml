@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <application>
-    <service android:name=".LogService" android:exported="false"/>
+    <service android:name=".LogService" android:exported="false" android:enabled="true"/>
     <activity android:name="com.cv.pic.log.LogViewerActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="true"

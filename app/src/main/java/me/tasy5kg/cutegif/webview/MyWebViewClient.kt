@@ -11,7 +11,7 @@ import com.cv.pic.log.LogRecorder
 class MyWebViewClient : WebViewClient() {
 
   override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-    LogRecorder.save("webview", request?.url.toString())
+    LogRecorder.save("webview", "shouldOverrideUrlLoading:${request?.url.toString()}")
     request?.url?.let { url ->
       // 处理特定 URL 方案
       if (url.scheme == "myapp") {
@@ -33,7 +33,7 @@ class MyWebViewClient : WebViewClient() {
 
   override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
     super.onPageStarted(view, url, favicon)
-    // 显示加载进度
+    LogRecorder.save("webview", "loadUrl：$url" )
   }
 
   override fun onPageFinished(view: WebView?, url: String?) {
