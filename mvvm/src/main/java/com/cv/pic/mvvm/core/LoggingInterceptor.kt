@@ -44,7 +44,7 @@ class LoggingInterceptor() : Interceptor {
       request.url,
       request.headers
     )
-    LogRecorder.save("NETWORK", requestLog)
+    LogRecorder.i("NETWORK", requestLog)
   }
 
   private fun recordAfter(t1: Long, response: Response) {
@@ -59,6 +59,6 @@ class LoggingInterceptor() : Interceptor {
       response.message,
       response.headers
     )
-    LogRecorder.save("NETWORK", responseLog)
+    LogRecorder.i("NETWORK", responseLog)
   }
 }
