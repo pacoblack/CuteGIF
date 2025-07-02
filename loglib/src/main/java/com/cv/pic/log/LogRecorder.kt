@@ -11,7 +11,7 @@ object LogRecorder {
   fun init(context: Context) {
     val logFile = File(context.filesDir, "app_logs.txt")
     inMemoryTree = InMemoryTree()
-    Timber.plant(inMemoryTree, FileLoggingTree(context))
+    Timber.plant(FileLoggingTree(context))
   }
 
   fun d(tag:String, message: String) = Timber.tag(tag).d(message)
