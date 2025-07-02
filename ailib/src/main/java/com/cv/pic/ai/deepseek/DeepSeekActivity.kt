@@ -14,10 +14,8 @@ import com.cv.pic.ai.databinding.ActivityDeepseekBinding
 import com.cv.pic.ai.deepseek.viewmodel.DeepSeekViewModel
 import com.cv.pic.ai.deepseek.viewmodel.Message
 import com.cv.pic.mvvm.core.NetworkResult
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 class DeepSeekActivity : AppCompatActivity() {
   private val viewModel: DeepSeekViewModel by viewModels()
   private lateinit var binding: ActivityDeepseekBinding
