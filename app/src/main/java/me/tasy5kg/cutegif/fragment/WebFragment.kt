@@ -9,9 +9,9 @@ import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import me.tasy5kg.cutegif.databinding.FragmentWebBinding
-import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.webview.MyWebChromeClient
 import me.tasy5kg.cutegif.webview.MyWebViewClient
+import me.tasy5kg.cutegif.webview.UrlUtils
 import me.tasy5kg.cutegif.webview.WebAppInterface
 import me.tasy5kg.cutegif.webview.WebBridge
 import org.json.JSONObject
@@ -66,7 +66,7 @@ class WebFragment: Fragment() , WebBridge {
     webView.webChromeClient = webChromeClient
 
     // 加载页面
-    webUrl?.let { webView.loadUrl(it) }
+    webUrl?.let { webView.loadUrl(UrlUtils.normalizeUrl(it)) }
   }
 
   // 发送消息到 WebView

@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import com.cv.pic.exo.video.VideoPlayerActivity
 import me.tasy5kg.cutegif.activity.WebActivity
 import me.tasy5kg.cutegif.databinding.FragmentVideoBinding
+import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 
 class VideoFragment: BaseFragment() {
   private lateinit var binding: FragmentVideoBinding
@@ -28,8 +29,8 @@ class VideoFragment: BaseFragment() {
     }
     binding.btnGo.setOnClickListener {
       when (binding.Spinner.selectedItemPosition) {
-        0-> VideoPlayerActivity.start(requireActivity(), binding.urlInput.text.toString())
-        1 -> WebActivity.start(requireActivity(), binding.urlInput.text.toString())
+        0 -> WebActivity.start(requireActivity(), binding.urlInput.text.toString())
+        1 -> VideoPlayerActivity.start(requireActivity(), binding.urlInput.text.toString())
       }
     }
   }

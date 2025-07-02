@@ -4,20 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cv.pic.ai.databinding.ActivityDeepseekBinding
+import com.cv.pic.ai.deepseek.viewmodel.DeepSeekRepository
 import com.cv.pic.ai.deepseek.viewmodel.DeepSeekViewModel
 import com.cv.pic.ai.deepseek.viewmodel.Message
 import com.cv.pic.mvvm.core.NetworkResult
+import com.cv.pic.mvvm.core.viewModelWithFactory
 import kotlinx.coroutines.launch
 
 class DeepSeekActivity : AppCompatActivity() {
-  private val viewModel: DeepSeekViewModel by viewModels()
+  private val repository by lazy { DeepSeekRepository() }
+  private val viewModel: DeepSeekViewModel by viewModelWithFactory { DeepSeekViewModel(repository) }
   private lateinit var binding: ActivityDeepseekBinding
   private val adapter = ChatAdapter()
   private val messages = mutableListOf<Message>()
