@@ -1,5 +1,7 @@
 package com.cv.pic.log
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,6 +33,12 @@ class LogViewerActivity : AppCompatActivity() {
     val logs = if (logFile.exists()) logFile.readLines().reversed() else emptyList()
 
     recyclerView.adapter = LogAdapter(logs)
+  }
+
+  companion object{
+    fun start(context:Context) {
+      context.startActivity(Intent(context, LogViewerActivity::class.java))
+    }
   }
 }
 
