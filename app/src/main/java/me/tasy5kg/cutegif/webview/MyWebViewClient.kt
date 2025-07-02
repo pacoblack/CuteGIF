@@ -6,10 +6,12 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.cv.pic.log.LogRecorder
 
 class MyWebViewClient : WebViewClient() {
 
   override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+    LogRecorder.save("webview", request?.url.toString())
     request?.url?.let { url ->
       // 处理特定 URL 方案
       if (url.scheme == "myapp") {
