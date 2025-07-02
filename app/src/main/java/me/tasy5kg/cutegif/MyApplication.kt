@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
+import dagger.hilt.android.HiltAndroidApp
 import me.tasy5kg.cutegif.model.MyConstants
 
+@HiltAndroidApp
 class MyApplication : Application() {
   override fun onCreate() {
     super.onCreate()
