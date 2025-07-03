@@ -16,14 +16,14 @@ class Demo {
     DatabaseManager.initialize(
       context = context,
       dbClass = AppDatabase::class.java,
-      dbName = "secure_database.db",
+      dbName = AppDatabase.DATABASE_NAME,
       passphrase = passphrase,
       migrations = DatabaseMigrations.getAllMigrations(),
       version = 3
     )
 
     // 获取数据库实例
-    val database = DatabaseManager.getDatabase<AppDatabase>("secure_database.db")
+    val database = DatabaseManager.getDatabase<AppDatabase>(AppDatabase.DATABASE_NAME)
 
     // 注册仓库
     DatabaseManager.registerRepository(

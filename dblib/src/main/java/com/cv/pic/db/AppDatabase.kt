@@ -17,4 +17,8 @@ import com.cv.pic.db.meta.user.UserDao
 abstract class AppDatabase : RoomDatabase() {
   abstract fun userDao(): UserDao
   abstract fun settingsDao(): SettingsDao
+
+  companion object {
+    const val DATABASE_NAME = "secure_database.db"
+  }
 }
