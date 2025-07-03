@@ -148,7 +148,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dash</string>
     <string name="title_notifications">Person</string>
-    <string name="gif_merge">GIF Merge</string>
+    <string name="multi_media">Multi Media</string>
     <string name="cycle">cycle</string>
     <string name="select_type_prompt">Select</string>
     <string name="goto_deepseek" >Goto DeepSeek</string>

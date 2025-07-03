@@ -2,19 +2,16 @@ package me.tasy5kg.cutegif.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import me.tasy5kg.cutegif.MainActivity
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.activity.BetaEndedActivity
-import me.tasy5kg.cutegif.activity.GifMergeActivity
 import me.tasy5kg.cutegif.activity.GifSplitActivity
 import me.tasy5kg.cutegif.activity.GifToVideoActivity
 import me.tasy5kg.cutegif.activity.ImportMvimgActivity
@@ -25,13 +22,9 @@ import me.tasy5kg.cutegif.model.MySettings
 import me.tasy5kg.cutegif.model.MySettings.INT_FILE_OPEN_WAY_13
 import me.tasy5kg.cutegif.model.MySettings.INT_FILE_OPEN_WAY_DOCUMENT
 import me.tasy5kg.cutegif.model.MySettings.INT_FILE_OPEN_WAY_GALLERY
-import me.tasy5kg.cutegif.model.MySettings.MAX_SELECT_FILE
 import me.tasy5kg.cutegif.toolbox.FileTools.copyToInputFileDir
 import me.tasy5kg.cutegif.toolbox.Toolbox.enableDropFile
-import me.tasy5kg.cutegif.toolbox.Toolbox.enableDropFiles
-import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
-import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 
 
 class MainFragment:BaseFragment() {
@@ -47,16 +40,6 @@ class MainFragment:BaseFragment() {
     binding = null
   }
 
-  private fun importFileTryCatch(function: () -> Unit) {
-    try {
-      function.invoke()
-    } catch (e: Exception) {
-      logRed("importFileFailed", e)
-      e.printStackTrace()
-      activity?.runOnUiThread { toast(R.string.import_file_failed_please_try) }
-    }
-  }
-
   private val arlImportVideoToGifDocument = registerForActivityResult(ActivityResultContracts.GetContent()) {
     it?.let { _ -> importFileTryCatch { activity?.let {a-> VideoToGifActivity.start(a, it.copyToInputFileDir()) } } }
   }
@@ -69,12 +52,6 @@ class MainFragment:BaseFragment() {
   }
   private val arlImportGifSplit13 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
     it?.data?.data?.let { uri -> importFileTryCatch { activity?.let {a->GifSplitActivity.start(a, uri.copyToInputFileDir()) } } }
-  }
-  private val arlImportGifMergeDocument = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
-      uris: List<Uri>? -> importFileTryCatch { activity?.let { GifMergeActivity.start(it, uris) } }
-  }
-  private val arlImportGifMerge13 = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(MAX_SELECT_FILE)) {
-    uris: List<Uri>? ->importFileTryCatch { activity?.let { GifMergeActivity.start(it, uris) } }
   }
 
   private val arlImportGifToVideoDocument = registerForActivityResult(ActivityResultContracts.GetContent()) {
@@ -112,12 +89,7 @@ class MainFragment:BaseFragment() {
         }
       }
 
-      binding?.mcvGifMerge?.apply {
-        onClick { importForGifMerge() }
-        enableDropFiles(a, "image/gif") {
-          GifMergeActivity.start(a, it)
-        }
-      }
+
       binding?.mcvGifToVideo?.apply {
         onClick { importForGifToVideo() }
         enableDropFile(a, "image/gif") {
@@ -172,19 +144,6 @@ class MainFragment:BaseFragment() {
       })
 
       else -> importForGifSplit(
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) INT_FILE_OPEN_WAY_13 else INT_FILE_OPEN_WAY_DOCUMENT
-      )
-    }
-  }
-
-  private fun importForGifMerge(intFileOpenWay: Int = MySettings.fileOpenWay){
-    when (intFileOpenWay) {
-      INT_FILE_OPEN_WAY_DOCUMENT -> arlImportGifMergeDocument.launch("*/*")
-      INT_FILE_OPEN_WAY_13 -> arlImportGifMerge13.launch(PickVisualMediaRequest(
-        mediaType = ActivityResultContracts.PickVisualMedia.SingleMimeType("*/*")
-      ))
-
-      else -> importForGifMerge(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) INT_FILE_OPEN_WAY_13 else INT_FILE_OPEN_WAY_DOCUMENT
       )
     }

@@ -141,7 +141,7 @@
   <string name="title_home">首页</string>
   <string name="title_dashboard">面板</string>
   <string name="title_notifications">个人</string>
-  <string name="gif_merge">GIF 合并</string>
+  <string name="multi_media">多图操作</string>
   <string name="cycle">循环</string>
   <string name="select_type_prompt">选择类型</string>
   <string name="goto_deepseek" >进入 DeepSeek</string>

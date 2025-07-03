@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.components.OnSelectFragment
+import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
+import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 
 
 abstract class BaseFragment: Fragment() {
@@ -28,5 +31,15 @@ abstract class BaseFragment: Fragment() {
   }
   abstract fun getFragmentPosition():Int
   open fun onDataChange(data:String){}
+
+  open fun importFileTryCatch(function: () -> Unit) {
+    try {
+      function.invoke()
+    } catch (e: Exception) {
+      logRed("importFileFailed", e)
+      e.printStackTrace()
+      activity?.runOnUiThread { toast(R.string.import_file_failed_please_try) }
+    }
+  }
 
 }
