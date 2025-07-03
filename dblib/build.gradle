@@ -16,6 +16,6 @@ dependencies {
 //  debugImplementation 'com.guolindev.glance:glance:1.1.0'
 //
 //  // 数据库加密
-//  implementation "net.zetetic:android-database-sqlcipher:4.5.4"
+  implementation "net.zetetic:android-database-sqlcipher:4.5.4"
 
 }

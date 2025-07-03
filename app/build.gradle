@@ -57,6 +57,7 @@ dependencies {
   implementation project(':exo-video-play')
   implementation project(':ailib')
   implementation project(':loglib')
+  implementation project(':dblib')
   // libgifsicle.so has been imported into the jniLibs directory.
   // It was cloned and compiled from https://github.com/kohler/gifsicle on January 9, 2024.
 
