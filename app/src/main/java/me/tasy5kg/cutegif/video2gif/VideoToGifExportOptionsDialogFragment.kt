@@ -60,6 +60,7 @@ class VideoToGifExportOptionsDialogFragment : DialogFragment() {
     binding.mbSave.onClick {
       vtgActivity.videoView.pause()
       VideoToGifPerformerActivity.start(vtgActivity, createTaskBuilder())
+//      EditVideoPerformActivity.start(vtgActivity, createTaskBuilder())
     }
     binding.chipGroupMoreOptions.setOnCheckedStateChangeListener { _, checkedIds ->
       val chipEffectNeedsToBeViewedAfterExporting = listOf(

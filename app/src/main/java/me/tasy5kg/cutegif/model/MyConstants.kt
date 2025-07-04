@@ -16,6 +16,7 @@ object MyConstants {
   val VIDEO_TO_GIF_PREVIEW_CACHE_DIR = "$CACHE_DIR_PATH/video_to_gif_preview_cache_dir/"
   val VIDSTABDETECT_RESULT_PATH = "$CACHE_DIR_PATH/transforms.trf"
   val VIDEO_TO_GIF_EXTRACTED_FRAMES_PATH = "$CACHE_DIR_PATH/extracted_frames/"
+  val VIDEO_TO_VIDEO_EXTRACTED_FRAMES_PATH = "$CACHE_DIR_PATH/convert_video/output_temp.mp4"
   val NATIVE_LIBRARY_DIR: String = appContext.applicationInfo.nativeLibraryDir
 
   const val EXTRA_TEXT_RENDER = "EXTRA_TEXT_RENDER"

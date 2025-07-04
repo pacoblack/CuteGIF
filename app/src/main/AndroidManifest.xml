@@ -98,6 +98,13 @@
       android:resizeableActivity="true"
       android:theme="@style/Theme.CuteGif.Dialog" />
     <activity
+      android:name=".activity.EditVideoPerformActivity"
+      android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
+      android:exported="false"
+      android:launchMode="singleTask"
+      android:resizeableActivity="true"
+      android:theme="@style/Theme.CuteGif.Dialog" />
+    <activity
       android:name=".activity.GifSplitActivity"
       android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
       android:exported="false"

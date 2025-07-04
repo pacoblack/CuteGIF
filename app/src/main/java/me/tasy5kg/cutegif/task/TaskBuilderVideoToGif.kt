@@ -4,6 +4,7 @@ import me.tasy5kg.cutegif.components.TextRender
 import me.tasy5kg.cutegif.model.CropParams
 import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.ADD_TEXT_RENDER_PNG_PATH
+import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL
 import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN
 import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_GIF_TEMP_PATH
 import me.tasy5kg.cutegif.toolbox.MediaTools.saveToPng
@@ -55,6 +56,19 @@ data class TaskBuilderVideoToGif(
       } + ":flags=lanczos"
     }
   }
+
+  fun getCommandExportVideo()=
+    "$FFMPEG_COMMAND_PREFIX_FOR_ALL ${trimTime?.let { "-ss ${trimTime.first}ms -to ${trimTime.second}ms " } ?: ""}" + // 配置视频的开始时间和截止时间
+      " -i \"$inputVideoPath\" -i \"$ADD_TEXT_RENDER_PNG_PATH\" " + // 给视频配置文字
+      "-filter_complex \"[0:v] " +
+      "setpts=PTS/$outputSpeed,fps=fps=$outputFps [0vPreprocessed]; " + // 配置视频的播放速度
+      "[0vPreprocessed][1:v] overlay=0:0," + cropParams.toFFmpegCropCommand() + resolutionParams(cropParams, shortLength) +  // 配置视频的宽高
+      (colorKey?.let { ",colorkey=#${it.first}:${it.second / 100f}:0" } ?: "") + // 配置视频的抠图
+      (",reverse").toEmptyStringIf { !reverse } + "\" " +//  配置视频是否倒放
+      "-c:v libx264 -crf 23 -preset medium -pix_fmt yuv420p " +
+      "-movflags +faststart " +
+      "\"${MyConstants.VIDEO_TO_VIDEO_EXTRACTED_FRAMES_PATH}\""
+
 
   // 第一步 配置视频的各种参数
   /**
