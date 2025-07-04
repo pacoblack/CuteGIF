@@ -19,6 +19,8 @@ import me.tasy5kg.cutegif.databinding.ItemImagePreviewBinding
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 import androidx.core.net.toUri
 import com.bumptech.glide.request.RequestOptions
+import com.cv.pic.exo.video.VideoPlayerActivity
+import me.tasy5kg.cutegif.components.preview.VideoPlayerView
 import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 
 class ImagePreviewActivity : AppCompatActivity() {
@@ -103,6 +105,7 @@ class ImagePreviewActivity : AppCompatActivity() {
               .centerCrop()
           )
           .into(holder.photoView)
+        holder.photoView.setOnClickListener {VideoPlayerActivity.start(context, mediaItems[position].url)}
       } else if (mediaItems[position].isGif()){
         Glide.with(context)
           .asGif()
