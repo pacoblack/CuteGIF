@@ -103,7 +103,15 @@ class ImagePreviewActivity : AppCompatActivity() {
               .centerCrop()
           )
           .into(holder.photoView)
-      } else {
+      } else if (mediaItems[position].isGif()){
+        Glide.with(context)
+          .asGif()
+          .load(mediaItems[position].url)
+          .placeholder(R.drawable.media_placeholder)
+          .error(R.drawable.media_placeholder)
+          .transition(DrawableTransitionOptions.withCrossFade())
+          .into(holder.photoView)
+      } else  {
         // 使用Glide加载图片（支持网络图片和本地资源）
         Glide.with(context)
           .load(mediaItems[position].url)

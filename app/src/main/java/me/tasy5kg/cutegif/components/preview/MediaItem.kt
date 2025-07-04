@@ -27,6 +27,9 @@ class MediaItem(val url: String, val title: String?, val type: Int) {
   fun isVideo(): Boolean {
     return type == TYPE_VIDEO
   }
+  fun isGif(): Boolean {
+    return type == TYPE_GIF
+  }
 
   fun isImage(): Boolean {
     return type == TYPE_IMAGE || type == TYPE_MOTION_PHOTO || type == TYPE_GIF
