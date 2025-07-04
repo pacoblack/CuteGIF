@@ -1,7 +1,5 @@
 package me.tasy5kg.cutegif.components.preview
 
-import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
-
 class MediaItem(val url: String, val title: String?, val type: Int) {
 
   init {
@@ -24,5 +22,13 @@ class MediaItem(val url: String, val title: String?, val type: Int) {
       TYPE_MOTION_PHOTO-> "image/*"
       else -> "*/*"
     }
+  }
+
+  fun isVideo(): Boolean {
+    return type == TYPE_VIDEO
+  }
+
+  fun isImage(): Boolean {
+    return type == TYPE_IMAGE || type == TYPE_MOTION_PHOTO || type == TYPE_GIF
   }
 }

@@ -24,6 +24,16 @@ interface UserDao {
   @Query("SELECT * FROM users WHERE name LIKE :query OR email LIKE :query")
   suspend fun searchUsers(query: String): List<User>
 
+  @Transaction
   @Query("SELECT * FROM users WHERE lastLogin > :minDate")
   suspend fun getActiveUsers(minDate: Date): List<User>
+
+  @Transaction
+  suspend fun changeUserName(id: Long,  name:String){
+    var user = getUserById(id)
+    if (user?.email?.contains("aaa") == true){
+      user.name = name
+      update(user)
+    }
+  }
 }

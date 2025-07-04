@@ -7,6 +7,7 @@ import me.tasy5kg.cutegif.components.preview.MediaItem.Companion.TYPE_GIF
 import me.tasy5kg.cutegif.components.preview.MediaItem.Companion.TYPE_IMAGE
 import me.tasy5kg.cutegif.components.preview.MediaItem.Companion.TYPE_UNKNOWN
 import me.tasy5kg.cutegif.components.preview.MediaItem.Companion.TYPE_VIDEO
+import me.tasy5kg.cutegif.toolbox.FileTools.FileName
 
 object MediaExtensions {
   fun Uri.getMediaType(context: Context): Int{
@@ -39,6 +40,10 @@ object MediaExtensions {
     }
 
     return TYPE_UNKNOWN
+  }
+
+  fun Uri.toMediaItem(context: Context): MediaItem{
+    return MediaItem(this.toString(), FileName(this).name, getMediaType(context))
   }
 
   private fun isImageExtension(extension: String?): Boolean {

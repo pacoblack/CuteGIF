@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.activity.ImagePreviewActivity
 import me.tasy5kg.cutegif.databinding.MediaGridItemBinding
 
 
@@ -47,6 +48,7 @@ internal class MediaGridAdapter(
     playParams.height = playButtonSize
     holder.playButton.setLayoutParams(playParams)
 
+    holder.bind { ImagePreviewActivity.start(context, mediaItems, position) }
     // 加载媒体内容
     when (item.type) {
       MediaItem.TYPE_IMAGE -> setupImageView(holder, item)

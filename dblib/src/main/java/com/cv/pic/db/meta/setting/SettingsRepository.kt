@@ -1,10 +1,9 @@
 package com.cv.pic.db.meta.setting
 
-import com.cv.pic.db.core.BaseRepository
 import com.cv.pic.db.core.RepositoryOperations
 import kotlinx.coroutines.flow.Flow
 
-class SettingsRepository(dao: SettingsDao) : BaseRepository<SettingsDao>(dao), RepositoryOperations<Settings>{
+class SettingsRepository(private val dao: SettingsDao) :  RepositoryOperations<Settings>{
   override suspend fun insert(item: Settings): Long {
     return dao.insert(item)
   }

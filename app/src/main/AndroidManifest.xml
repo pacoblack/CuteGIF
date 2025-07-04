@@ -194,7 +194,11 @@
       android:exported="true"
       android:launchMode="singleTask"
       android:resizeableActivity="true"/>
-      <activity android:name="me.tasy5kg.cutegif.activity.ImageActivity" />
+    <activity android:name="me.tasy5kg.cutegif.activity.ImagePreviewActivity"
+      android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|density|screenSize|smallestScreenSize"
+      android:exported="true"
+      android:launchMode="singleTask"
+      android:resizeableActivity="true"/>
 
       <!-- 微信AppId -->
     <meta-data

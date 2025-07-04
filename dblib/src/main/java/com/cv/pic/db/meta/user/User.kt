@@ -7,7 +7,7 @@ import java.util.Date
 @Entity(tableName = "users")
 data class User(
   @PrimaryKey(autoGenerate = true) val id: Long = 0,
-  val name: String,
+  var name: String,
   val email: String,
   val createdAt: Date = Date(),
   val lastLogin: Date? = null

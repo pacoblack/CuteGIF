@@ -22,16 +22,6 @@ class UserViewModel : ViewModel() {
       UserRepository::class.java
     )
 
-    userRepo.transaction {
-      val fromUser = userRepo.getById(fromUserId) ?: return@transaction
-      val toUser = userRepo.getById(toUserId) ?: return@transaction
-
-      // 转移数据
-//      toUser.name = fromUser.name
-//      fromUser.name = ""
-
-      userRepo.update(fromUser)
-      userRepo.update(toUser)
-    }
+    userRepo.doSomething()
   }
 }
