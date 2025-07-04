@@ -40,6 +40,7 @@ import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 import me.tasy5kg.cutegif.toolbox.Toolbox.visibleIf
 import kotlin.math.min
+import androidx.core.graphics.scale
 
 class VideoToGifExportOptionsDialogFragment : DialogFragment() {
   private var _binding: DialogFragmentVideoToGifExportOptionsBinding? = null
@@ -210,7 +211,7 @@ class VideoToGifExportOptionsDialogFragment : DialogFragment() {
       if (!fileExistsCache.contains(getCache_shortLength_colorKey_palettegen())) {
         if (!fileExistsCache.contains(getCache_shortLength_colorKey())) {
           if (!fileExistsCache.contains(getCache_shortLength())) {
-            Bitmap.createScaledBitmap(frame, gifOutputWH(shortLength).first, gifOutputWH(shortLength).second, true).saveToPng(getCache_shortLength())
+            frame.scale(gifOutputWH(shortLength).first, gifOutputWH(shortLength).second).saveToPng(getCache_shortLength())
             fileExistsCache.add(getCache_shortLength())
           }
           colorKey?.let {
