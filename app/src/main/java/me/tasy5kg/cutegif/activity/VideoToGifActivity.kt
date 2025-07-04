@@ -38,6 +38,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.roundToLong
 import androidx.core.graphics.createBitmap
+import me.tasy5kg.cutegif.model.MyConstants.EXTRA_VIDEO_TYPE
 
 
 class VideoToGifActivity : BaseActivity() {
@@ -52,6 +53,7 @@ class VideoToGifActivity : BaseActivity() {
 
   val cropParams get() = CropParams(binding.cropImageView.cropRect!!)
   val inputVideoPath by lazy { intent.getExtra<String>(EXTRA_VIDEO_PATH) }
+  val convertType by lazy { intent.getExtra<Int>(EXTRA_VIDEO_TYPE) }
 
   val videoView by lazy { binding.videoView }
   val rangeSlider by lazy { binding.rangeSlider } // value 1.0f == 100ms
@@ -299,6 +301,12 @@ class VideoToGifActivity : BaseActivity() {
       Intent(context, VideoToGifActivity::class.java).putExtra(
         EXTRA_VIDEO_PATH, inputVideoPath
       )
+    )
+
+    fun startVideo(context: Context, inputVideoPath: String) = context.startActivity(
+      Intent(context, VideoToGifActivity::class.java).putExtra(
+        EXTRA_VIDEO_PATH, inputVideoPath
+      ).putExtra(EXTRA_VIDEO_TYPE, 1)
     )
 
     fun intentAddTextResult(textRender: TextRender) = Intent().putExtra(EXTRA_ADD_TEXT_RENDER, textRender)

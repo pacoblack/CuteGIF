@@ -47,6 +47,13 @@ class MainFragment:BaseFragment() {
     it?.data?.data?.let { uri -> importFileTryCatch { activity?.let {a->VideoToGifActivity.start(a, uri.copyToInputFileDir()) } } }
   }
 
+  private val arlImportVideoEditDocument = registerForActivityResult(ActivityResultContracts.GetContent()) {
+    it?.let { _ -> importFileTryCatch { activity?.let {a-> VideoToGifActivity.startVideo(a, it.copyToInputFileDir()) } } }
+  }
+  private val arlImportVideoEditElse = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    it?.data?.data?.let { uri -> importFileTryCatch { activity?.let {a->VideoToGifActivity.startVideo(a, uri.copyToInputFileDir()) } } }
+  }
+
   private val arlImportGifSplitDocument = registerForActivityResult(ActivityResultContracts.GetContent()) {
     it?.let { _ -> importFileTryCatch { activity?.let {a->GifSplitActivity.start(a, it.copyToInputFileDir()) } } }
   }
@@ -79,6 +86,15 @@ class MainFragment:BaseFragment() {
               a, it.copyToInputFileDir()
             )
           }
+      }
+
+      binding?.mcvVideoToVideo?.apply {
+        onClick { importVideoToVideo() }
+        enableDropFile(a, "video/*") {
+          VideoToGifActivity.startVideo(
+            a, it.copyToInputFileDir()
+          )
+        }
       }
       binding?.mcvGifSplit?.apply {
         onClick { importForGifSplit() }
@@ -131,6 +147,22 @@ class MainFragment:BaseFragment() {
       })
 
       INT_FILE_OPEN_WAY_13 -> arlImportVideoToGifElse.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply {
+        type = "video/*"
+      })
+    }
+  }
+
+  private fun importVideoToVideo(){
+    when (MySettings.fileOpenWay) {
+      INT_FILE_OPEN_WAY_DOCUMENT -> arlImportVideoEditDocument.launch("video/*")
+      INT_FILE_OPEN_WAY_GALLERY -> arlImportVideoEditElse.launch(
+        Intent(
+          Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        ).apply {
+          type = "video/*"
+        })
+
+      INT_FILE_OPEN_WAY_13 -> arlImportVideoEditElse.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply {
         type = "video/*"
       })
     }

@@ -153,6 +153,7 @@
     <string name="select_type_prompt">Select</string>
     <string name="goto_deepseek" >Goto DeepSeek</string>
     <string name="goto_log">Goto Log</string>
+    <string name="video_edit">Video Edit</string>
     <string-array name="page_types">
       <item>Web</item>
       <item>Video</item>

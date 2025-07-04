@@ -146,7 +146,8 @@
   <string name="select_type_prompt">选择类型</string>
   <string name="goto_deepseek" >进入 DeepSeek</string>
     <string name="goto_log">查看日志</string>
-    <string-array name="page_types">
+  <string name="video_edit">视频编辑</string>
+  <string-array name="page_types">
     <item>网页</item>
     <item>视频</item>
     <item>其他</item>

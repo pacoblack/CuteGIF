@@ -67,7 +67,7 @@ data class TaskBuilderVideoToGif(
       (",reverse").toEmptyStringIf { !reverse } + "\" " +//  配置视频是否倒放
       "-c:v libx264 -crf 23 -preset medium -pix_fmt yuv420p " +
       "-movflags +faststart " +
-      "\"${MyConstants.VIDEO_TO_VIDEO_EXTRACTED_FRAMES_PATH}\""
+      "\"${MyConstants.VIDEO_TO_VIDEO_EXTRACTED_FRAMES_FILE}\""
 
 
   // 第一步 配置视频的各种参数

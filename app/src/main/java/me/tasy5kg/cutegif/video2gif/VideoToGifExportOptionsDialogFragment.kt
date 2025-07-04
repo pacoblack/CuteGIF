@@ -17,6 +17,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.arthenica.ffmpegkit.FFmpegKit
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.activity.EditVideoPerformActivity
 import me.tasy5kg.cutegif.activity.VideoToGifActivity
 import me.tasy5kg.cutegif.activity.VideoToGifPerformerActivity
 import me.tasy5kg.cutegif.components.TextRender
@@ -59,8 +60,11 @@ class VideoToGifExportOptionsDialogFragment : DialogFragment() {
     vtgActivity.videoView.pause()
     binding.mbSave.onClick {
       vtgActivity.videoView.pause()
-      VideoToGifPerformerActivity.start(vtgActivity, createTaskBuilder())
-//      EditVideoPerformActivity.start(vtgActivity, createTaskBuilder())
+      if (vtgActivity.convertType == 1){
+        EditVideoPerformActivity.start(vtgActivity, createTaskBuilder())
+      } else {
+        VideoToGifPerformerActivity.start(vtgActivity, createTaskBuilder())
+      }
     }
     binding.chipGroupMoreOptions.setOnCheckedStateChangeListener { _, checkedIds ->
       val chipEffectNeedsToBeViewedAfterExporting = listOf(

@@ -5,6 +5,7 @@ import android.content.Intent
 import com.arthenica.ffmpegkit.FFmpegKit
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.model.MyConstants.EXTRA_TASK_BUILDER_VIDEO_TO_GIF
+import me.tasy5kg.cutegif.model.MyConstants.VIDEO_TO_VIDEO_EXTRACTED_FRAMES_FILE
 import me.tasy5kg.cutegif.model.MyConstants.VIDEO_TO_VIDEO_EXTRACTED_FRAMES_PATH
 import me.tasy5kg.cutegif.task.TaskBuilderVideoToGif
 import me.tasy5kg.cutegif.toolbox.FileTools
@@ -37,7 +38,7 @@ class EditVideoPerformActivity : BaseVideoPerformActivity() {
   fun onTaskSuccess(){
     with(taskBuilder) {
       val outputUri = createNewFile(FileTools.FileName(inputVideoPath).nameWithoutExtension, "mp4")
-      copyFile(VIDEO_TO_VIDEO_EXTRACTED_FRAMES_PATH, outputUri, true)
+      copyFile(VIDEO_TO_VIDEO_EXTRACTED_FRAMES_FILE, outputUri, true)
       finish()
       FileSavedActivity.start(this@EditVideoPerformActivity, outputUri)
     }
