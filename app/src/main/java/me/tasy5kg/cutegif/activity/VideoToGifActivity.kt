@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.roundToLong
+import androidx.core.graphics.createBitmap
 
 
 class VideoToGifActivity : BaseActivity() {
@@ -189,7 +190,8 @@ class VideoToGifActivity : BaseActivity() {
       videoWH = with(mediaPlayer) { videoWidth to videoHeight }
       binding.cropImageView.apply {
         setBackgroundColor(Color.TRANSPARENT)
-        setImageBitmap(Bitmap.createBitmap(videoWH.first, videoWH.second, Bitmap.Config.ALPHA_8)
+        setImageBitmap(
+          createBitmap(videoWH.first, videoWH.second, Bitmap.Config.ALPHA_8)
           .apply { eraseColor(Color.TRANSPARENT) })
         cropRect = wholeImageRect
       }
