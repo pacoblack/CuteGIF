@@ -8,12 +8,15 @@ import android.util.TypedValue
 import android.view.View
 import androidx.core.content.withStyledAttributes
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import me.tasy5kg.cutegif.R
+import me.tasy5kg.cutegif.components.preview.MediaGridAdapter.OnItemMoveListener
+import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 
 
 class MediaGridView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-  RecyclerView(context, attrs, defStyleAttr) {
+  RecyclerView(context, attrs, defStyleAttr), OnItemMoveListener {
   private var maxRows = 0
   private var maxColumns = 0
   private var itemSize = 0
@@ -23,6 +26,7 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
   private var playButtonSize = 0
 
   private lateinit var adapter: MediaGridAdapter
+  private var itemTouchHelper: ItemTouchHelper?= null
   private val mediaItems: MutableList<MediaItem> = ArrayList<MediaItem>()
 
   init {
@@ -70,6 +74,9 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     // 设置适配器
     adapter = MediaGridAdapter(context, mediaItems, itemSize, labelHeight, labelTextSize, playButtonSize)
+    adapter.setMoveListener(this);
+    adapter.setSwapMode(false)
+
     setAdapter(adapter)
 
     // 添加间距装饰
@@ -77,6 +84,10 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     // 设置固定高度
     setHasFixedSize(true)
+
+    val callback = DragItemTouchHelper(adapter)
+    itemTouchHelper = ItemTouchHelper(callback)
+    itemTouchHelper!!.attachToRecyclerView(this)
   }
 
   @SuppressLint("NotifyDataSetChanged")
@@ -112,6 +123,15 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
       sp.toFloat(),
       context.resources.displayMetrics
     ).toInt()
+  }
+
+  override fun onItemMove(fromPosition: Int, toPosition: Int) {
+    toast("拖动开始")
+  }
+
+  override fun onItemDropped() {
+    toast("拖动结束")
+    adapter.printItems()
   }
 
   // 网格间距装饰类

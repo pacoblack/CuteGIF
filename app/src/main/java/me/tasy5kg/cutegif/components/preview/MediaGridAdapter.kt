@@ -15,12 +15,33 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.activity.ImagePreviewActivity
 import me.tasy5kg.cutegif.databinding.MediaGridItemBinding
-
+import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
+import java.util.Collections
 
 internal class MediaGridAdapter(
   private val context: Context, private val mediaItems: MutableList<MediaItem>,
   private val itemSize: Int, private val labelHeight: Int, private val labelTextSize: Int, private val playButtonSize: Int
 ) : RecyclerView.Adapter<MediaGridAdapter.MediaViewHolder>() {
+  interface OnItemMoveListener {
+    fun onItemMove(fromPosition: Int, toPosition: Int)
+    fun onItemDropped()
+  }
+
+  internal var moveListener: OnItemMoveListener? = null
+  internal var isSwapMode = true // 默认为交换模式
+
+  fun setMoveListener(l: OnItemMoveListener){
+    this.moveListener = l
+  }
+
+  fun setSwapMode(value: Boolean){
+    this.isSwapMode = value
+  }
+
+  fun printItems(){
+    this.mediaItems.forEach {item -> logRed(TAG, "title: ${item.title}") }
+  }
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
     return MediaViewHolder(MediaGridItemBinding.inflate(LayoutInflater.from(context), parent, false))
   }
@@ -48,7 +69,7 @@ internal class MediaGridAdapter(
     playParams.height = playButtonSize
     holder.playButton.setLayoutParams(playParams)
 
-    holder.bind { ImagePreviewActivity.start(context, mediaItems, position) }
+    holder.bindClickListener { ImagePreviewActivity.start(context, mediaItems, position) }
     // 加载媒体内容
     when (item.type) {
       MediaItem.TYPE_IMAGE -> setupImageView(holder, item)
@@ -81,6 +102,13 @@ internal class MediaGridAdapter(
         holder.typeContainer.setBackgroundColor("#9C27B0".toColorInt())
         holder.typeIcon.setImageResource(R.drawable.ic_media_motion_photo)
       }
+    }
+
+    holder.itemView.setOnLongClickListener {
+      if (moveListener != null) {
+        moveListener!!.onItemMove(holder.absoluteAdapterPosition, -1);
+      }
+      true;
     }
   }
 
@@ -122,7 +150,7 @@ internal class MediaGridAdapter(
     // 设置视频URL
     holder.videoPlayer.setVideoUrl(item.url)
 
-    holder.bind { holder.videoPlayer.startPlayback() }
+    holder.bindClickListener { holder.videoPlayer.startPlayback() }
   }
 
   private fun setupMotionPhotoView(holder: MediaViewHolder, item: MediaItem) {
@@ -143,6 +171,33 @@ internal class MediaGridAdapter(
     return mediaItems.size
   }
 
+  // 交换两个项目的位置
+  fun swapItems(fromPosition: Int, toPosition: Int) {
+    Collections.swap(mediaItems, fromPosition, toPosition)
+    notifyItemMoved(fromPosition, toPosition)
+    updatePositions()
+  }
+
+  // 将项目插入到新位置
+  fun insertItem(fromPosition: Int, toPosition: Int) {
+    if (fromPosition < toPosition) {
+      for (i in fromPosition..<toPosition) {
+        Collections.swap(mediaItems, i, i + 1)
+      }
+    } else {
+      for (i in fromPosition downTo toPosition + 1) {
+        Collections.swap(mediaItems, i, i - 1)
+      }
+    }
+    notifyItemMoved(fromPosition, toPosition)
+    updatePositions()
+  }
+
+  // 更新所有项目的位置信息
+  private fun updatePositions() {
+    notifyItemRangeChanged(0, mediaItems.size)
+  }
+
   internal class MediaViewHolder(binding: MediaGridItemBinding) : RecyclerView.ViewHolder(binding.root) {
     var videoPlayer: VideoPlayerView = binding.videoPlayer
     var mediaImage: ImageView = binding.mediaImage
@@ -151,10 +206,14 @@ internal class MediaGridAdapter(
     var typeLabel: TextView = binding.typeLabel
     var playButton: ImageView = binding.playButton
 
-    fun bind(clickListener: () -> Unit) {
+    fun bindClickListener(clickListener: () -> Unit) {
       itemView.setOnClickListener {
         clickListener()
       }
     }
+  }
+
+  companion object{
+    const val TAG = "MediaGridAdapter"
   }
 }
