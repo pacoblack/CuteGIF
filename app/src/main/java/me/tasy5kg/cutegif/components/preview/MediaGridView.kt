@@ -7,16 +7,17 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import androidx.core.content.withStyledAttributes
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import me.tasy5kg.cutegif.R
-import me.tasy5kg.cutegif.components.preview.MediaGridAdapter.OnItemMoveListener
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
 
 
 class MediaGridView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-  RecyclerView(context, attrs, defStyleAttr), OnItemMoveListener {
+  RecyclerView(context, attrs, defStyleAttr), MediaGridAdapter.OnItemMoveListener {
+
   private var maxRows = 0
   private var maxColumns = 0
   private var itemSize = 0
@@ -26,8 +27,9 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
   private var playButtonSize = 0
 
   private lateinit var adapter: MediaGridAdapter
-  private var itemTouchHelper: ItemTouchHelper?= null
-  private val mediaItems: MutableList<MediaItem> = ArrayList<MediaItem>()
+
+  private var itemTouchHelper: ItemTouchHelper? = null
+  private val mediaItems: MutableList<MediaItem> = ArrayList()
 
   init {
     init(context, attrs)
@@ -74,20 +76,29 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     // 设置适配器
     adapter = MediaGridAdapter(context, mediaItems, itemSize, labelHeight, labelTextSize, playButtonSize)
-    adapter.setMoveListener(this);
+    adapter.setMoveListener(this)
     adapter.setSwapMode(false)
 
     setAdapter(adapter)
+
+    // 设置拖拽帮助类
+    val callback: ItemTouchHelper.Callback = ItemTouchHelperCallback(adapter)
+    itemTouchHelper = ItemTouchHelper(callback)
+    itemTouchHelper!!.attachToRecyclerView(this)
+
+    // 添加项目动画
+    setItemAnimator(object : DefaultItemAnimator() {
+      override fun animateMove(holder: ViewHolder, fromX: Int, fromY: Int, toX: Int, toY: Int): Boolean {
+        // 自定义移动动画
+        return super.animateMove(holder, fromX, fromY, toX, toY)
+      }
+    })
 
     // 添加间距装饰
     addItemDecoration(GridSpacingItemDecoration(maxColumns, itemSpacing, true))
 
     // 设置固定高度
     setHasFixedSize(true)
-
-    val callback = DragItemTouchHelper(adapter)
-    itemTouchHelper = ItemTouchHelper(callback)
-    itemTouchHelper!!.attachToRecyclerView(this)
   }
 
   @SuppressLint("NotifyDataSetChanged")
@@ -131,7 +142,6 @@ class MediaGridView @JvmOverloads constructor(context: Context, attrs: Attribute
 
   override fun onItemDropped() {
     toast("拖动结束")
-    adapter.printItems()
   }
 
   // 网格间距装饰类
