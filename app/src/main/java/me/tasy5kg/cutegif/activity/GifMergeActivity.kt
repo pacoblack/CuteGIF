@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.lifecycleScope
+import com.arthenica.ffmpegkit.FFmpegKit
+import com.arthenica.ffmpegkit.ReturnCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
@@ -23,6 +25,8 @@ import me.tasy5kg.cutegif.toolbox.FileTools.fileSize
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
+import java.io.File
+
 
 class GifMergeActivity : BaseActivity() {
   private val scope = lifecycleScope
@@ -53,8 +57,7 @@ class GifMergeActivity : BaseActivity() {
   private fun prepareInput(){
     scope.launch {
       withContext(Dispatchers.IO) {
-        val list = mutableListOf<String>()
-        list.addAll(gifUris.mapIndexed { index, uri -> uri.copyToInputFileDir(false, String.format("img_%04d.jpg", index+1))})
+        gifUris.onEachIndexed { index, uri -> uri.copyToInputFileDir(false, String.format("img_%04d.jpg", index+1))}
       }
 
 
@@ -62,7 +65,32 @@ class GifMergeActivity : BaseActivity() {
   }
 
   private fun makeVideo(){
+    val outputFile = File(getExternalFilesDir(null), "output_video.mp4")
 
+    // 4. 构建FFmpeg命令
+    val cmd: MutableList<String> = ArrayList()
+    cmd.add("-y") // 覆盖输出
+    cmd.add("-framerate")
+    cmd.add(java.lang.String.valueOf(1.0 / 3)) // 每张图显示秒数
+    cmd.add("-i")
+    cmd.add(File(MyConstants.INPUT_FILE_DIR, "img_%04d.jpg").absolutePath)
+    cmd.add("-c:v")
+    cmd.add("libx264")
+    cmd.add("-r")
+    cmd.add("30") // 输出帧率
+    cmd.add("-pix_fmt")
+    cmd.add("yuv420p") // 兼容格式
+    cmd.add("-vf")
+    cmd.add("scale=1280:-2") // 缩放为1280宽度，高度自动保持比例
+    cmd.add(outputFile.absolutePath)
+
+    // 5. 执行FFmpeg命令
+    val session = FFmpegKit.execute(cmd.joinToString(" "))
+    if (ReturnCode.isSuccess(session.returnCode)) {
+
+    } else {
+
+    }
   }
 
   private fun filterUri(){
