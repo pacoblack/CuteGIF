@@ -124,11 +124,11 @@ object FileTools {
     }
   }
 
-  fun Uri.copyToInputFileDir(reset:Boolean = true,fileName:String?): String {
+  fun Uri.copyToInputFileDir(reset:Boolean = true,fileName:String=""): String {
     if (reset) {
       resetDirectory(MyConstants.INPUT_FILE_DIR)
     }
-    val inputFilePath = MyConstants.INPUT_FILE_DIR + if (fileName.isNullOrEmpty()) FileName(this).name else fileName
+    val inputFilePath = MyConstants.INPUT_FILE_DIR + if (fileName.isEmpty()) FileName(this).name else fileName
     MyApplication.appContext.contentResolver.openInputStream(this)!!.use { inputStream ->
       FileOutputStream(inputFilePath).use { outputStream ->
         var toastedPleaseWait = false
