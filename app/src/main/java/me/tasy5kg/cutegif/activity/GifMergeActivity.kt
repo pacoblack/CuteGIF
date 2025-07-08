@@ -2,29 +2,19 @@ package me.tasy5kg.cutegif.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.HapticFeedbackConstants
-import android.view.LayoutInflater
-import android.view.View.GONE
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.arthenica.ffmpegkit.FFmpegKit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.components.preview.MediaExtensions.getMediaType
 import me.tasy5kg.cutegif.components.preview.MediaItem
 import me.tasy5kg.cutegif.databinding.ActivityGifMergeBinding
-import me.tasy5kg.cutegif.databinding.ItemMergePageBinding
 import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_MERGE_DIR
 import me.tasy5kg.cutegif.model.MySettings.MAX_FILE_SIZE
@@ -33,13 +23,11 @@ import me.tasy5kg.cutegif.toolbox.FileTools.fileSize
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
-import java.io.File
 
 class GifMergeActivity : BaseActivity() {
   private val scope = lifecycleScope
   private val gifUris = mutableListOf<Uri>()
   private val binding by lazy { ActivityGifMergeBinding.inflate(layoutInflater) }
-  private lateinit var viewPager: ViewPager2
 
   private val inputGifPaths by lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -52,28 +40,29 @@ class GifMergeActivity : BaseActivity() {
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
     binding.mbClose.onClick { finish() }
+    binding.mbSave.onClick { makeVideo() }
     initMediaGrid()
-//    filterUri()
-
-    //TODO:保存实现
-//    binding.mbSave.onClick {
-//      copyFile(
-//        "$OUTPUT_MERGE_DIR${String.format("%06d", binding.slider.value.toInt())}.png",
-//        createNewFile(inputGifPath, "png")
-//      )
-//      toast(R.string.saved_this_frame_to_gallery)
-//      holder.binding.view.apply {
-//        visibility = View.VISIBLE
-//        postDelayed({
-//          visibility = View.INVISIBLE
-//        }, 50)
-//      }
-//    }
+    filterUri()
   }
 
   private fun initMediaGrid(){
-    var list = inputGifPaths?.mapIndexed { index, uri-> MediaItem(uri.toString(), ""+index, uri.getMediaType(this))} ?: emptyList()
+    val list = inputGifPaths?.mapIndexed { index, uri-> MediaItem(uri.toString(), ""+index, uri.getMediaType(this))} ?: emptyList()
     binding.mediaGrid.setMediaItems(list)
+  }
+
+  private fun prepareInput(){
+    scope.launch {
+      withContext(Dispatchers.IO) {
+        val list = mutableListOf<String>()
+        list.addAll(gifUris.mapIndexed { index, uri -> uri.copyToInputFileDir(false, String.format("img_%04d.jpg", index+1))})
+      }
+
+
+    }
+  }
+
+  private fun makeVideo(){
+
   }
 
   private fun filterUri(){
@@ -106,18 +95,7 @@ class GifMergeActivity : BaseActivity() {
       finish()
       return
     }
-    viewPager = binding.viewPager
-    // 设置适配器
-    viewPager.adapter = PageAdapter()
-    viewPager.offscreenPageLimit = 1
-
-    // 设置页面切换监听器
-    viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-      override fun onPageSelected(position: Int) {
-
-      }
-    })
-    binding.dotsIndicator.attachTo(viewPager)
+    prepareInput()
   }
 
   override fun onDestroy() {
@@ -136,8 +114,8 @@ class GifMergeActivity : BaseActivity() {
         arrayList.addAll(uriList)
         arrayList
       }
-      if (parcelableArrayList.isNullOrEmpty() == true) {
-        toast("请选择至少一张符合要求的gif")
+      if (parcelableArrayList.isNullOrEmpty()) {
+        toast("请选择至少一张符合要求的图片")
         return
       }
       context.startActivity(
@@ -146,67 +124,6 @@ class GifMergeActivity : BaseActivity() {
         ).putParcelableArrayListExtra(MyConstants.EXTRA_GIF_PATH, parcelableArrayList)
       )
     }
-  }
-
-  inner class PageAdapter : RecyclerView.Adapter<PageAdapter.PageViewHolder>() {
-
-    inner class PageViewHolder(val binding: ItemMergePageBinding) : RecyclerView.ViewHolder(binding.root)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder {
-      val binding = ItemMergePageBinding.inflate(
-        LayoutInflater.from(parent.context),
-        parent,
-        false
-      )
-      return PageViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
-      val uriItem = gifUris[position]
-      val inputGifPath = uriItem.copyToInputFileDir()
-      if (inputGifPath.isBlank()) {
-        return
-      }
-      holder.binding.mbSliderMinus.onClick { if (holder.binding.slider.value > holder.binding.slider.valueFrom) holder.binding.slider.value-- }
-      holder.binding.mbSliderPlus.onClick { if (holder.binding.slider.value < holder.binding.slider.valueTo) holder.binding.slider.value++ }
-      resetDirectory(OUTPUT_MERGE_DIR)
-      FFmpegKit.execute("${MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL_AN} -i \"$inputGifPath\" \"$OUTPUT_MERGE_DIR%06d.png\"")
-      val frameCount = File(OUTPUT_MERGE_DIR).listFiles()?.size
-      if (frameCount == null) {
-        toast(R.string.unable_to_load_gif)
-        finish()
-        return
-      }
-      val mlo = (1..frameCount).map { BitmapFactory.decodeFile(OUTPUT_MERGE_DIR + String.format("%06d", it) + ".png")!! }
-      if (mlo.size == 1) {
-        holder.binding.llcFrameSelector.visibility = GONE
-      } else {
-        holder.binding.slider.apply {
-          valueTo = mlo.size.toFloat()
-          setLabelFormatter { "${it.toInt()}/${valueTo.toInt()}" }
-          addOnChangeListener { slider, value, _ ->
-            slider.performHapticFeedback(HapticFeedbackConstants.TEXT_HANDLE_MOVE)
-            holder.binding.aciv.setImageBitmap(mlo[value.toInt() - 1])
-          }
-        }
-      }
-      holder.binding.aciv.setImageBitmap(mlo[0])
-//      binding.mbSave.onClick {
-//        copyFile(
-//          "$OUTPUT_MERGE_DIR${String.format("%06d", binding.slider.value.toInt())}.png",
-//          createNewFile(inputGifPath, "png")
-//        )
-//        toast(R.string.saved_this_frame_to_gallery)
-//        holder.binding.view.apply {
-//          visibility = View.VISIBLE
-//          postDelayed({
-//            visibility = View.INVISIBLE
-//          }, 50)
-//        }
-//      }
-    }
-
-    override fun getItemCount(): Int = gifUris.size
   }
 
 }
