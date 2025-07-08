@@ -53,7 +53,8 @@ class VideoToGifActivity : BaseActivity() {
 
   val cropParams get() = CropParams(binding.cropImageView.cropRect!!)
   val inputVideoPath by lazy { intent.getExtra<String>(EXTRA_VIDEO_PATH) }
-  val convertType by lazy { intent.getExtra<Int>(EXTRA_VIDEO_TYPE) }
+  // 如果为 1 则生成视频，其他则为生成gif
+  val convertType by lazy { intent.getIntExtra(EXTRA_VIDEO_TYPE, 0) }
 
   val videoView by lazy { binding.videoView }
   val rangeSlider by lazy { binding.rangeSlider } // value 1.0f == 100ms
