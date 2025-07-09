@@ -30,14 +30,7 @@ import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.PlayerView.ControllerVisibilityListener
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import com.cv.pic.exo.video.MediaTypeDetector.isHls
-import com.cv.pic.exo.video.MediaTypeDetector.isMp4
-import com.cv.pic.exo.video.VideoCacheManager.initSegmentTracking
 import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
-import java.io.IOException
 import java.util.concurrent.Executors
 
 class VideoPlayerActivity : AppCompatActivity() {
@@ -86,18 +79,6 @@ class VideoPlayerActivity : AppCompatActivity() {
     segmentTracker = SegmentTracker()
     videoUrl?.let { videoCache.addListener(it, segmentTracker) }
 
-    // 检测媒体类型并获取分片信息
-    if (videoUrl.isNullOrEmpty()) {
-      Toast.makeText(this, "Url is empty", Toast.LENGTH_SHORT).show()
-      finish()
-    } else if (isHls(videoUrl!!)) {
-      loadHlsVideo(videoUrl!!)
-    } else if (isMp4(videoUrl!!)) {
-      loadMp4Video(videoUrl!!)
-    } else {
-      Toast.makeText(this, "Unsupported video format", Toast.LENGTH_SHORT).show()
-      finish()
-    }
   }
 
   @RequiresApi(Build.VERSION_CODES.R)
@@ -118,16 +99,6 @@ class VideoPlayerActivity : AppCompatActivity() {
       WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
     );
   }
-
-   private fun showCachedSegments() {
-     val cachedIndices = SegmentTracker.downloadedSegmentIndices;
-     val sb = StringBuilder("Cached segments: ")
-     cachedIndices.forEachIndexed { index, _ ->
-       if (index > 0) sb.append(", ")
-       sb.append(cachedIndices[index])
-     }
-     Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show()
-   }
 
   private fun toggleFullscreen(value:Boolean) {
     isFullscreen = value
@@ -203,59 +174,10 @@ class VideoPlayerActivity : AppCompatActivity() {
     videoCache.removeListener(videoUrl!!, segmentTracker);
     executor.shutdown();
   }
-  private fun mergeAllCached() {
-      val cachedIndices = SegmentTracker.downloadedSegmentIndices;
-      if (cachedIndices.isNotEmpty()) {
-          startMergeWork(cachedIndices[cachedIndices.size - 1] + 1);
-      } else {
-          Toast.makeText(this, "No segments cached yet", Toast.LENGTH_SHORT).show();
-      }
-  }
-  private fun startMergeWork(mergeUpTo:Int) {
-      if (totalSegments <= 0) {
-          Toast.makeText(this, "Segment count not available", Toast.LENGTH_SHORT).show();
-          return;
-      }
-
-      val inputData = Data.Builder()
-          .putString("cache_key_prefix", cacheKeyPrefix)
-          .putInt("total_segments", totalSegments)
-          .putInt("merge_up_to", mergeUpTo.coerceAtMost(totalSegments))
-          .build();
-
-      val mergeRequest = OneTimeWorkRequest.Builder(VideoMergeWorker::class.java)
-          .setInputData(inputData)
-          .build()
-
-      WorkManager.getInstance(this).enqueue(mergeRequest)
-      Toast.makeText(this, "Merge started for first $mergeUpTo segments", Toast.LENGTH_SHORT).show();
-  }
-
-  private fun loadHlsVideo(videoUrl:String) {
-        executor.execute {
-          try {
-            val segmentInfo = HlsParser.parse(videoUrl);
-            totalSegments = segmentInfo.segmentCount;
-            cacheKeyPrefix = segmentInfo.playlistUrl.toUri().lastPathSegment;
-
-            runOnUiThread {
-              initSegmentTracking(totalSegments, cacheKeyPrefix ?: "");
-              initializePlayer();
-              Toast.makeText(this, "Total segments: $totalSegments", Toast.LENGTH_SHORT).show();
-            };
-          } catch (e: IOException) {
-            runOnUiThread {
-              Toast.makeText(this, "Error loading HLS playlist", Toast.LENGTH_SHORT).show();
-              initializePlayer() // 尝试继续播放
-            };
-          }
-        };
-    }
 
   private fun loadMp4Video(videoUrl: String) {
     totalSegments = 1
     cacheKeyPrefix = videoUrl.toUri().lastPathSegment!!
-    initSegmentTracking(totalSegments, cacheKeyPrefix?:"")
     initializePlayer()
   }
 
@@ -346,8 +268,8 @@ class VideoPlayerActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
-      R.id.menu_video_info -> showCachedSegments()
-      R.id.menu_video_save -> mergeAllCached()
+      R.id.menu_video_info -> {}
+      R.id.menu_video_save -> {}
     }
     return true
   }
