@@ -5,10 +5,10 @@
     android:id="@+id/menu_video_info"
     android:icon="@drawable/ic_progress"
     android:title="@string/check_info"
-    app:showAsAction="always" />
+    app:showAsAction="never" />
   <item
     android:id="@+id/menu_video_save"
     android:icon="@drawable/ic_save"
-    android:title="@string/check_info"
-    app:showAsAction="always" />
+    android:title="@string/merge_video"
+    app:showAsAction="never" />
 </menu>

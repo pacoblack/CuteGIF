@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="check_info">查看分片</string>
+  <string name="merge_video">合并视频</string>
 </resources>
