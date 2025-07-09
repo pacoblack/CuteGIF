@@ -71,5 +71,13 @@
     app:dotsCornerRadius="4dp"
     app:selectedDotColor="#6200EE"/>
 
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/mbSort"
+    style="@style/Widget.Material3.Button.Icon"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:text="@string/sort_and_copy"
+    app:icon="@drawable/ic_baseline_format_align_center_24" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

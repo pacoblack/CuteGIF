@@ -154,6 +154,7 @@
     <string name="goto_deepseek" >Goto DeepSeek</string>
     <string name="goto_log">Goto Log</string>
     <string name="video_edit">Video Edit</string>
+    <string name="sort_and_copy">Copy to Cache</string>
     <string-array name="page_types">
       <item>Web</item>
       <item>Video</item>
