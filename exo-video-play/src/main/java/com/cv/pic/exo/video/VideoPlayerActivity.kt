@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -23,6 +25,7 @@ import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
+import androidx.media3.ui.PlayerView.ControllerVisibilityListener
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
@@ -53,11 +56,24 @@ class VideoPlayerActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(binding.root)
+    setSupportActionBar(binding.toolbar)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.setDisplayShowHomeEnabled(true)
 
     playerView = binding.playerView
     progressBar = binding.progressBar
     playerView.setFullscreenButtonClickListener {toggleFullscreen(!isFullscreen)}
     toggleFullscreen(false)
+    playerView.setControllerVisibilityListener(ControllerVisibilityListener { visibility ->
+      if (View.VISIBLE === visibility) {
+        if (!isFullscreen) {
+          binding.toolbar.visibility = View.VISIBLE
+        }
+      } else {
+        binding.toolbar.visibility = View.GONE
+      }
+    })
+
     // 初始化缓存目录
     videoCache = VideoCacheManager.getCache(this)
     segmentTracker = SegmentTracker()
@@ -98,6 +114,7 @@ class VideoPlayerActivity : AppCompatActivity() {
   }
 
   private fun enterFullscreen() {
+    binding.appBar.visibility = View.GONE
     // 1. 隐藏系统UI
     hideSystemUI()
 
@@ -106,6 +123,7 @@ class VideoPlayerActivity : AppCompatActivity() {
   }
 
   private fun exitFullscreen() {
+    binding.appBar.visibility = View.VISIBLE
     // 1. 显示系统UI
     showSystemUI()
 
@@ -149,7 +167,7 @@ class VideoPlayerActivity : AppCompatActivity() {
     videoCache.removeListener(videoUrl!!, segmentTracker);
     executor.shutdown();
   }
-  public fun mergeAllCached(view:View) {
+  private fun mergeAllCached() {
       val cachedIndices = SegmentTracker.downloadedSegmentIndices;
       if (cachedIndices.isNotEmpty()) {
           startMergeWork(cachedIndices[cachedIndices.size - 1] + 1);
@@ -283,6 +301,19 @@ class VideoPlayerActivity : AppCompatActivity() {
   @OptIn(UnstableApi::class)
   private fun releaseCache() {
     videoCache.release()
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    menuInflater.inflate(R.menu.toolbar_video, menu)
+    return true
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      R.id.menu_video_info -> showCachedSegments()
+      R.id.menu_video_save -> mergeAllCached()
+    }
+    return true
   }
 
   companion object {

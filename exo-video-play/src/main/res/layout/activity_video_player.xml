@@ -7,6 +7,23 @@
   android:layout_height="match_parent"
   android:background="@android:color/black"
   tools:context=".VideoPlayerActivity">
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/app_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:elevation="4dp"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@drawable/toolbar_gradient"
+      app:titleTextColor="@android:color/white"
+      app:navigationIcon="@drawable/ic_arrow_back_black_24"
+      app:title="视频播放器"/>
+  </com.google.android.material.appbar.AppBarLayout>
 
   <androidx.media3.ui.PlayerView
     android:id="@+id/player_view"
