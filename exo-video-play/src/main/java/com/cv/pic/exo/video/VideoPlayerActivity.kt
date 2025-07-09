@@ -3,13 +3,17 @@ package com.cv.pic.exo.video
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.OptIn
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
@@ -55,6 +59,9 @@ class VideoPlayerActivity : AppCompatActivity() {
   @OptIn(UnstableApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      initSystemBar()
+    }
     setContentView(binding.root)
     setSupportActionBar(binding.toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -65,7 +72,7 @@ class VideoPlayerActivity : AppCompatActivity() {
     playerView.setFullscreenButtonClickListener {toggleFullscreen(!isFullscreen)}
     toggleFullscreen(false)
     playerView.setControllerVisibilityListener(ControllerVisibilityListener { visibility ->
-      if (View.VISIBLE === visibility) {
+      if (View.VISIBLE == visibility) {
         if (!isFullscreen) {
           binding.toolbar.visibility = View.VISIBLE
         }
@@ -91,6 +98,25 @@ class VideoPlayerActivity : AppCompatActivity() {
       Toast.makeText(this, "Unsupported video format", Toast.LENGTH_SHORT).show()
       finish()
     }
+  }
+
+  @RequiresApi(Build.VERSION_CODES.R)
+  private fun initSystemBar(){
+    // 获取 WindowInsetsController（需在 View 已附加到窗口后调用）
+    val decorView = window.decorView;
+    val controller = decorView.getWindowInsetsController();
+
+    // 隐藏系统栏（状态栏 + 导航栏）
+    controller?.hide(WindowInsets.Type.systemBars());
+
+    // 启用沉浸式粘性模式（滑动边缘临时显示系统栏）
+    controller?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE;
+
+    // 设置状态栏图标深色模式（需浅色背景）
+    controller?.setSystemBarsAppearance(
+      WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+      WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+    );
   }
 
    private fun showCachedSegments() {
@@ -132,22 +158,32 @@ class VideoPlayerActivity : AppCompatActivity() {
   }
 
   private fun hideSystemUI() {
-    window.decorView.systemUiVisibility = (
-      View.SYSTEM_UI_FLAG_FULLSCREEN
-        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-      )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      val controller = window.insetsController;
+      controller?.hide(WindowInsets.Type.systemBars())
+    } else {
+      window.decorView.systemUiVisibility = (
+        View.SYSTEM_UI_FLAG_FULLSCREEN
+          or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+          or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+          or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+          or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+          or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        )
+    }
   }
 
   private fun showSystemUI() {
-    window.decorView.systemUiVisibility = (
-      View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-      )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      val controller = window.insetsController
+      controller?.show(WindowInsets.Type.systemBars())
+    } else {
+      window.decorView.systemUiVisibility = (
+        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+          or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+          or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        )
+    }
   }
 
   override fun onStart() {
