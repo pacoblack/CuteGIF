@@ -17,28 +17,37 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.datasource.cache.CacheEvictor
-import androidx.media3.datasource.cache.CacheSpan
-import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import com.cv.pic.exo.video.MediaTypeDetector.isHls
+import com.cv.pic.exo.video.MediaTypeDetector.isMp4
+import com.cv.pic.exo.video.VideoCacheManager.initSegmentTracking
 import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
-import java.io.File
+import java.io.IOException
+import java.util.concurrent.Executors
 
 class VideoPlayerActivity : AppCompatActivity() {
 
+  private lateinit var segmentTracker: SegmentTracker
   private val binding by lazy { ActivityVideoPlayerBinding.inflate(layoutInflater) }
-  private val videoUri by lazy { intent.extras?.getString(EXTRA_VIDEO_URI)}
+  private val videoUrl by lazy { intent.extras?.getString(EXTRA_VIDEO_URI)}
 
   private lateinit var playerView: PlayerView
   private lateinit var progressBar: ProgressBar
   private lateinit var player: ExoPlayer
   private lateinit var videoCache: Cache
   private var isFullscreen = true
+
+  private var totalSegments = 1
+  private var cacheKeyPrefix:String? = ""
+  private val executor = Executors.newSingleThreadExecutor()
 
   @OptIn(UnstableApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,16 +59,33 @@ class VideoPlayerActivity : AppCompatActivity() {
     playerView.setFullscreenButtonClickListener {toggleFullscreen(!isFullscreen)}
     toggleFullscreen(false)
     // 初始化缓存目录
-    val cacheDir = getCacheDirectory(this)
-    if (cacheDir != null) {
-      // 确保缓存目录存在
-      cacheDir.mkdirs()
-      // 初始化缓存
-      videoCache = SimpleCache(cacheDir, MyCacheEvictor())
+    videoCache = VideoCacheManager.getCache(this)
+    segmentTracker = SegmentTracker()
+    videoUrl?.let { videoCache.addListener(it, segmentTracker) }
+
+    // 检测媒体类型并获取分片信息
+    if (videoUrl.isNullOrEmpty()) {
+      Toast.makeText(this, "Url is empty", Toast.LENGTH_SHORT).show()
+      finish()
+    } else if (isHls(videoUrl!!)) {
+      loadHlsVideo(videoUrl!!)
+    } else if (isMp4(videoUrl!!)) {
+      loadMp4Video(videoUrl!!)
     } else {
+      Toast.makeText(this, "Unsupported video format", Toast.LENGTH_SHORT).show()
       finish()
     }
   }
+
+   private fun showCachedSegments() {
+     val cachedIndices = SegmentTracker.downloadedSegmentIndices;
+     val sb = StringBuilder("Cached segments: ")
+     cachedIndices.forEachIndexed { index, _ ->
+       if (index > 0) sb.append(", ")
+       sb.append(cachedIndices[index])
+     }
+     Toast.makeText(this, sb.toString(), Toast.LENGTH_LONG).show()
+   }
 
   private fun toggleFullscreen(value:Boolean) {
     isFullscreen = value
@@ -116,9 +142,67 @@ class VideoPlayerActivity : AppCompatActivity() {
     releasePlayer()
   }
 
+  @OptIn(UnstableApi::class)
   override fun onDestroy() {
     super.onDestroy()
     releaseCache()
+    videoCache.removeListener(videoUrl!!, segmentTracker);
+    executor.shutdown();
+  }
+  public fun mergeAllCached(view:View) {
+      val cachedIndices = SegmentTracker.downloadedSegmentIndices;
+      if (cachedIndices.isNotEmpty()) {
+          startMergeWork(cachedIndices[cachedIndices.size - 1] + 1);
+      } else {
+          Toast.makeText(this, "No segments cached yet", Toast.LENGTH_SHORT).show();
+      }
+  }
+  private fun startMergeWork(mergeUpTo:Int) {
+      if (totalSegments <= 0) {
+          Toast.makeText(this, "Segment count not available", Toast.LENGTH_SHORT).show();
+          return;
+      }
+
+      val inputData = Data.Builder()
+          .putString("cache_key_prefix", cacheKeyPrefix)
+          .putInt("total_segments", totalSegments)
+          .putInt("merge_up_to", mergeUpTo.coerceAtMost(totalSegments))
+          .build();
+
+      val mergeRequest = OneTimeWorkRequest.Builder(VideoMergeWorker::class.java)
+          .setInputData(inputData)
+          .build()
+
+      WorkManager.getInstance(this).enqueue(mergeRequest)
+      Toast.makeText(this, "Merge started for first $mergeUpTo segments", Toast.LENGTH_SHORT).show();
+  }
+
+  private fun loadHlsVideo(videoUrl:String) {
+        executor.execute {
+          try {
+            val segmentInfo = HlsParser.parse(videoUrl);
+            totalSegments = segmentInfo.segmentCount;
+            cacheKeyPrefix = segmentInfo.playlistUrl.toUri().lastPathSegment;
+
+            runOnUiThread {
+              initSegmentTracking(totalSegments, cacheKeyPrefix ?: "");
+              initializePlayer();
+              Toast.makeText(this, "Total segments: $totalSegments", Toast.LENGTH_SHORT).show();
+            };
+          } catch (e: IOException) {
+            runOnUiThread {
+              Toast.makeText(this, "Error loading HLS playlist", Toast.LENGTH_SHORT).show();
+              initializePlayer() // 尝试继续播放
+            };
+          }
+        };
+    }
+
+  private fun loadMp4Video(videoUrl: String) {
+    totalSegments = 1
+    cacheKeyPrefix = videoUrl.toUri().lastPathSegment!!
+    initSegmentTracking(totalSegments, cacheKeyPrefix?:"")
+    initializePlayer()
   }
 
   @OptIn(UnstableApi::class)
@@ -150,7 +234,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         })
 
         // 准备媒体源
-        val uri = videoUri?.toUri()
+        val uri = videoUrl?.toUri()
         if (uri == null) {
           Toast.makeText(this, "Uri参数问题", Toast.LENGTH_LONG).show()
           finish()
@@ -199,43 +283,6 @@ class VideoPlayerActivity : AppCompatActivity() {
   @OptIn(UnstableApi::class)
   private fun releaseCache() {
     videoCache.release()
-  }
-
-  private fun isExternalSdCard(file: File): Boolean {
-    val path = file.absolutePath
-    // 常见SD卡路径标识
-    val patterns = arrayOf(
-      "extSdCard", "sdcard1", "external_sd",
-      "ext_sd", "external", "microSd"
-    )
-    return patterns.any { path.contains(it, ignoreCase = true) }
-  }
-
-  // 获取SD卡上的缓存目录
-  private fun getCacheDirectory(context: Context): File? {
-    // 尝试获取SD卡路径
-    val externalDirs = context.getExternalFilesDirs(null)
-    val sdCardDir = externalDirs.find {
-      isExternalSdCard(it)
-    }
-
-    // 如果找到SD卡，使用SD卡路径，否则使用主存储
-    val baseDir = sdCardDir ?: context.getExternalFilesDir(null)
-
-    return baseDir?.let { File(it, "video/cache") }
-  }
-
-  // 自定义缓存驱逐器
-  @UnstableApi
-  private class MyCacheEvictor : CacheEvictor {
-    override fun requiresCacheSpanTouches() = false
-    override fun onCacheInitialized() = Unit
-    override fun onStartFile(cache: Cache, key: String, position: Long, length: Long) = Unit
-
-    override fun onSpanAdded(cache: Cache, span: CacheSpan) = Unit
-    override fun onSpanRemoved(cache: Cache, span: CacheSpan) = Unit
-    override fun onSpanTouched(cache: Cache, oldSpan: CacheSpan, newSpan: CacheSpan) = Unit
-
   }
 
   companion object {
