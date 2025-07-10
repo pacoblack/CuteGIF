@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.media.Image
-import androidx.camera.core.ImageProcessingUtil.convertYUVToBitmap
+//import androidx.camera.core.ImageProcessingUtil.convertYUVToBitmap
 
 //TODO: 需要接入google ML kit
 class MLKit {
