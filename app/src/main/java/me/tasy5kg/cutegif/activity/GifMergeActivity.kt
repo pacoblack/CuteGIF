@@ -7,36 +7,27 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.lifecycleScope
-import com.arthenica.ffmpegkit.FFmpegKit
-import com.arthenica.ffmpegkit.FFmpegKitConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.tasy5kg.cutegif.R
 import me.tasy5kg.cutegif.components.preview.MediaExtensions.getMediaType
 import me.tasy5kg.cutegif.components.preview.MediaItem
 import me.tasy5kg.cutegif.databinding.ActivityGifMergeBinding
 import me.tasy5kg.cutegif.model.MyConstants
-import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL
 import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_MERGE_DIR
-import me.tasy5kg.cutegif.model.MyConstants.PICTURE_TO_VIDEO_EXTRACTED_FRAMES_FILE
 import me.tasy5kg.cutegif.model.MySettings.MAX_FILE_SIZE
-import me.tasy5kg.cutegif.toolbox.FileTools
-import me.tasy5kg.cutegif.toolbox.FileTools.copyFile
 import me.tasy5kg.cutegif.toolbox.FileTools.copyToInputFileDir
-import me.tasy5kg.cutegif.toolbox.FileTools.createNewFile
 import me.tasy5kg.cutegif.toolbox.FileTools.fileSize
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
-import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
-import java.io.File
 
-class GifMergeActivity : BaseActivity() {
+open class GifMergeActivity : BaseActivity() {
   private val scope = lifecycleScope
   private val gifUris = mutableListOf<Uri>()
+  private var hasFileCopy = false
   private val binding by lazy { ActivityGifMergeBinding.inflate(layoutInflater) }
 
   private val inputGifPaths by lazy {
@@ -50,10 +41,15 @@ class GifMergeActivity : BaseActivity() {
   override fun onCreateIfEulaAccepted(savedInstanceState: Bundle?) {
     setContentView(binding.root)
     binding.mbClose.onClick { finish() }
-    binding.mbSave.onClick { makeVideo() }
+    binding.mbSave.onClick {
+      if (hasFileCopy) {
+        PicToVideoPerformActivity.start(this@GifMergeActivity)
+      } else {
+        toast("请先拷贝文件")
+      }}
     binding.mbSort.isEnabled = false
     initMediaGrid()
-    filterUri()
+//    filterUri()
     binding.mbSort.onClick { prepareInput() }
   }
 
@@ -66,56 +62,12 @@ class GifMergeActivity : BaseActivity() {
     scope.launch {
       withContext(Dispatchers.IO) {
         resetDirectory(MyConstants.INPUT_FILE_DIR)
-        gifUris.onEachIndexed { index, uri -> uri.copyToInputFileDir(false, String.format("img_%04d.jpg", index+1))}
+        gifUris.onEachIndexed { index, uri ->
+          uri.copyToInputFileDir(false, String.format("img_%04d.jpg", index+1))
+          toast("拷贝文件个数 ${index+1}")
+          hasFileCopy = true
+        }
       }
-    }
-  }
-
-  private fun makeVideo(){
-    resetDirectory(MyConstants.PICTURE_TO_VIDEO_EXTRACTED_FRAMES_PATH)
-    // 4. 构建FFmpeg命令
-    val cmd: MutableList<String> = ArrayList()
-    cmd.add(FFMPEG_COMMAND_PREFIX_FOR_ALL)
-    cmd.add("-y") // 覆盖输出
-    cmd.add("-framerate")
-    cmd.add(java.lang.String.valueOf(1.0 / 1)) // 每张图显示秒数
-    cmd.add("-i")
-    cmd.add(File(MyConstants.INPUT_FILE_DIR, "img_%04d.jpg").absolutePath)
-    cmd.add("-c:v")
-    cmd.add("libx264")
-    cmd.add("-r")
-    cmd.add("30") // 输出帧率
-    cmd.add("-pix_fmt")
-    cmd.add("yuv420p") // 兼容格式
-    cmd.add("-vf")
-    cmd.add("scale=1280:-2") // 缩放为1280宽度，高度自动保持比例
-    cmd.add(PICTURE_TO_VIDEO_EXTRACTED_FRAMES_FILE)
-
-    // 5. 执行FFmpeg命令
-    logRed("GifMergeActivity Command", cmd.joinToString(" "))
-    val session = FFmpegKit.executeAsync(cmd.joinToString(" "), { completeCallback ->
-      when {
-        completeCallback.returnCode.isValueSuccess -> onTaskSuccess()
-        completeCallback.returnCode.isValueError -> quitOrFailed(getString(R.string.an_error_occurred))
-      }
-    }, { logCallback ->
-      logRed("logcallback", logCallback.message.toString())
-    }, { statistics ->
-
-    })
-  }
-
-  fun onTaskSuccess(){
-      val outputUri = createNewFile(FileTools.FileName(inputGifPaths!![0]).nameWithoutExtension, "mp4")
-      copyFile(PICTURE_TO_VIDEO_EXTRACTED_FRAMES_FILE, outputUri, true)
-      FileSavedActivity.start(this@GifMergeActivity, outputUri)
-  }
-
-  protected fun quitOrFailed(toastText: String?) {
-    runOnUiThread {
-      toastText?.let { toast(it) }
-      FFmpegKit.cancel()
-      FFmpegKitConfig.clearSessions()
     }
   }
 

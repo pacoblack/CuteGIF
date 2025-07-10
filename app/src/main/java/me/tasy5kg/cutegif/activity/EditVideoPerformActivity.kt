@@ -20,7 +20,7 @@ class EditVideoPerformActivity : BaseVideoPerformActivity() {
     putProgress(0, getString(R.string.exporting_gif_))
     FileTools.resetDirectory(VIDEO_TO_VIDEO_EXTRACTED_FRAMES_PATH)
     val command = taskBuilder.getCommandExportVideo()
-    logRed("CommandExtractFrame", command)
+    logRed("CommandEditVideo", command)
     FFmpegKit.executeAsync(command, { completeCallback ->
       when {
         completeCallback.returnCode.isValueSuccess -> onTaskSuccess()
