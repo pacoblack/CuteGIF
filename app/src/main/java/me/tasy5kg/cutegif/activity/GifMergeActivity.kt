@@ -9,7 +9,6 @@ import android.os.Parcelable
 import androidx.lifecycle.lifecycleScope
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
-import com.arthenica.ffmpegkit.ReturnCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
@@ -23,7 +22,6 @@ import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.FFMPEG_COMMAND_PREFIX_FOR_ALL
 import me.tasy5kg.cutegif.model.MyConstants.OUTPUT_MERGE_DIR
 import me.tasy5kg.cutegif.model.MyConstants.PICTURE_TO_VIDEO_EXTRACTED_FRAMES_FILE
-import me.tasy5kg.cutegif.model.MyConstants.VIDEO_TO_VIDEO_EXTRACTED_FRAMES_FILE
 import me.tasy5kg.cutegif.model.MySettings.MAX_FILE_SIZE
 import me.tasy5kg.cutegif.toolbox.FileTools
 import me.tasy5kg.cutegif.toolbox.FileTools.copyFile
@@ -31,8 +29,6 @@ import me.tasy5kg.cutegif.toolbox.FileTools.copyToInputFileDir
 import me.tasy5kg.cutegif.toolbox.FileTools.createNewFile
 import me.tasy5kg.cutegif.toolbox.FileTools.fileSize
 import me.tasy5kg.cutegif.toolbox.FileTools.resetDirectory
-import me.tasy5kg.cutegif.toolbox.Toolbox
-import me.tasy5kg.cutegif.toolbox.Toolbox.constraintBy
 import me.tasy5kg.cutegif.toolbox.Toolbox.logRed
 import me.tasy5kg.cutegif.toolbox.Toolbox.onClick
 import me.tasy5kg.cutegif.toolbox.Toolbox.toast
@@ -76,6 +72,7 @@ class GifMergeActivity : BaseActivity() {
   }
 
   private fun makeVideo(){
+    resetDirectory(MyConstants.PICTURE_TO_VIDEO_EXTRACTED_FRAMES_PATH)
     // 4. 构建FFmpeg命令
     val cmd: MutableList<String> = ArrayList()
     cmd.add(FFMPEG_COMMAND_PREFIX_FOR_ALL)
@@ -95,6 +92,7 @@ class GifMergeActivity : BaseActivity() {
     cmd.add(PICTURE_TO_VIDEO_EXTRACTED_FRAMES_FILE)
 
     // 5. 执行FFmpeg命令
+    logRed("GifMergeActivity Command", cmd.joinToString(" "))
     val session = FFmpegKit.executeAsync(cmd.joinToString(" "), { completeCallback ->
       when {
         completeCallback.returnCode.isValueSuccess -> onTaskSuccess()
