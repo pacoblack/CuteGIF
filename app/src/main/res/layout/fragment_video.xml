@@ -67,6 +67,17 @@
       />
   </com.google.android.material.textfield.TextInputLayout>
 
+  <Button
+    android:id="@+id/btnHistory"
+    style="@style/Theme.CuteGif.SegmentedButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:text="查看历史"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toLeftOf="@+id/btnGo"
+    app:layout_constraintTop_toBottomOf="@+id/urlContainer" />
+
   <!-- 跳转按钮 -->
   <Button
     android:id="@+id/btnGo"
@@ -74,7 +85,7 @@
     android:layout_height="wrap_content"
     android:text="跳转"
     android:layout_marginTop="16dp"
-    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintLeft_toRightOf="@+id/btnHistory"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/urlContainer"/>
 

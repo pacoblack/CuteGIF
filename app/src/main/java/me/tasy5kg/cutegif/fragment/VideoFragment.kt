@@ -20,6 +20,8 @@ class VideoFragment: BaseFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    binding.btnHistory.setOnClickListener{ TextListDialogFragment.show(requireActivity()) }
+
     binding.btnGo.setOnClickListener {
       if(binding.chipGotoWeb.isChecked) {
         WebActivity.start(requireActivity(), binding.urlInput.text.toString())
