@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import com.cv.pic.exo.video.VideoPlayerActivity
 import me.tasy5kg.cutegif.activity.WebActivity
 import me.tasy5kg.cutegif.databinding.FragmentVideoBinding
@@ -20,17 +19,14 @@ class VideoFragment: BaseFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.Spinner.onItemSelectedListener= object : AdapterView.OnItemSelectedListener{
-      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-      }
 
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-      }
-    }
     binding.btnGo.setOnClickListener {
-      when (binding.Spinner.selectedItemPosition) {
-        0 -> WebActivity.start(requireActivity(), binding.urlInput.text.toString())
-        1 -> VideoPlayerActivity.start(requireActivity(), binding.urlInput.text.toString())
+      if(binding.chipGotoWeb.isChecked) {
+        WebActivity.start(requireActivity(), binding.urlInput.text.toString())
+      } else if (binding.chipGotoVideo.isChecked){
+        VideoPlayerActivity.start(requireActivity(), binding.urlInput.text.toString())
+      } else {
+        toast("请选择其他两项")
       }
     }
   }

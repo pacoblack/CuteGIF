@@ -7,15 +7,34 @@
   android:padding="16dp">
 
   <!-- 类型选择下拉菜单 -->
-  <Spinner
-    android:id="@+id/Spinner"
-    android:layout_width="100dp"
+  <com.google.android.material.chip.ChipGroup
+    android:id="@+id/chipGroupMoreOptions"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:entries="@array/page_types"
-    android:prompt="@string/select_type_prompt"
+    app:singleSelection="true"
+    app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
+    app:layout_constraintRight_toRightOf="parent">
+
+    <com.google.android.material.chip.Chip
+      android:id="@+id/chipGotoWeb"
+      style="@style/Theme.CuteGif.Chip"
+      app:checkedIconVisible="false"
+      android:text="@string/goto_web" />
+
+    <com.google.android.material.chip.Chip
+      android:id="@+id/chipGotoVideo"
+      style="@style/Theme.CuteGif.Chip"
+      app:checkedIconVisible="false"
+      android:text="@string/goto_video" />
+
+    <com.google.android.material.chip.Chip
+      android:id="@+id/chipGotoOther"
+      style="@style/Theme.CuteGif.Chip"
+      app:checkedIconVisible="false"
+      android:text="@string/goto_other" />
+
+  </com.google.android.material.chip.ChipGroup>
 
   <com.google.android.material.textfield.TextInputLayout
     android:id="@+id/urlContainer"
@@ -25,7 +44,7 @@
     android:layout_marginHorizontal="8dp"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/Spinner"
+    app:layout_constraintTop_toBottomOf="@+id/chipGroupMoreOptions"
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     tools:boxBackgroundColor="@android:color/white"
     tools:boxCornerRadius="24dp"
@@ -41,24 +60,12 @@
       android:imeOptions="actionGo"
       android:inputType="textUri|textNoSuggestions|textMultiLine"
       android:maxLines="50"
+      android:lines="5"
       android:paddingVertical="12dp"
       android:textColor="@color/dark"
       android:textSize="14sp"
       />
   </com.google.android.material.textfield.TextInputLayout>
-  <!-- 地址输入栏 -->
-<!--  <EditText-->
-<!--    android:id="@+id/etAddress"-->
-<!--    android:layout_width="0dp"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_weight="1"-->
-<!--    android:minLines="1"-->
-<!--    android:maxLines="10"-->
-<!--    android:ellipsize="end"-->
-<!--    android:hint="输入"-->
-<!--    android:inputType="textUri|textMultiLine"-->
-<!--    android:imeOptions="actionGo"-->
-<!--    tools:text="123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf123112123123q3254345345reasradfasdfasdfasdfasdf"/>-->
 
   <!-- 跳转按钮 -->
   <Button
@@ -66,6 +73,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="跳转"
+    android:layout_marginTop="16dp"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/urlContainer"/>
