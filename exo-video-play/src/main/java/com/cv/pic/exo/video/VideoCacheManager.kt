@@ -9,7 +9,6 @@ import java.io.File
 import java.util.Collections
 import java.util.regex.Pattern
 
-
 object VideoCacheManager {
   private var videoCache: Cache? = null
   private const val MAX_CACHE_SIZE = (200 * 1024 * 1024).toLong()  // 200MB
@@ -30,7 +29,7 @@ object VideoCacheManager {
   }
 
   fun getCachedFilesForPrefix(context: Context, prefix: String): MutableList<File?> {
-    val files: MutableList<File?> = ArrayList<File?>()
+    val files: MutableList<File?> = ArrayList()
     val cacheDir = File(context.cacheDir, CACHE_DIR)
 
     if (cacheDir.exists() && cacheDir.isDirectory()) {
@@ -57,7 +56,7 @@ object VideoCacheManager {
     return files
   }
 
-  fun extractSegmentIndex(fileName: String): Int {
+  private fun extractSegmentIndex(fileName: String): Int {
     // 文件名格式：prefix_0.ts, prefix_1.ts, ...
     val pattern = Pattern.compile(".*_(\\d+)\\..*")
     val matcher = pattern.matcher(fileName)

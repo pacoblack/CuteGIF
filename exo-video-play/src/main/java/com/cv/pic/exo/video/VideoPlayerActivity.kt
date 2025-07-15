@@ -38,8 +38,6 @@ import java.util.NavigableSet
 import java.util.concurrent.Executors
 
 class VideoPlayerActivity : AppCompatActivity() {
-
-  private lateinit var segmentTracker: SegmentTracker
   private val binding by lazy { ActivityVideoPlayerBinding.inflate(layoutInflater) }
   private val videoUrl by lazy { intent.extras?.getString(EXTRA_VIDEO_URI)}
 
@@ -80,8 +78,6 @@ class VideoPlayerActivity : AppCompatActivity() {
 
     // 初始化缓存目录
     videoCache = VideoCacheManager.getCache(this)
-    segmentTracker = SegmentTracker()
-    videoUrl?.let { videoCache.addListener(it, segmentTracker) }
 
   }
 
@@ -175,7 +171,6 @@ class VideoPlayerActivity : AppCompatActivity() {
   override fun onDestroy() {
     super.onDestroy()
     releaseCache()
-    videoCache.removeListener(videoUrl!!, segmentTracker);
     executor.shutdown();
   }
 
