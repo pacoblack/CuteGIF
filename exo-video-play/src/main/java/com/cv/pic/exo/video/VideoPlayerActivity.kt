@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,6 +17,7 @@ import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.lifecycle.Observer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -24,7 +26,6 @@ import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.datasource.cache.CacheSpan
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
@@ -32,9 +33,10 @@ import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.PlayerView.ControllerVisibilityListener
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
 import java.io.File
-import java.util.NavigableSet
 import java.util.concurrent.Executors
 
 class VideoPlayerActivity : AppCompatActivity() {
@@ -256,81 +258,29 @@ class VideoPlayerActivity : AppCompatActivity() {
   @OptIn(UnstableApi::class)
   @UnstableApi
   private fun saveVideoAfterPlayback() {
-    if (isHlsVideo) {
-      // HLS视频需要合并分片
-      mergeAndSaveHlsVideo()
-    } else {
-      // MP4视频直接获取缓存文件
-      saveMp4Video()
-    }
-  }
+    val outputDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+    val outputFile = File(outputDir, "merged_video.mp4");
 
-  @UnstableApi
-  private fun saveMp4Video() {
-    try {
-      // 获取缓存文件
-      val cachedSpans: NavigableSet<CacheSpan> = videoCache.getCachedSpans(cacheKeyPrefix!!)
-      if (cachedSpans.isEmpty()) {
-        updateStatus("未找到缓存文件")
-        return
-      }
+    HlsMergeManager.startMerge(this, videoUrl, outputFile, "mp4");
+    WorkManager.getInstance(this)
+      .getWorkInfosForUniqueWorkLiveData("mergeWork")
+      .observe(this, Observer { workInfos->
+        if (workInfos != null && workInfos.isNotEmpty()) {
+          val workInfo = workInfos[0];
 
-      // 取第一个缓存片段（MP4只有一个文件）
-      val span: CacheSpan = cachedSpans.first()
-      val cachedFile: File? = span.file
-
-      // 生成文件名并保存
-
-      updateStatus("视频已保存: ${cachedFile?.name}")
-    } catch (e: Exception) {
-      updateStatus("保存失败: " + e.message)
-    }
-  }
-
-  private fun mergeAndSaveHlsVideo() {
-    Thread(Runnable {
-      try {
-        // 获取所有HLS分片文件
-        val segmentFiles: List<File?> = VideoCacheManager.getCachedFilesForPrefix(
-          this@VideoPlayerActivity, cacheKeyPrefix!!
-        )
-
-        if (segmentFiles.isEmpty()) {
-          runOnUiThread(Runnable { updateStatus("未找到分片文件") })
-          return@Runnable
+          when (workInfo.state) {
+            WorkInfo.State.SUCCEEDED->{
+              Toast.makeText(this, "视频合并成功", Toast.LENGTH_SHORT).show();
+              // 打开视频文件
+            }
+            WorkInfo.State.FAILED ->{
+              Toast.makeText(this, "视频合并失败", Toast.LENGTH_SHORT).show();
+            }
+            else -> {}
+          }
         }
 
-
-        // 创建合并文件
-//        val fileName: String = VideoSaver.generateVideoFileName(videoUri, "ts")
-//        val outputFile = File(cacheDir, fileName)
-//
-//
-//        // 合并文件
-//        val success: Boolean = VideoMerger.mergeVideoFiles(segmentFiles, outputFile)
-
-//        if (success) {
-          // 保存到永久目录
-//          val savedFile: File = VideoSaver.saveVideo(
-//            this@VideoPlayerActivity, outputFile, fileName
-//          )
-
-          runOnUiThread(Runnable { updateStatus("视频已保存: " ) })
-//        } else {
-//          runOnUiThread(Runnable { updateStatus("合并分片失败") })
-//        }
-
-
-        // 清理临时文件
-//        outputFile.delete()
-      } catch (e: java.lang.Exception) {
-        runOnUiThread(Runnable { updateStatus("保存失败: " + e.message) })
-      }
-    }).start()
-  }
-
-  private fun updateStatus(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+      });
   }
 
   private fun showProgress(show: Boolean) {

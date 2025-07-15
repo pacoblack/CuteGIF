@@ -20,5 +20,10 @@
       android:launchMode="singleTask"
       android:resizeableActivity="true">
     </activity>
+    <service
+      android:name=".HlsMergeWorker"
+      android:exported="false"
+      tools:node="merge"
+      tools:ignore="Instantiatable" />
   </application>
 </manifest>
