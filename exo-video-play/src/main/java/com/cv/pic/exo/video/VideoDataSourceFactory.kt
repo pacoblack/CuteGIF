@@ -37,4 +37,16 @@ object VideoDataSourceFactory {
       .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
     return cacheDataSourceFactory
   }
+
+  /**
+   * 创建只读缓存数据源
+   */
+  @UnstableApi
+  fun createCacheDataSource(context:Context, cache: Cache): DataSource {
+    return CacheDataSource.Factory()
+      .setCache(cache)
+      .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
+      .setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE) // 只从缓存读取
+      .createDataSource()
+  }
 }

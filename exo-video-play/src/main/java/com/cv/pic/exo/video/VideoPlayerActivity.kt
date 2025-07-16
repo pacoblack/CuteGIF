@@ -21,11 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DataSource
-import androidx.media3.datasource.DataSpec
-import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
@@ -36,19 +32,20 @@ import androidx.media3.ui.PlayerView.ControllerVisibilityListener
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
+import com.cv.pic.exo.video.UriExtensions.isHls
+import com.cv.pic.exo.video.UriExtensions.isMpd
 import java.io.File
 import java.util.concurrent.Executors
 
 class VideoPlayerActivity : AppCompatActivity() {
   private val binding by lazy { ActivityVideoPlayerBinding.inflate(layoutInflater) }
-  private val videoUrl by lazy { intent.extras?.getString(EXTRA_VIDEO_URI)}
+  private val videoUri by lazy { intent.extras?.getString(EXTRA_VIDEO_URI)?.toUri() }
 
   private lateinit var playerView: PlayerView
   private lateinit var progressBar: ProgressBar
   private lateinit var player: ExoPlayer
   private lateinit var videoCache: Cache
   private var isFullscreen = true
-  private var isHlsVideo = false
 
   private val executor = Executors.newSingleThreadExecutor()
 
@@ -58,6 +55,7 @@ class VideoPlayerActivity : AppCompatActivity() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       initSystemBar()
     }
+
     setContentView(binding.root)
     setSupportActionBar(binding.toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -77,8 +75,13 @@ class VideoPlayerActivity : AppCompatActivity() {
       }
     })
 
+    if (videoUri == null) {
+      Toast.makeText(this, "Uri参数问题", Toast.LENGTH_LONG).show()
+      finish()
+      return
+    }
     // 初始化缓存目录
-    videoCache = VideoCacheManager.getCache(this)
+    videoCache = VideoCacheManager.getCache(this, videoUri!!)
 
   }
 
@@ -203,18 +206,10 @@ class VideoPlayerActivity : AppCompatActivity() {
         })
 
         // 准备媒体源
-        val uri = videoUrl?.toUri()
-        if (uri == null) {
-          Toast.makeText(this, "Uri参数问题", Toast.LENGTH_LONG).show()
-          finish()
-          return
-        } else {
-          val mediaSource =  buildMediaSource(uri)
-          exoPlayer.setMediaSource(mediaSource)
-          exoPlayer.prepare()
-          exoPlayer.playWhenReady = true
-        }
-
+        val mediaSource =  buildMediaSource(videoUri!!)
+        exoPlayer.setMediaSource(mediaSource)
+        exoPlayer.prepare()
+        exoPlayer.playWhenReady = true
       }
   }
 
@@ -224,15 +219,13 @@ class VideoPlayerActivity : AppCompatActivity() {
     val cacheDataSourceFactory = VideoDataSourceFactory.buildCacheSourceFactory(this, videoCache)
     cacheDataSourceFactory.setCacheKeyFactory(MyCacheKeyFactory())
     // 根据文件类型创建对应的媒体源
-    val path = uri.path ?: ""
     val mediaItem = MediaItem.fromUri(uri)
     return when {
-      path.contains(".m3u8") -> {
-        isHlsVideo = true
+      uri.isHls() -> {
         HlsMediaSource.Factory(cacheDataSourceFactory)
           .createMediaSource(mediaItem)
       }
-      path.contains(".mpd") -> {
+      uri.isMpd() -> {
         DashMediaSource.Factory(cacheDataSourceFactory)
           .createMediaSource(mediaItem)
       }
@@ -249,7 +242,7 @@ class VideoPlayerActivity : AppCompatActivity() {
     val outputDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
     val outputFile = File(outputDir, "merged_video.mp4");
 
-    HlsMergeManager.startMerge(this, videoUrl, outputFile, "mp4");
+    HlsMergeManager.startMerge(this, videoUri.toString(), outputFile, "mp4");
     WorkManager.getInstance(this)
       .getWorkInfosForUniqueWorkLiveData("mergeWork")
       .observe(this, Observer { workInfos->

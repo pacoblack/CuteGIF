@@ -6,38 +6,21 @@ import androidx.core.net.toUri
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
-import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.cache.Cache
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.CacheEvictor
 import androidx.media3.datasource.cache.CacheSpan
-import androidx.media3.datasource.cache.SimpleCache
+import com.cv.pic.exo.video.VideoCacheManager.HLS_CACHE_DIR
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
-class HlsDownloader(private val context: Context) {
-  private val downloadCache: SimpleCache
-  private val executor: ExecutorService
-  private val dataSourceFactory: DataSource.Factory
-
-  init {
-    this.downloadCache = SimpleCache(
-      File(context.cacheDir, "hls_cache"),
-      NoOpCacheEvictor()
-    )
-
-    this.dataSourceFactory = CacheDataSource.Factory()
-      .setCache(downloadCache)
-      .setUpstreamDataSourceFactory(
-        DefaultHttpDataSource.Factory()
-          .setUserAgent("HlsDownloader")
-      )
-
-    this.executor = Executors.newFixedThreadPool(4)
-  }
+@UnstableApi
+class HlsDownloader(context: Context) {
+  private val downloadCache: Cache = VideoCacheManager.getCache(context, HLS_CACHE_DIR)
+  private val executor: ExecutorService = Executors.newFixedThreadPool(4)
+  private val dataSourceFactory: DataSource.Factory = VideoDataSourceFactory.buildCacheSourceFactory(context, downloadCache)
 
   fun downloadHlsSegments(segments: List<HlsParser.Segment>, listener: DownloadListener) {
     val downloadedCount = AtomicInteger(0)

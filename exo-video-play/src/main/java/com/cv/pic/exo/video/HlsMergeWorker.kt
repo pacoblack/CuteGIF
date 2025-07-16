@@ -2,6 +2,7 @@ package com.cv.pic.exo.video
 
 import android.content.Context
 import android.util.Log
+import androidx.media3.common.util.UnstableApi
 import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -25,6 +26,7 @@ public class HlsMergeWorker(context: Context,workerParams: WorkerParameters) : W
     const val KEY_OUTPUT_FORMAT: String = "output_format" // "ts" or "mp4"
   }
 
+  @UnstableApi
   override fun doWork(): Result {
     val m3u8Url: String? = inputData.getString(KEY_M3U8_URL)
     val outputPath: String? = inputData.getString(KEY_OUTPUT_FILE)

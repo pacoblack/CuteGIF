@@ -5,13 +5,11 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
-import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
-import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.ContentMetadata
 import com.cv.pic.exo.video.MyCacheKeyFactory.Companion.generateCacheKey
+import com.cv.pic.exo.video.VideoDataSourceFactory.createCacheDataSource
 import java.io.File
 import java.io.FileOutputStream
 
@@ -61,18 +59,6 @@ class MediaCacheMerger(private val context: Context) {
     }
 
     /**
-     * 创建只读缓存数据源
-     */
-    @UnstableApi
-    private fun createCacheDataSource(cache: Cache): DataSource {
-        return CacheDataSource.Factory()
-            .setCache(cache)
-            .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
-            .setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE) // 只从缓存读取
-            .createDataSource()
-    }
-
-    /**
      * 合并HLS缓存（M3U8 + TS分片）
      */
     @UnstableApi
@@ -106,7 +92,7 @@ class MediaCacheMerger(private val context: Context) {
     @UnstableApi
     private fun readCachedContent(cache: Cache, uri: Uri): String? {
         val cacheKey = generateCacheKey(uri)
-        val cacheDataSource = createCacheDataSource(cache)
+        val cacheDataSource = createCacheDataSource(context, cache)
 
         return try {
             val dataSpec = DataSpec.Builder()
@@ -152,7 +138,7 @@ class MediaCacheMerger(private val context: Context) {
     @UnstableApi
     private fun mergeCacheSegment(cache: Cache, segmentUri: Uri, output: FileOutputStream): Boolean {
         val cacheKey = generateCacheKey(segmentUri)
-        val cacheDataSource = createCacheDataSource(cache)
+        val cacheDataSource = createCacheDataSource(context, cache)
 
         return try {
             val dataSpec = DataSpec.Builder()
