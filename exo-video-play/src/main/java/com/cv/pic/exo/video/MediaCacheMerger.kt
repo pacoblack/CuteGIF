@@ -11,9 +11,13 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.ContentMetadata
+import com.cv.pic.exo.video.MyCacheKeyFactory.Companion.generateCacheKey
 import java.io.File
 import java.io.FileOutputStream
 
+/**
+ * 缓存文件合并
+ */
 class MediaCacheMerger(private val context: Context) {
 
     /**
@@ -71,13 +75,6 @@ class MediaCacheMerger(private val context: Context) {
         } finally {
             cacheDataSource.close()
         }
-    }
-
-    /**
-     * 生成缓存键（与Media3内部逻辑一致）
-     */
-    private fun generateCacheKey(uri: Uri): String {
-        return uri.toString().hashCode().toString()
     }
 
     /**

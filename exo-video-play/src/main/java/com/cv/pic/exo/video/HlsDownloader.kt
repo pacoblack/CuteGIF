@@ -1,8 +1,8 @@
 package com.cv.pic.exo.video
 
 import android.content.Context
-import android.net.Uri
 import androidx.annotation.OptIn
+import androidx.core.net.toUri
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
@@ -17,7 +17,6 @@ import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
-import androidx.core.net.toUri
 
 class HlsDownloader(private val context: Context) {
   private val downloadCache: SimpleCache

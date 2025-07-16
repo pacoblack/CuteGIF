@@ -50,7 +50,6 @@ class VideoPlayerActivity : AppCompatActivity() {
   private var isFullscreen = true
   private var isHlsVideo = false
 
-  private var cacheKeyPrefix:String? = ""
   private val executor = Executors.newSingleThreadExecutor()
 
   @OptIn(UnstableApi::class)
@@ -223,26 +222,21 @@ class VideoPlayerActivity : AppCompatActivity() {
   private fun buildMediaSource(uri: Uri): MediaSource {
     // 创建支持缓存的数据源工厂
     val cacheDataSourceFactory = VideoDataSourceFactory.buildCacheSourceFactory(this, videoCache)
-
+    cacheDataSourceFactory.setCacheKeyFactory(MyCacheKeyFactory())
     // 根据文件类型创建对应的媒体源
     val path = uri.path ?: ""
     val mediaItem = MediaItem.fromUri(uri)
     return when {
       path.contains(".m3u8") -> {
         isHlsVideo = true
-        cacheKeyPrefix = "hls_" + uri.hashCode() + "_"
         HlsMediaSource.Factory(cacheDataSourceFactory)
           .createMediaSource(mediaItem)
       }
       path.contains(".mpd") -> {
-        val cacheKey: String = cacheDataSourceFactory.cacheKeyFactory.buildCacheKey(DataSpec(uri))
-        cacheKeyPrefix = cacheKey
         DashMediaSource.Factory(cacheDataSourceFactory)
           .createMediaSource(mediaItem)
       }
       else -> {
-        val cacheKey: String = cacheDataSourceFactory.cacheKeyFactory.buildCacheKey(DataSpec(uri))
-        cacheKeyPrefix = cacheKey
         ProgressiveMediaSource.Factory(cacheDataSourceFactory)
           .createMediaSource(mediaItem)
       }
