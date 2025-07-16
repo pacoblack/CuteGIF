@@ -41,40 +41,9 @@ class MediaCacheMerger(private val context: Context) {
         if (!isCacheComplete(cache, cacheKey)) {
             return false
         }
-
-        // 3. 创建缓存数据源
-        val cacheDataSource = createCacheDataSource(cache)
-
-        return try {
-            // 4. 打开数据源
-            val dataSpec = DataSpec.Builder()
-                .setUri(mediaUri)
-                .setKey(cacheKey)
-                .setLength(C.LENGTH_UNSET.toLong())
-                .build()
-
-            cacheDataSource.open(dataSpec)
-
-            // 5. 读取缓存并写入文件
-            FileOutputStream(outputFile).use { output ->
-                val buffer = ByteArray(64 * 1024) // 64KB缓冲区
-                var totalBytesRead = 0L
-
-                while (true) {
-                    val bytesRead = cacheDataSource.read(buffer, 0, buffer.size)
-                    if (bytesRead == C.RESULT_END_OF_INPUT) break
-
-                    output.write(buffer, 0, bytesRead)
-                    totalBytesRead += bytesRead
-                }
-            }
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        } finally {
-            cacheDataSource.close()
-        }
+        val merger = MP4Merger()
+        merger.mergeCacheSpansToMp4(cache, cacheKey, outputFile.absolutePath)
+        return true
     }
 
     /**
