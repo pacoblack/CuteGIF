@@ -8,8 +8,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.ContentMetadata
-import com.cv.pic.exo.video.MyCacheKeyFactory.Companion.generateCacheKey
-import com.cv.pic.exo.video.VideoDataSourceFactory.createCacheDataSource
+import com.cv.pic.exo.video.core.MyCacheKeyFactory.Companion.generateCacheKey
+import com.cv.pic.exo.video.core.VideoDataSourceFactory.createCacheDataSource
 import java.io.File
 import java.io.FileOutputStream
 

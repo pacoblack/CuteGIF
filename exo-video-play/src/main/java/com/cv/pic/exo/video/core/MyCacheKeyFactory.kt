@@ -1,4 +1,4 @@
-package com.cv.pic.exo.video
+package com.cv.pic.exo.video.core
 
 import android.net.Uri
 import androidx.media3.common.util.UnstableApi

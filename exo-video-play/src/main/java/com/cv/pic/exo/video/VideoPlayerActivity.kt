@@ -31,9 +31,13 @@ import androidx.media3.ui.PlayerView
 import androidx.media3.ui.PlayerView.ControllerVisibilityListener
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.cv.pic.exo.video.core.MyCacheKeyFactory
 import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
-import com.cv.pic.exo.video.UriExtensions.isHls
-import com.cv.pic.exo.video.UriExtensions.isMpd
+import com.cv.pic.exo.video.core.UriExtensions.isHls
+import com.cv.pic.exo.video.core.UriExtensions.isMpd
+import com.cv.pic.exo.video.core.VideoCacheManager
+import com.cv.pic.exo.video.core.VideoDataSourceFactory
+import com.cv.pic.exo.video.work.HlsMergeManager
 import java.io.File
 import java.util.concurrent.Executors
 

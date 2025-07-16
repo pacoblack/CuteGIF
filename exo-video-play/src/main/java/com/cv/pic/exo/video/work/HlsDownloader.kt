@@ -1,4 +1,4 @@
-package com.cv.pic.exo.video
+package com.cv.pic.exo.video.work
 
 import android.content.Context
 import androidx.annotation.OptIn
@@ -9,7 +9,9 @@ import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheEvictor
 import androidx.media3.datasource.cache.CacheSpan
-import com.cv.pic.exo.video.VideoCacheManager.HLS_CACHE_DIR
+import com.cv.pic.exo.video.core.VideoCacheManager
+import com.cv.pic.exo.video.core.VideoCacheManager.HLS_CACHE_DIR
+import com.cv.pic.exo.video.core.VideoDataSourceFactory
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutorService
@@ -20,7 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class HlsDownloader(context: Context) {
   private val downloadCache: Cache = VideoCacheManager.getCache(context, HLS_CACHE_DIR)
   private val executor: ExecutorService = Executors.newFixedThreadPool(4)
-  private val dataSourceFactory: DataSource.Factory = VideoDataSourceFactory.buildCacheSourceFactory(context, downloadCache)
+  private val dataSourceFactory: DataSource.Factory =
+    VideoDataSourceFactory.buildCacheSourceFactory(context, downloadCache)
 
   fun downloadHlsSegments(segments: List<HlsParser.Segment>, listener: DownloadListener) {
     val downloadedCount = AtomicInteger(0)

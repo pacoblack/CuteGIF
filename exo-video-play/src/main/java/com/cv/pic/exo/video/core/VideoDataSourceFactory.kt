@@ -1,4 +1,4 @@
-package com.cv.pic.exo.video
+package com.cv.pic.exo.video.core
 
 import android.content.Context
 import androidx.annotation.OptIn
@@ -8,6 +8,7 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
+import com.cv.pic.exo.video.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit

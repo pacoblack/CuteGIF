@@ -1,4 +1,4 @@
-package com.cv.pic.exo.video
+package com.cv.pic.exo.video.core
 
 import android.content.Context
 import android.net.Uri
@@ -6,7 +6,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
-import com.cv.pic.exo.video.UriExtensions.isHls
+import com.cv.pic.exo.video.core.UriExtensions.isHls
 import java.io.File
 
 object VideoCacheManager {

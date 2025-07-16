@@ -1,4 +1,4 @@
-package com.cv.pic.exo.video
+package com.cv.pic.exo.video.work
 
 import android.util.Log
 import okhttp3.OkHttpClient
