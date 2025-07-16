@@ -255,29 +255,33 @@ class VideoPlayerActivity : AppCompatActivity() {
   @OptIn(UnstableApi::class)
   @UnstableApi
   private fun saveVideoAfterPlayback() {
-    val outputDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
-    val outputFile = File(outputDir, "merged_video.mp4");
+    if (videoUri!!.isHls()) {
+      val outputDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+      val outputFile = File(outputDir, "merged_video.mp4");
 
-    HlsMergeManager.startMerge(this, videoUri.toString(), outputFile, "mp4");
-    WorkManager.getInstance(this)
-      .getWorkInfosForUniqueWorkLiveData("mergeWork")
-      .observe(this, Observer { workInfos->
-        if (workInfos != null && workInfos.isNotEmpty()) {
-          val workInfo = workInfos[0];
+      HlsMergeManager.startMerge(this, videoUri.toString(), outputFile, "mp4");
+      WorkManager.getInstance(this)
+        .getWorkInfosForUniqueWorkLiveData("mergeWork")
+        .observe(this, Observer { workInfos ->
+          if (workInfos != null && workInfos.isNotEmpty()) {
+            val workInfo = workInfos[0];
 
-          when (workInfo.state) {
-            WorkInfo.State.SUCCEEDED->{
-              Toast.makeText(this, "视频合并成功", Toast.LENGTH_SHORT).show();
-              // 打开视频文件
+            when (workInfo.state) {
+              WorkInfo.State.SUCCEEDED -> {
+                Toast.makeText(this, "视频合并成功", Toast.LENGTH_SHORT).show();
+                // 打开视频文件
+              }
+
+              WorkInfo.State.FAILED -> {
+                Toast.makeText(this, "视频合并失败", Toast.LENGTH_SHORT).show();
+              }
+
+              else -> {}
             }
-            WorkInfo.State.FAILED ->{
-              Toast.makeText(this, "视频合并失败", Toast.LENGTH_SHORT).show();
-            }
-            else -> {}
           }
-        }
 
-      });
+        });
+    }
   }
 
   private fun showProgress(show: Boolean) {
