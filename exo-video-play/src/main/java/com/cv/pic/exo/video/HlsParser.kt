@@ -2,6 +2,7 @@ package com.cv.pic.exo.video
 
 import android.util.Log
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.IOException
 import java.net.URI
 import java.net.URISyntaxException
@@ -44,16 +45,16 @@ public class HlsParser {
     @Throws(IOException::class)
     private fun downloadPlaylist(url: String): String {
       val client = OkHttpClient()
-      val request: Request = Builder().url(url).build()
+      val request: Request = Request.Builder().url(url).build()
 
       client.newCall(request).execute().use { response ->
-        if (!response.isSuccessful()) {
+        if (!response.isSuccessful) {
           throw IOException("Unexpected code $response")
         }
-        if (response.body() == null) {
+        if (response.body == null) {
           throw IOException("Empty response body")
         }
-        return response.body()!!.string()
+        return response.body!!.string()
       }
     }
 

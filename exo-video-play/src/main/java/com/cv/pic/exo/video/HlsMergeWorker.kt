@@ -9,6 +9,7 @@ import com.cv.pic.exo.video.VideoMerger.decryptTsFile
 import com.cv.pic.exo.video.VideoMerger.mergeToMp4
 import com.cv.pic.exo.video.VideoMerger.mergeTsFiles
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
 import java.io.IOException
 
@@ -126,13 +127,13 @@ public class HlsMergeWorker(context: Context,workerParams: WorkerParameters) : W
   @Throws(IOException::class)
   private fun downloadKey(keyUri: String): ByteArray {
     val client = OkHttpClient()
-    val request: Request = Builder().url(keyUri).build()
+    val request: Request = Request.Builder().url(keyUri).build()
 
     client.newCall(request).execute().use { response ->
-      if (response.body() == null) {
+      if (response.body == null) {
         throw IOException("Empty key response")
       }
-      return response.body()!!.bytes()
+      return response.body!!.bytes()
     }
   }
 
