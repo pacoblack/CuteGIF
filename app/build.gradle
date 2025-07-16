@@ -71,7 +71,7 @@ dependencies {
 
   implementation "androidx.viewpager2:viewpager2:1.1.0"
 
-  implementation "com.vanniktech:android-image-cropper:4.5.0"
+  implementation "com.vanniktech:android-image-cropper:4.6.0"
 //  implementation "com.arthenica:ffmpeg-kit-full-gpl:6.0-2.LTS"
   implementation files('libs/smart-exception-common-0.2.1.jar')
   implementation files('libs/smart-exception-java9-0.2.1.jar')
