@@ -22,9 +22,11 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.rtmp.RtmpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
@@ -35,6 +37,8 @@ import com.cv.pic.exo.video.core.MyCacheKeyFactory
 import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
 import com.cv.pic.exo.video.core.UriExtensions.isHls
 import com.cv.pic.exo.video.core.UriExtensions.isMpd
+import com.cv.pic.exo.video.core.UriExtensions.isRtmp
+import com.cv.pic.exo.video.core.UriExtensions.isRtsp
 import com.cv.pic.exo.video.core.VideoCacheManager
 import com.cv.pic.exo.video.core.VideoDataSourceFactory
 import com.cv.pic.exo.video.work.HlsMergeManager
@@ -231,6 +235,14 @@ class VideoPlayerActivity : AppCompatActivity() {
       }
       uri.isMpd() -> {
         DashMediaSource.Factory(cacheDataSourceFactory)
+          .createMediaSource(mediaItem)
+      }
+      uri.isRtsp() -> {
+        RtspMediaSource.Factory()
+          .createMediaSource(mediaItem)
+      }
+      uri.isRtmp() -> {
+        ProgressiveMediaSource.Factory(RtmpDataSource.Factory())
           .createMediaSource(mediaItem)
       }
       else -> {

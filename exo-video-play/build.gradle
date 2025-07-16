@@ -16,6 +16,7 @@ dependencies {
   implementation "androidx.media3:media3-session:1.7.1"
   implementation "androidx.media3:media3-datasource-okhttp:1.7.1"
   implementation "androidx.media3:media3-datasource-cronet:1.7.1"
+  implementation "androidx.media3:media3-datasource-rtmp:1.7.1"
 
   // 加密支持
   implementation 'androidx.media3:media3-decoder:1.7.1'

@@ -14,4 +14,12 @@ object UriExtensions {
   fun Uri.isMpd():Boolean{
     return this.path?.contains(".mpd") ?:false
   }
+
+  fun Uri.isRtsp():Boolean {
+    return scheme.equals("rtsp")
+  }
+
+  fun Uri.isRtmp():Boolean {
+    return scheme.equals("rtmp")
+  }
 }
