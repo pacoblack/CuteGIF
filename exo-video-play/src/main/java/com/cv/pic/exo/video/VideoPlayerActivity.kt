@@ -221,18 +221,12 @@ class VideoPlayerActivity : AppCompatActivity() {
 
   @OptIn(UnstableApi::class)
   private fun buildMediaSource(uri: Uri): MediaSource {
-    // 创建基础数据源工厂
-    val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(this)
-
     // 创建支持缓存的数据源工厂
-    val cacheDataSourceFactory = CacheDataSource.Factory()
-      .setCache(videoCache)
-      .setUpstreamDataSourceFactory(dataSourceFactory)
-      .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+    val cacheDataSourceFactory = VideoDataSourceFactory.buildCacheSourceFactory(this, videoCache)
 
     // 根据文件类型创建对应的媒体源
     val path = uri.path ?: ""
-    var mediaItem = MediaItem.fromUri(uri)
+    val mediaItem = MediaItem.fromUri(uri)
     return when {
       path.contains(".m3u8") -> {
         isHlsVideo = true
@@ -242,13 +236,13 @@ class VideoPlayerActivity : AppCompatActivity() {
       }
       path.contains(".mpd") -> {
         val cacheKey: String = cacheDataSourceFactory.cacheKeyFactory.buildCacheKey(DataSpec(uri))
-        cacheKeyPrefix = cacheKey.toString()
+        cacheKeyPrefix = cacheKey
         DashMediaSource.Factory(cacheDataSourceFactory)
           .createMediaSource(mediaItem)
       }
       else -> {
         val cacheKey: String = cacheDataSourceFactory.cacheKeyFactory.buildCacheKey(DataSpec(uri))
-        cacheKeyPrefix = cacheKey.toString()
+        cacheKeyPrefix = cacheKey
         ProgressiveMediaSource.Factory(cacheDataSourceFactory)
           .createMediaSource(mediaItem)
       }
