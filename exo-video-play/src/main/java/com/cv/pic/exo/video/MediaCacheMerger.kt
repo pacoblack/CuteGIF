@@ -1,0 +1,212 @@
+package com.cv.pic.exo.video
+
+import android.content.Context
+import android.net.Uri
+import androidx.core.net.toUri
+import androidx.media3.common.C
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DataSpec
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.datasource.cache.ContentMetadata
+import java.io.File
+import java.io.FileOutputStream
+
+class MediaCacheMerger(private val context: Context) {
+
+    /**
+     * 合并缓存为完整视频
+     *
+     * @param cache 播放器使用的缓存实例
+     * @param mediaUri 原始媒体URI
+     * @param outputFile 输出文件
+     * @return 是否合并成功
+     */
+    @UnstableApi
+    fun mergeCacheToFile(
+        cache: Cache,
+        mediaUri: Uri,
+        outputFile: File,
+    ): Boolean {
+        // 1. 生成缓存键（与播放器使用的相同）
+        val cacheKey = generateCacheKey(mediaUri)
+
+        // 2. 检查缓存是否完整
+        if (!isCacheComplete(cache, cacheKey)) {
+            return false
+        }
+
+        // 3. 创建缓存数据源
+        val cacheDataSource = createCacheDataSource(cache)
+
+        return try {
+            // 4. 打开数据源
+            val dataSpec = DataSpec.Builder()
+                .setUri(mediaUri)
+                .setKey(cacheKey)
+                .setLength(C.LENGTH_UNSET.toLong())
+                .build()
+
+            cacheDataSource.open(dataSpec)
+
+            // 5. 读取缓存并写入文件
+            FileOutputStream(outputFile).use { output ->
+                val buffer = ByteArray(64 * 1024) // 64KB缓冲区
+                var totalBytesRead = 0L
+
+                while (true) {
+                    val bytesRead = cacheDataSource.read(buffer, 0, buffer.size)
+                    if (bytesRead == C.RESULT_END_OF_INPUT) break
+
+                    output.write(buffer, 0, bytesRead)
+                    totalBytesRead += bytesRead
+                }
+            }
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            cacheDataSource.close()
+        }
+    }
+
+    /**
+     * 生成缓存键（与Media3内部逻辑一致）
+     */
+    private fun generateCacheKey(uri: Uri): String {
+        return uri.toString().hashCode().toString()
+    }
+
+    /**
+     * 检查缓存是否完整
+     */
+    @UnstableApi
+    private fun isCacheComplete(cache: Cache, cacheKey: String): Boolean {
+        val contentMetadata = cache.getContentMetadata(cacheKey)
+        val contentLength = ContentMetadata.getContentLength(contentMetadata)
+
+        if (contentLength == C.LENGTH_UNSET.toLong()) return false
+
+        val cachedBytes = cache.getCachedBytes(cacheKey, 0, contentLength)
+        return cachedBytes == contentLength
+    }
+
+    /**
+     * 创建只读缓存数据源
+     */
+    @UnstableApi
+    private fun createCacheDataSource(cache: Cache): DataSource {
+        return CacheDataSource.Factory()
+            .setCache(cache)
+            .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
+            .setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE) // 只从缓存读取
+            .createDataSource()
+    }
+
+    /**
+     * 合并HLS缓存（M3U8 + TS分片）
+     */
+    @UnstableApi
+    fun mergeHlsCache(
+        cache: Cache,
+        masterPlaylistUri: Uri,
+        outputFile: File,
+    ): Boolean {
+        // 1. 读取主播放列表
+        val playlistContent = readCachedContent(cache, masterPlaylistUri) ?: return false
+
+        // 2. 解析TS片段列表
+        val basePath = masterPlaylistUri.toString().substringBeforeLast('/') + "/"
+        val segmentUrls = parseM3u8Playlist(playlistContent, basePath)
+
+        // 3. 合并所有TS片段
+        FileOutputStream(outputFile).use { output ->
+            for (segmentUrl in segmentUrls) {
+                val segmentUri = segmentUrl.toUri()
+                if (!mergeCacheSegment(cache, segmentUri, output)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    /**
+     * 读取缓存内容为字符串
+     */
+    @UnstableApi
+    private fun readCachedContent(cache: Cache, uri: Uri): String? {
+        val cacheKey = generateCacheKey(uri)
+        val cacheDataSource = createCacheDataSource(cache)
+
+        return try {
+            val dataSpec = DataSpec.Builder()
+                .setUri(uri)
+                .setKey(cacheKey)
+                .build()
+
+            cacheDataSource.open(dataSpec)
+
+            // 读取内容到字节数组
+            val length = cacheDataSource.responseHeaders["Content-Length"]?.firstOrNull()?.toIntOrNull() ?: 0
+            if (length <= 0) return null
+
+            val buffer = ByteArray(length)
+            var totalRead = 0
+
+            while (length > totalRead) {
+                val bytesRead = cacheDataSource.read(buffer, totalRead, length - totalRead)
+                if (bytesRead == C.RESULT_END_OF_INPUT) break
+                totalRead += bytesRead
+            }
+
+            String(buffer, Charsets.UTF_8)
+        } catch (e: Exception) {
+            null
+        } finally {
+            cacheDataSource.close()
+        }
+    }
+
+    /**
+     * 解析M3U8播放列表
+     */
+    private fun parseM3u8Playlist(content: String, basePath: String): List<String> {
+        return content.lines()
+            .filter { !it.startsWith("#") && it.isNotBlank() }
+            .map { if (it.startsWith("http")) it else basePath + it }
+    }
+
+    /**
+     * 合并单个缓存片段
+     */
+    @UnstableApi
+    private fun mergeCacheSegment(cache: Cache, segmentUri: Uri, output: FileOutputStream): Boolean {
+        val cacheKey = generateCacheKey(segmentUri)
+        val cacheDataSource = createCacheDataSource(cache)
+
+        return try {
+            val dataSpec = DataSpec.Builder()
+                .setUri(segmentUri)
+                .setKey(cacheKey)
+                .build()
+
+            cacheDataSource.open(dataSpec)
+
+            val buffer = ByteArray(64 * 1024)
+            while (true) {
+                val bytesRead = cacheDataSource.read(buffer, 0, buffer.size)
+                if (bytesRead == C.RESULT_END_OF_INPUT) break
+                output.write(buffer, 0, bytesRead)
+            }
+            true
+        } catch (e: Exception) {
+            false
+        } finally {
+            cacheDataSource.close()
+        }
+    }
+}
