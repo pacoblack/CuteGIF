@@ -51,10 +51,7 @@ public class HlsParser {
         if (!response.isSuccessful) {
           throw IOException("Unexpected code $response")
         }
-        if (response.body == null) {
-          throw IOException("Empty response body")
-        }
-        return response.body!!.string()
+        return response.body.string()
       }
     }
 

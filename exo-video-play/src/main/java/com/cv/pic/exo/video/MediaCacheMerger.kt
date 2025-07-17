@@ -1,5 +1,6 @@
 package com.cv.pic.exo.video
 
+import android.R
 import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
@@ -10,8 +11,10 @@ import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.ContentMetadata
 import com.cv.pic.exo.video.core.MyCacheKeyFactory.Companion.generateCacheKey
 import com.cv.pic.exo.video.core.VideoDataSourceFactory.createCacheDataSource
+import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileReader
 
 /**
  * 缓存文件合并
@@ -85,6 +88,38 @@ class MediaCacheMerger(private val context: Context) {
         }
         return true
     }
+
+  /**
+   * 读取缓存内容为字符串
+   */
+  @UnstableApi
+  private fun readCachedContent1(cache: Cache, uri: Uri): String? {
+    val cacheKey = generateCacheKey(uri)
+    val stringBuilder = StringBuilder()
+    return try {
+      val spans = cache.getCachedSpans( cacheKey)
+      val files = spans.mapNotNull { span ->
+        val file = span.file
+        if (file?.exists() == true) file else null
+      }
+
+      files.map { file->
+        FileReader(file).use { reader ->
+          BufferedReader(reader).use { bufferedReader ->
+            var line: String?
+            while (bufferedReader.readLine().also { line = it } != null) {
+              stringBuilder.append(line!!)
+            }
+          }
+        }
+      }
+      stringBuilder.toString()
+    } catch (e: Exception) {
+      stringBuilder.toString()
+    } finally {
+      stringBuilder.toString()
+    }
+  }
 
     /**
      * 读取缓存内容为字符串
