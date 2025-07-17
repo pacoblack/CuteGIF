@@ -20,11 +20,12 @@ object VideoCacheManager {
   @Synchronized
   fun getCache(context: Context): Cache {
     if (videoCache == null) {
-      val cacheDir = File(context.cacheDir, CACHE_DIR)
+      val cacheDir = File(context.externalCacheDir, CACHE_DIR)
       if (!cacheDir.exists()) cacheDir.mkdirs()
       videoCache = SimpleCache(
         cacheDir,
-        LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE)
+        LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE),
+        StandaloneDatabaseProvider(context)
       )
     }
     return videoCache!!

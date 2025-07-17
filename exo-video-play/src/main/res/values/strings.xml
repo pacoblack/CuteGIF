@@ -2,4 +2,6 @@
 <resources>
   <string name="check_info">查看分片</string>
   <string name="merge_video">合并视频</string>
+    <string name="download_channel_name">video_download_service_channel</string>
+  <string name="download_channel_description">video_download_description</string>
 </resources>
