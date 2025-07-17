@@ -3,6 +3,7 @@ package com.cv.pic.exo.video.core
 import android.content.Context
 import android.net.Uri
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
@@ -37,7 +38,8 @@ object VideoCacheManager {
       if (!cacheDir.exists()) cacheDir.mkdirs()
       videoCache = SimpleCache(
         cacheDir,
-        LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE)
+        LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE),
+        StandaloneDatabaseProvider(context)
       )
     }
     return videoCache!!
@@ -51,7 +53,8 @@ object VideoCacheManager {
       if (!cacheDir.exists()) cacheDir.mkdirs()
       videoCache = SimpleCache(
         cacheDir,
-        LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE)
+        LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE),
+        StandaloneDatabaseProvider(context)
       )
     }
     return videoCache!!
