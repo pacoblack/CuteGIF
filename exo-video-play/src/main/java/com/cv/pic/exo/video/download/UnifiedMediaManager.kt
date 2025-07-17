@@ -7,16 +7,12 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.offline.DefaultDownloadIndex
 import androidx.media3.exoplayer.offline.DefaultDownloaderFactory
 import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.DownloadManager
 import androidx.media3.exoplayer.offline.DownloadRequest
-import androidx.media3.exoplayer.offline.DownloadService
 import androidx.media3.exoplayer.offline.DownloaderFactory
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-import com.cv.pic.exo.video.R
 import com.cv.pic.exo.video.core.VideoCacheManager
 import com.cv.pic.exo.video.core.VideoDataSourceFactory
 import java.util.concurrent.Executor
@@ -70,35 +66,6 @@ class UnifiedMediaManager private constructor(context: Context) {
   }
 
   /**
-   * 创建支持缓存的播放器
-   */
-  fun createPlayer(): ExoPlayer {
-    // 创建缓存数据源工厂
-    val cacheDataSourceFactory = CacheDataSource.Factory()
-      .setCache(cache)
-      .setUpstreamDataSourceFactory(cacheDataSourceFactory)
-      .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-
-
-    // 创建播放器
-    return ExoPlayer.Builder(context)
-      .setMediaSourceFactory(
-        DefaultMediaSourceFactory(context)
-          .setDataSourceFactory(cacheDataSourceFactory)
-      )
-      .build()
-  }
-
-  /**
-   * 播放媒体内容（自动使用缓存/离线内容）
-   */
-  fun playMedia(player: ExoPlayer, mediaItem: MediaItem) {
-    player.setMediaItem(mediaItem)
-    player.prepare()
-    player.play()
-  }
-
-  /**
    * 开始下载媒体内容
    */
   fun downloadMedia(mediaItem: MediaItem, listener: DownloadListener?) {
@@ -122,7 +89,6 @@ class UnifiedMediaManager private constructor(context: Context) {
     if (listener != null) {
       downloadListeners.put(mediaId, listener)
     }
-
 
     // 添加下载任务
     downloadManager.addDownload(request)
@@ -187,7 +153,7 @@ class UnifiedMediaManager private constructor(context: Context) {
       finalException: Exception?
     ) {
       val mediaId = download.request.id
-      val listener = downloadListeners.get(mediaId)
+      val listener = downloadListeners[mediaId]
 
       if (listener == null) return
 

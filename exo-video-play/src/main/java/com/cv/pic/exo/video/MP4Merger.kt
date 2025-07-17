@@ -9,7 +9,6 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheSpan
 import java.nio.ByteBuffer
-import java.util.NavigableSet
 
 /**
  * MP4合并
@@ -17,8 +16,7 @@ import java.util.NavigableSet
 class MP4Merger {
   @UnstableApi
   private fun getCacheSpans(cache: Cache, mediaKey: String): List<CacheSpan> {
-    val spans = cache.getCachedSpans(mediaKey) as? NavigableSet<CacheSpan> ?: return emptyList()
-    return spans.toList()
+    return cache.getCachedSpans(mediaKey).toList()
   }
 
   @UnstableApi

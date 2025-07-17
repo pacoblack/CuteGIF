@@ -2,7 +2,6 @@ package com.cv.pic.exo.video
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -18,29 +17,18 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.Observer
-import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
-import androidx.media3.datasource.rtmp.RtmpDataSource
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.dash.DashMediaSource
-import androidx.media3.exoplayer.hls.HlsMediaSource
-import androidx.media3.exoplayer.rtsp.RtspMediaSource
-import androidx.media3.exoplayer.source.MediaSource
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.PlayerView.ControllerVisibilityListener
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.cv.pic.exo.video.core.MyCacheKeyFactory
-import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
 import com.cv.pic.exo.video.core.UriExtensions.isHls
-import com.cv.pic.exo.video.core.UriExtensions.isMpd
-import com.cv.pic.exo.video.core.UriExtensions.isRtmp
-import com.cv.pic.exo.video.core.UriExtensions.isRtsp
 import com.cv.pic.exo.video.core.VideoCacheManager
-import com.cv.pic.exo.video.core.VideoDataSourceFactory
+import com.cv.pic.exo.video.core.VideoDataSourceFactory.buildMediaSource
+import com.cv.pic.exo.video.databinding.ActivityVideoPlayerBinding
 import com.cv.pic.exo.video.work.HlsMergeManager
 import java.io.File
 import java.util.concurrent.Executors
@@ -214,42 +202,11 @@ class VideoPlayerActivity : AppCompatActivity() {
         })
 
         // 准备媒体源
-        val mediaSource =  buildMediaSource(videoUri!!)
+        val mediaSource = buildMediaSource(this, videoCache, videoUri!!)
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.prepare()
         exoPlayer.playWhenReady = true
       }
-  }
-
-  @OptIn(UnstableApi::class)
-  private fun buildMediaSource(uri: Uri): MediaSource {
-    // 创建支持缓存的数据源工厂
-    val cacheDataSourceFactory = VideoDataSourceFactory.buildCacheSourceFactory(this, videoCache)
-    cacheDataSourceFactory.setCacheKeyFactory(MyCacheKeyFactory())
-    // 根据文件类型创建对应的媒体源
-    val mediaItem = MediaItem.fromUri(uri)
-    return when {
-      uri.isHls() -> {
-        HlsMediaSource.Factory(cacheDataSourceFactory)
-          .createMediaSource(mediaItem)
-      }
-      uri.isMpd() -> {
-        DashMediaSource.Factory(cacheDataSourceFactory)
-          .createMediaSource(mediaItem)
-      }
-      uri.isRtsp() -> {
-        RtspMediaSource.Factory()
-          .createMediaSource(mediaItem)
-      }
-      uri.isRtmp() -> {
-        ProgressiveMediaSource.Factory(RtmpDataSource.Factory())
-          .createMediaSource(mediaItem)
-      }
-      else -> {
-        ProgressiveMediaSource.Factory(cacheDataSourceFactory)
-          .createMediaSource(mediaItem)
-      }
-    }
   }
 
   @OptIn(UnstableApi::class)

@@ -1,19 +1,62 @@
 package com.cv.pic.exo.video.core
 
 import android.content.Context
+import android.net.Uri
 import androidx.annotation.OptIn
+import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
+import androidx.media3.datasource.rtmp.RtmpDataSource
+import androidx.media3.exoplayer.dash.DashMediaSource
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.rtsp.RtspMediaSource
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.cv.pic.exo.video.BuildConfig
+import com.cv.pic.exo.video.core.UriExtensions.isHls
+import com.cv.pic.exo.video.core.UriExtensions.isMpd
+import com.cv.pic.exo.video.core.UriExtensions.isRtmp
+import com.cv.pic.exo.video.core.UriExtensions.isRtsp
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 object VideoDataSourceFactory {
+
+  @OptIn(UnstableApi::class)
+  fun buildMediaSource(context: Context, cache:Cache, uri: Uri): MediaSource {
+    // 创建支持缓存的数据源工厂
+    val cacheDataSourceFactory = VideoDataSourceFactory.buildCacheSourceFactory(context, cache)
+    cacheDataSourceFactory.setCacheKeyFactory(MyCacheKeyFactory())
+    // 根据文件类型创建对应的媒体源
+    val mediaItem = MediaItem.fromUri(uri)
+    return when {
+      uri.isHls() -> {
+        HlsMediaSource.Factory(cacheDataSourceFactory)
+          .createMediaSource(mediaItem)
+      }
+      uri.isMpd() -> {
+        DashMediaSource.Factory(cacheDataSourceFactory)
+          .createMediaSource(mediaItem)
+      }
+      uri.isRtsp() -> {
+        RtspMediaSource.Factory()
+          .createMediaSource(mediaItem)
+      }
+      uri.isRtmp() -> {
+        ProgressiveMediaSource.Factory(RtmpDataSource.Factory())
+          .createMediaSource(mediaItem)
+      }
+      else -> {
+        ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+          .createMediaSource(mediaItem)
+      }
+    }
+  }
 
 
   @OptIn(UnstableApi::class)
