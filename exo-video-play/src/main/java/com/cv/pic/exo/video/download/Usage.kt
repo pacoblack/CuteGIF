@@ -12,7 +12,7 @@ import androidx.work.workDataOf
 class Usage {
   @OptIn(UnstableApi::class)
   fun init(context:Context){
-    UnifiedMediaManager.getInstance(context)
+    WorkManager.initialize(context, MyWorkManagerFactory(context).workManagerConfiguration)
 
     val requestData = workDataOf("media_id" to "params_mediaId", "media_uri" to "params_mediaUri")
     val downloadRequest = OneTimeWorkRequestBuilder<MediaDownloadWorker>()
