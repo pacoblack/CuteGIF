@@ -39,7 +39,7 @@ class MediaDownloadService : DownloadService(
     downloads: List<Download>,
     notMetRequirements: Int
   ): Notification {
-    return NotificationCompat.Builder(this, "download_channel")
+    return NotificationCompat.Builder(this, DOWNLOAD_CHANNEL_ID)
       .setSmallIcon(R.drawable.ic_save)
       .setContentTitle("Downloading Media Files")
       .setPriority(NotificationCompat.PRIORITY_LOW)

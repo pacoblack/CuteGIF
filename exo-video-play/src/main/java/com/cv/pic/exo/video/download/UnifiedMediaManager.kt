@@ -44,7 +44,6 @@ class UnifiedMediaManager private constructor(context: Context) {
    * 初始化媒体管理模块
    */
   init {
-
     // 创建下载器工厂
     downloaderFactory = DefaultDownloaderFactory(
       cacheDataSourceFactory,
@@ -163,8 +162,6 @@ class UnifiedMediaManager private constructor(context: Context) {
       }
     }
   }
-
-
 
   companion object {
     // 单例实例
