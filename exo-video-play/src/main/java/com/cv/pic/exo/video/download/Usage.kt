@@ -2,39 +2,31 @@ package com.cv.pic.exo.video.download
 
 import android.content.Context
 import androidx.annotation.OptIn
-import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
-import com.cv.pic.exo.video.download.UnifiedMediaManager.DownloadListener
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 
 class Usage {
   @OptIn(UnstableApi::class)
   fun init(context:Context){
     UnifiedMediaManager.getInstance(context)
-  }
 
-  @OptIn(UnstableApi::class)
-  fun download(context: Context){
-    val mediaManager = UnifiedMediaManager.getInstance(context);
-    mediaManager.downloadMedia(MediaItem.Builder().build(), UseDownloadListener())
-  }
+    val requestData = workDataOf("media_id" to "params_mediaId", "media_uri" to "params_mediaUri")
+    val downloadRequest = OneTimeWorkRequestBuilder<MediaDownloadWorker>()
+      .setInputData(requestData)
+      .setConstraints(
+        Constraints.Builder()
+          .setRequiredNetworkType(NetworkType.CONNECTED)
+          .setRequiresBatteryNotLow(true)
+          .build()
+      )
+      .build()
 
-  @UnstableApi
-  class UseDownloadListener : DownloadListener {
-    override fun onDownloadProgress(mediaId: String?, progress: Float) {
-      TODO("Not yet implemented")
-    }
-
-    override fun onDownloadCompleted(mediaId: String?) {
-      TODO("Not yet implemented")
-    }
-
-    override fun onDownloadFailed(mediaId: String?, exception: Exception?) {
-      TODO("Not yet implemented")
-    }
-
-    override fun onDownloadPaused(mediaId: String?) {
-      TODO("Not yet implemented")
-    }
+   WorkManager.getInstance(context).enqueue(downloadRequest)
 
   }
+
 }

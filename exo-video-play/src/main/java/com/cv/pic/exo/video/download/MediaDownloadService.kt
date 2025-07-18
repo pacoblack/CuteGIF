@@ -31,7 +31,7 @@ class MediaDownloadService : DownloadService(
   }
 
   @RequiresPermission(Manifest.permission.RECEIVE_BOOT_COMPLETED)
-  override fun getScheduler(): Scheduler? {
+  override fun getScheduler(): Scheduler {
     return PlatformScheduler(this, FOREGROUND_NOTIFICATION_ID)
   }
 

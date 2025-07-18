@@ -29,5 +29,10 @@
     <service android:name="com.cv.pic.exo.video.download.MediaDownloadService"
       android:foregroundServiceType="mediaPlayback"
       android:exported="false"/>
+    <service
+    android:name=".download.MediaDownloadWorker"
+    android:exported="false"
+    tools:node="merge"
+    tools:ignore="Instantiatable" />
   </application>
 </manifest>

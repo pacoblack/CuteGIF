@@ -1,8 +1,8 @@
 package com.cv.pic.exo.video.download
 
 import android.content.Context
+import android.net.Uri
 import androidx.media3.common.C
-import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.cache.Cache
@@ -27,15 +27,15 @@ class UnifiedMediaManager private constructor(context: Context) {
   // 核心组件
   private val context: Context = context.applicationContext
   // 创建缓存目录（共享用于播放和下载）
-  private val cache: Cache = VideoCacheManager.getCache(context)
+  private val cache: Cache = VideoCacheManager.getCache(this.context)
   val downloadManager: DownloadManager
   private val downloaderFactory: DownloaderFactory
 
   // 创建数据源工厂
-  private val cacheDataSourceFactory: CacheDataSource.Factory = VideoDataSourceFactory.buildCacheSourceFactory(context, cache)
+  private val cacheDataSourceFactory: CacheDataSource.Factory = VideoDataSourceFactory.buildCacheSourceFactory(this.context, cache)
 
   // 下载状态监听器
-  private val downloadListeners: MutableMap<String?, DownloadListener?> = HashMap<String?, DownloadListener?>()
+  private val downloadListeners: MutableMap<String, DownloadListener> = HashMap()
 
   // 线程池
   private val executor: Executor = Executors.newFixedThreadPool(4)
@@ -53,8 +53,8 @@ class UnifiedMediaManager private constructor(context: Context) {
 
     // 创建下载管理器
     downloadManager = DownloadManager(
-      context,
-      DefaultDownloadIndex(StandaloneDatabaseProvider(context)),
+      this.context,
+      DefaultDownloadIndex(StandaloneDatabaseProvider(this.context)),
       downloaderFactory
     )
 
@@ -68,26 +68,16 @@ class UnifiedMediaManager private constructor(context: Context) {
   /**
    * 开始下载媒体内容
    */
-  fun downloadMedia(mediaItem: MediaItem, listener: DownloadListener?) {
-    var mediaId = mediaItem.mediaId
-    if (mediaId.isEmpty()) {
-      mediaId = if (mediaItem.mediaMetadata.title != null)
-        mediaItem.mediaMetadata.title.toString()
-      else System.currentTimeMillis().toString()
-    }
-
-    if (mediaItem.requestMetadata.mediaUri == null) {
-      return
-    }
+  fun downloadMedia(mediaId:String, mediaUri: Uri, listener: DownloadListener?) {
     // 创建下载请求
-    val request: DownloadRequest = DownloadRequest.Builder(mediaId, mediaItem.requestMetadata.mediaUri!!)
+    val request: DownloadRequest = DownloadRequest.Builder(mediaId, mediaUri)
       .setCustomCacheKey(mediaId) // 使用唯一缓存键
+      .setData(mediaId.toByteArray())
       .build()
-
 
     // 注册监听器
     if (listener != null) {
-      downloadListeners.put(mediaId, listener)
+      downloadListeners[mediaId] = listener
     }
 
     // 添加下载任务
@@ -153,10 +143,7 @@ class UnifiedMediaManager private constructor(context: Context) {
       finalException: Exception?
     ) {
       val mediaId = download.request.id
-      val listener = downloadListeners[mediaId]
-
-      if (listener == null) return
-
+      val listener = downloadListeners[mediaId] ?: return
       when (download.state) {
         Download.STATE_DOWNLOADING -> {
           val progress = download.percentDownloaded
@@ -165,7 +152,10 @@ class UnifiedMediaManager private constructor(context: Context) {
           }
         }
 
-        Download.STATE_COMPLETED -> listener.onDownloadCompleted(mediaId)
+        Download.STATE_COMPLETED -> {
+          listener.onDownloadCompleted(mediaId)
+
+        }
         Download.STATE_FAILED -> listener.onDownloadFailed(mediaId, finalException)
         Download.STATE_QUEUED, Download.STATE_RESTARTING -> {}
         Download.STATE_STOPPED -> listener.onDownloadPaused(mediaId)
