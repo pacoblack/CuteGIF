@@ -10,7 +10,6 @@ import com.tencent.mm.opensdk.modelmsg.SendAuth
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
-import me.tasy5kg.cutegif.BuildConfig
 import me.tasy5kg.cutegif.databinding.ActivityWxEntryBinding
 import me.tasy5kg.cutegif.model.MyConstants
 import me.tasy5kg.cutegif.model.MyConstants.WX_LOGIN_CODE
