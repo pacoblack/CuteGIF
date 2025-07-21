@@ -1,6 +1,5 @@
 package com.cv.pic.exo.video
 
-import android.R
 import android.content.Context
 import android.net.Uri
 import androidx.core.net.toUri
@@ -9,7 +8,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.ContentMetadata
-import com.cv.pic.exo.video.core.MyCacheKeyFactory.Companion.generateCacheKey
+import com.cv.pic.exo.video.core.VideoDataSourceFactory.MyCacheKeyFactory.Companion.generateCacheKey
 import com.cv.pic.exo.video.core.VideoDataSourceFactory.createCacheDataSource
 import java.io.BufferedReader
 import java.io.File

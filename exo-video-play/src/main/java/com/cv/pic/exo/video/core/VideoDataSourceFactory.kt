@@ -6,9 +6,11 @@ import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.datasource.cache.CacheKeyFactory
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.datasource.rtmp.RtmpDataSource
 import androidx.media3.exoplayer.dash.DashMediaSource
@@ -30,7 +32,7 @@ object VideoDataSourceFactory {
   @OptIn(UnstableApi::class)
   fun buildMediaSource(context: Context, cache:Cache, uri: Uri): MediaSource {
     // 创建支持缓存的数据源工厂
-    val cacheDataSourceFactory = VideoDataSourceFactory.buildCacheSourceFactory(context, cache)
+    val cacheDataSourceFactory = buildCacheSourceFactory(context, cache)
     cacheDataSourceFactory.setCacheKeyFactory(MyCacheKeyFactory())
     // 根据文件类型创建对应的媒体源
     val mediaItem = MediaItem.fromUri(uri)
@@ -92,5 +94,21 @@ object VideoDataSourceFactory {
       .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
       .setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE) // 只从缓存读取
       .createDataSource()
+  }
+
+  @UnstableApi
+  class MyCacheKeyFactory: CacheKeyFactory {
+    override fun buildCacheKey(dataSpec: DataSpec): String {
+      return dataSpec.key?.ifEmpty { generateCacheKey(dataSpec.uri) } ?: dataSpec.key!!
+    }
+
+    companion object{
+      /**
+       * 生成缓存键（与Media3内部逻辑一致）
+       */
+      fun generateCacheKey(uri: Uri): String {
+        return uri.toString().hashCode().toString()
+      }
+    }
   }
 }
