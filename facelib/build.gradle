@@ -9,7 +9,7 @@ project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 apply from: 'download.gradle'
 
 android {
-  namespace 'com.cv.pic.facelib'
+  namespace 'com.cv.pic.face'
   defaultConfig {
     ndk {
       abiFilters 'arm64-v8a' // 仅支持主流 ARM 架构
@@ -22,9 +22,6 @@ android {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-  implementation("org.tensorflow:tensorflow-lite:2.16.1")
-  implementation("org.tensorflow:tensorflow-lite-gpu:2.16.1")
-  implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
   // MediaPipe核心库
   implementation 'com.google.mediapipe:tasks-vision:0.20230731'
