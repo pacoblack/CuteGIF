@@ -1,4 +1,4 @@
-package com.cv.pic.face.helper
+package com.cv.pic.face.face_dector
 
 import android.content.Context
 import android.graphics.Bitmap
