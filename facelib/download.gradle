@@ -1,5 +1,5 @@
 
-task downloadModelFile(type: Download) {
+task downloadFaceDetectionModelFile(type: Download) {
   src 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite'
   dest project.ext.ASSET_DIR + '/face_detection_short_range.tflite'
   overwrite false
@@ -96,4 +96,4 @@ task downloadSelfieSegmenterModelFile(type: Download) {
   overwrite false
 }
 
-preBuild.dependsOn downloadFaceTaskFile, downloadModelFile,downloadColorInkTask,downloadColorSketchTask,downloadOilPainting,downloadGestureTaskFile,downloadHandTaskFile,downloadSmallModel,downloadLargeModel, downloadFacePluginFile, downloadEdgePluginFile, downloadDepthModelFile, downloadDepthPluginFile,downloadDeepModelFile, downloadHairSegmenterModelFile, downloadSelfieMulticlassSegmenterModelFile, downloadSelfieSegmenterModelFile
+preBuild.dependsOn downloadFaceTaskFile, downloadFaceDetectionModelFile,downloadColorInkTask,downloadColorSketchTask,downloadOilPainting,downloadGestureTaskFile,downloadHandTaskFile,downloadSmallModel,downloadLargeModel, downloadFacePluginFile, downloadEdgePluginFile, downloadDepthModelFile, downloadDepthPluginFile,downloadDeepModelFile, downloadHairSegmenterModelFile, downloadSelfieMulticlassSegmenterModelFile, downloadSelfieSegmenterModelFile
