@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="default_prompt_diffusion">" colorful cartoon raccoon wearing a floppy wide brimmed hat holding a stick walking through the forest, animated, three-quarter view, painting"</string>
+  <string name="default_lora_plugin">a side view of a bright purple monadikos teapot sitting on top of a green table with orange saucers</string>
+  <string name="default_prompt_plugin_face">an ancient marble statue wearing a brightly colored rainbow wig</string>
+  <string name="default_prompt_plugin_edge">a box overflowing with brightly colored flowers</string>
+  <string name="default_prompt_plugin_depth">A modern green race car</string>
+  <string-array name="plugins">
+    <item>Face</item>
+    <item>Depth</item>
+    <item>Edge</item>
+  </string-array>
+</resources>

@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application
+    android:allowBackup="true"
+    android:supportsRtl="true"
+    android:largeHeap="true">
+    <!-- Some devices, like the Pixel 6, may need to actively declare the use of native libs -->
+    <uses-native-library android:name="libOpenCL.so" android:required="false" />
+    <uses-native-library android:name="libOpenCL-car.so" android:required="false"/>
+    <uses-native-library android:name="libOpenCL-pixel.so" android:required="false" />
 
+    <activity android:name=".image_generation.diffusion.DiffusionActivity"
+      android:keepScreenOn="true" />
+    <activity android:name=".image_generation.plugins.PluginActivity"
+      android:keepScreenOn="true" />
+    <activity android:name=".image_generation.loraweights.LoRAWeightActivity"
+      android:keepScreenOn="true" />
+  </application>
 </manifest>
