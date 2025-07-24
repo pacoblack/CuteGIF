@@ -15,6 +15,13 @@ import com.google.mediapipe.tasks.vision.imagegenerator.ImageGenerator.Condition
 import com.google.mediapipe.tasks.vision.imagegenerator.ImageGenerator.ConditionOptions.FaceConditionOptions
 import com.google.mediapipe.tasks.vision.imagegenerator.ImageGenerator.ImageGeneratorOptions
 
+/**
+ * face_landmarker.task
+ * face_landmark_plugin.tflite
+ * canny_edge_plugin.tflite
+ * depth_model.tflite
+ * depth_plugin.tflite
+ */
 class ImageGenerationHelper(
     val context: Context
 ) {

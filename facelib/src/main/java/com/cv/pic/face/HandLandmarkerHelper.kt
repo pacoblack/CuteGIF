@@ -32,6 +32,9 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarker
 import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
 
+/**
+ * hand_landmarker.task
+ */
 class HandLandmarkerHelper(
   var minHandDetectionConfidence: Float = DEFAULT_HAND_DETECTION_CONFIDENCE,
   var minHandTrackingConfidence: Float = DEFAULT_HAND_TRACKING_CONFIDENCE,

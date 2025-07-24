@@ -16,7 +16,11 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.facedetector.FaceDetector
 import com.google.mediapipe.tasks.vision.facedetector.FaceDetectorResult
-// face_detection_short_range.tflite
+
+/**
+ * face_detection_short_range.tflite
+  */
+
 class FaceDetectorHelper(
   var threshold: Float = THRESHOLD_DEFAULT,
   var currentDelegate: Int = DELEGATE_CPU,

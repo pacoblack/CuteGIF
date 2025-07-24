@@ -33,6 +33,11 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.imageclassifier.ImageClassifier
 import com.google.mediapipe.tasks.vision.imageclassifier.ImageClassifierResult
 
+/**
+ * efficientnet-lite0.tflite
+ * efficientnet-lite0.tflite
+ * efficientnet-lite2.tflite
+ */
 class ImageClassifierHelper(
   var threshold: Float = THRESHOLD_DEFAULT,
   var maxResults: Int = MAX_RESULTS_DEFAULT,

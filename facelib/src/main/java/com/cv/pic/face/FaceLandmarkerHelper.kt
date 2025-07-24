@@ -18,6 +18,9 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.facelandmarker.FaceLandmarker
 import com.google.mediapipe.tasks.vision.facelandmarker.FaceLandmarkerResult
 
+/**
+ * face_landmarker.task
+ */
 class FaceLandmarkerHelper(
   var minFaceDetectionConfidence: Float = DEFAULT_FACE_DETECTION_CONFIDENCE,
   var minFaceTrackingConfidence: Float = DEFAULT_FACE_TRACKING_CONFIDENCE,

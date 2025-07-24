@@ -9,6 +9,11 @@ import com.google.mediapipe.tasks.vision.facestylizer.FaceStylizer
 import com.google.mediapipe.tasks.vision.facestylizer.FaceStylizer.FaceStylizerOptions
 import com.google.mediapipe.tasks.vision.facestylizer.FaceStylizerResult
 
+/**
+ * face_stylizer_color_ink.task
+ * face_stylizer_color_sketch.task
+ * face_stylizer_oil_painting.task
+ */
 class FaceStylizationHelper(
   private val modelPosition: Int,
   private val context: Context,

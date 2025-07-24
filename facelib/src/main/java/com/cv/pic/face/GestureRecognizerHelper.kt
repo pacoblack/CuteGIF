@@ -32,6 +32,9 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
 
+/**
+ * gesture_recognizer.task
+ */
 class GestureRecognizerHelper(
   var minHandDetectionConfidence: Float = DEFAULT_HAND_DETECTION_CONFIDENCE,
   var minHandTrackingConfidence: Float = DEFAULT_HAND_TRACKING_CONFIDENCE,

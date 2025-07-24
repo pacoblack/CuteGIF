@@ -26,6 +26,10 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.imageembedder.ImageEmbedder
 import com.google.mediapipe.tasks.vision.imageembedder.ImageEmbedder.ImageEmbedderOptions
 
+/**
+ * mobilenet_v3_small.tflite
+ * mobilenet_v3_large.tflite
+ */
 class ImageEmbedderHelper(
   private val context: Context,
   var currentDelegate: Int = DELEGATE_CPU,
