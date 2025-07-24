@@ -6,7 +6,7 @@
     android:background="@color/toolbar_background"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".loraweights.LoRAWeightActivity">
+    tools:context=".image_generation.loraweights.LoRAWeightActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

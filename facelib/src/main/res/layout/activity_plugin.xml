@@ -6,7 +6,7 @@
     android:background="@color/toolbar_background"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".MainActivity">
+    tools:context=".image_generation.plugins.PluginActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

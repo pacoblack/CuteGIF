@@ -24,7 +24,7 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
   // MediaPipe核心库
-  implementation 'com.google.mediapipe:tasks-vision:0.20230731'
+//  implementation 'com.google.mediapipe:tasks-vision:0.20230731'
   implementation 'com.google.mediapipe:tasks-vision-image-generator:0.10.14'
 
   implementation 'androidx.camera:camera-core:1.4.2'
