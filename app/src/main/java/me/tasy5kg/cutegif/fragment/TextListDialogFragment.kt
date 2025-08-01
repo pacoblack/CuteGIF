@@ -23,7 +23,7 @@ class TextListDialogFragment : DialogFragment(), TextActionListener {
     //TODO:加载数据
     // 确保有数据
     if (textItems == null) {
-      textItems = ArrayList<String?>()
+      textItems = ArrayList()
     }
     textItems?.add("123123123123")
   }
@@ -47,7 +47,7 @@ class TextListDialogFragment : DialogFragment(), TextActionListener {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
+    binding.dialogClose.setOnClickListener { dismissAllowingStateLoss() }
     // 设置RecyclerView
     val recyclerView = binding.textRecyclerView
     recyclerView.setLayoutManager(LinearLayoutManager(context))
@@ -58,7 +58,7 @@ class TextListDialogFragment : DialogFragment(), TextActionListener {
   override fun onStart() {
     super.onStart()
     // 设置对话框尺寸
-    val dialog = getDialog()
+    val dialog = dialog
     if (dialog != null && dialog.window != null) {
       val width = (resources.displayMetrics.widthPixels * 0.9).toInt()
       val height = (resources.displayMetrics.heightPixels * 0.8).toInt()
@@ -75,7 +75,7 @@ class TextListDialogFragment : DialogFragment(), TextActionListener {
 
       // 如果没有项目了，关闭对话框
       if (textItems!!.isEmpty()) {
-        dismiss()
+        dismissAllowingStateLoss()
       }
     }
   }
