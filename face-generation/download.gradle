@@ -1,0 +1,99 @@
+
+task downloadFaceDetectionModelFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite'
+  dest project.ext.ASSET_DIR + '/face_detection_short_range.tflite'
+  overwrite false
+}
+task downloadColorInkTask(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/face_stylizer/blaze_face_stylizer/float32/latest/face_stylizer_color_ink.task'
+  dest project.ext.ASSET_DIR + '/face_stylizer_color_ink.task'
+  overwrite false
+}
+
+task downloadColorSketchTask(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/face_stylizer/blaze_face_stylizer/float32/latest/face_stylizer_color_sketch.task'
+  dest project.ext.ASSET_DIR + '/face_stylizer_color_sketch.task'
+  overwrite false
+}
+
+task downloadOilPainting(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/face_stylizer/blaze_face_stylizer/float32/latest/face_stylizer_oil_painting.task'
+  dest project.ext.ASSET_DIR + '/face_stylizer_oil_painting.task'
+  overwrite false
+}
+task downloadGestureTaskFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task'
+  dest project.ext.ASSET_DIR + '/gesture_recognizer.task'
+  overwrite false
+}
+task downloadHandTaskFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task'
+  dest project.ext.ASSET_DIR + '/hand_landmarker.task'
+  overwrite false
+}
+
+task downloadSmallModel(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite'
+  dest project.ext.ASSET_DIR + '/mobilenet_v3_small.tflite'
+  overwrite false
+}
+
+task downloadLargeModel(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_embedder/mobilenet_v3_large/float32/1/mobilenet_v3_large.tflite'
+  dest project.ext.ASSET_DIR + '/mobilenet_v3_large.tflite'
+  overwrite false
+}
+task downloadFaceTaskFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task'
+  dest project.ext.ASSET_DIR + '/face_landmarker.task'
+  overwrite false
+}
+
+task downloadFacePluginFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_generator/plugin_models/float32/latest/face_landmark_plugin.tflite'
+  dest project.ext.ASSET_DIR + '/face_landmark_plugin.tflite'
+  overwrite false
+}
+
+task downloadEdgePluginFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_generator/plugin_models/float32/latest/canny_edge_plugin.tflite'
+  dest project.ext.ASSET_DIR + '/canny_edge_plugin.tflite'
+  overwrite false
+}
+
+task downloadDepthModelFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_generator/condition_image_models/float16/latest/depth_512_512_fp16_opt_w_metadata.tflite'
+  dest project.ext.ASSET_DIR + '/depth_model.tflite'
+  overwrite false
+}
+
+task downloadDepthPluginFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_generator/plugin_models/float32/latest/depth_plugin.tflite'
+  dest project.ext.ASSET_DIR + '/depth_plugin.tflite'
+  overwrite false
+}
+task downloadDeepModelFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_segmenter/deeplab_v3/float32/1/deeplab_v3.tflite'
+  dest project.ext.ASSET_DIR + '/deeplabv3.tflite'
+  overwrite false
+}
+
+task downloadHairSegmenterModelFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_segmenter/hair_segmenter/float32/1/hair_segmenter.tflite'
+  dest project.ext.ASSET_DIR + '/hair_segmenter.tflite'
+  overwrite false
+}
+
+task downloadSelfieMulticlassSegmenterModelFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/1/selfie_multiclass_256x256.tflite'
+  dest project.ext.ASSET_DIR + '/selfie_multiclass.tflite'
+  overwrite false
+}
+
+task downloadSelfieSegmenterModelFile(type: Download) {
+  src 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/1/selfie_segmenter.tflite'
+  dest project.ext.ASSET_DIR + '/selfie_segmenter.tflite'
+  overwrite false
+}
+
+preBuild.dependsOn downloadFaceTaskFile, downloadFaceDetectionModelFile,downloadColorInkTask,downloadColorSketchTask,downloadOilPainting,downloadGestureTaskFile,downloadHandTaskFile,downloadSmallModel,downloadLargeModel, downloadFacePluginFile, downloadEdgePluginFile, downloadDepthModelFile, downloadDepthPluginFile,downloadDeepModelFile, downloadHairSegmenterModelFile, downloadSelfieMulticlassSegmenterModelFile, downloadSelfieSegmenterModelFile

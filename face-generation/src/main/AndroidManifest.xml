@@ -9,5 +9,11 @@
     <uses-native-library android:name="libOpenCL-car.so" android:required="false"/>
     <uses-native-library android:name="libOpenCL-pixel.so" android:required="false" />
 
+    <activity android:name="com.cv.pic.face.image_generation.diffusion.DiffusionActivity"
+      android:keepScreenOn="true" />
+    <activity android:name="com.cv.pic.face.image_generation.plugins.PluginActivity"
+      android:keepScreenOn="true" />
+    <activity android:name="com.cv.pic.face.image_generation.loraweights.LoRAWeightActivity"
+      android:keepScreenOn="true" />
   </application>
 </manifest>
