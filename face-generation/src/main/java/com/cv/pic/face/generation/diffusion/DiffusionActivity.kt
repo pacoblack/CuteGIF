@@ -1,73 +1,37 @@
-package com.cv.pic.face.image_generation.plugins
+package com.cv.pic.face.generation.diffusion
 
-import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.cv.pic.face.R
-import com.cv.pic.face.databinding.ActivityPluginBinding
-import com.cv.pic.face.image_generation.ImageUtils
-import com.google.mediapipe.tasks.vision.imagegenerator.ImageGenerator.ConditionOptions.*
+import com.cv.pic.face.generation.R
+import com.cv.pic.face.generation.databinding.ActivityDiffusionBinding
 import kotlinx.coroutines.launch
-import java.lang.Math.abs
 import java.util.*
 
-class PluginActivity : AppCompatActivity() {
+class DiffusionActivity : AppCompatActivity() {
     companion object {
         private const val DEFAULT_DISPLAY_ITERATION = 5
         private const val DEFAULT_ITERATION = 20
         private const val DEFAULT_SEED = 0
+        private val DEFAULT_PROMPT = R.string.default_prompt_diffusion
         private val DEFAULT_DISPLAY_OPTIONS = R.id.radio_final // FINAL
     }
 
-    private lateinit var binding: ActivityPluginBinding
-    private val viewModel: PluginViewModel by viewModels()
-    private val openGalleryResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val uri = result.data?.data
-                if (uri != null) {
-                    val bitmap = ImageUtils.decodeBitmapFromUri(this, uri)
-                    if (bitmap != null) {
-                        viewModel.updateInputBitmap(cropBitmapToSquare(bitmap))
-                    }
-                }
-            }
-        }
-    private val openCameraResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val bitmap = result.data?.extras?.get("data") as? Bitmap
-                if (bitmap != null) {
-                    viewModel.updateInputBitmap(cropBitmapToSquare(bitmap))
-                }
-            }
-        }
+    private lateinit var binding: ActivityDiffusionBinding
+    private val viewModel: DiffusionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPluginBinding.inflate(layoutInflater)
+        binding = ActivityDiffusionBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel.createImageGenerationHelper(this)
-
-        // Set up spinner
-        ArrayAdapter.createFromResource(
-            this, R.array.plugins, android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinnerPlugins.adapter = adapter
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -80,6 +44,7 @@ class PluginActivity : AppCompatActivity() {
                     binding.llDisplayIteration.visibility =
                         if (uiState.displayOptions == DisplayOptions.ITERATION) android.view.View.VISIBLE else android.view.View.GONE
 
+                    // Button initialize is enabled when (the display option is final or iteration and display iteration is not null) and is not initializing
                     binding.btnInitialize.isEnabled =
                         (uiState.displayOptions == DisplayOptions.FINAL || (uiState.displayOptions == DisplayOptions.ITERATION && uiState.displayIteration != null)) && !uiState.isInitializing
 
@@ -91,17 +56,15 @@ class PluginActivity : AppCompatActivity() {
                         binding.btnGenerate.text = "Generate"
                         if (uiState.initialized) {
                             binding.btnGenerate.isEnabled =
-                                uiState.prompt.isNotEmpty() && uiState.iteration != null && uiState.seed != null && uiState.inputBitmap != null
+                                uiState.prompt.isNotEmpty() && uiState.iteration != null && uiState.seed != null
                         } else {
                             binding.btnGenerate.isEnabled = false
                         }
                     }
                     binding.imgOutput.setImageBitmap(uiState.outputBitmap)
-                    binding.imgDisplayInput.setImageBitmap(uiState.inputBitmap)
-
                     showError(uiState.error)
-                    showGenerationTime(uiState.generateTime)
-                    showInitializingTime(uiState.initializedTime)
+                    showGenerateTime(uiState.generateTime)
+                    showInitializedTime(uiState.initializedTime)
                 }
             }
         }
@@ -113,30 +76,17 @@ class PluginActivity : AppCompatActivity() {
     private fun handleListener() {
         binding.btnInitialize.setOnClickListener {
             viewModel.initializeImageGenerator()
-            when(viewModel.uiState.value.plugins) {
-                ConditionType.FACE -> binding.edtPrompt.setText(getString(R.string.default_prompt_plugin_face))
-                ConditionType.EDGE -> binding.edtPrompt.setText(getString(R.string.default_prompt_plugin_edge))
-                ConditionType.DEPTH -> binding.edtPrompt.setText(getString(R.string.default_prompt_plugin_depth))
-            }
-
             closeSoftKeyboard()
         }
         binding.btnGenerate.setOnClickListener {
             viewModel.generateImage()
             closeSoftKeyboard()
         }
-        binding.btnOpenCamera.setOnClickListener {
-            openCamera()
-            closeSoftKeyboard()
-        }
-        binding.btnOpenGallery.setOnClickListener {
-            openGallery()
-            closeSoftKeyboard()
-        }
         binding.btnSeedRandom.setOnClickListener {
             randomSeed()
             closeSoftKeyboard()
         }
+
         binding.radioDisplayOptions.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.radio_iteration -> {
@@ -148,21 +98,6 @@ class PluginActivity : AppCompatActivity() {
                 }
             }
         }
-        binding.spinnerPlugins.onItemSelectedListener =
-            object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: android.widget.AdapterView<*>?,
-                    view: android.view.View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    viewModel.updatePlugin(position)
-                }
-
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
-                    // do nothing
-                }
-            }
 
         binding.edtDisplayIteration.doOnTextChanged { text, _, _, _ ->
             viewModel.updateDisplayIteration(text.toString().toIntOrNull())
@@ -182,13 +117,12 @@ class PluginActivity : AppCompatActivity() {
         if (message.isNullOrEmpty()) return
         runOnUiThread {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            Log.e("ImgGen Error", message)
         }
         // prevent showing error message twice
         viewModel.clearError()
     }
 
-    private fun showGenerationTime(time: Long?) {
+    private fun showGenerateTime(time: Long?) {
         if (time == null) return
         runOnUiThread {
             Toast.makeText(
@@ -197,40 +131,31 @@ class PluginActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        viewModel.clearGenerationTime()
+        // prevent showing generate time twice
+        viewModel.clearGenerateTime()
     }
 
-    private fun showInitializingTime(time: Long?) {
+    private fun showInitializedTime(time: Long?) {
         if (time == null) return
         runOnUiThread {
             Toast.makeText(
                 this,
-                "Initializing time: ${time / 1000.0} seconds",
+                "Initialized time: ${time / 1000.0} seconds",
                 Toast.LENGTH_SHORT
             ).show()
         }
+        // prevent showing initialized time twice
         viewModel.clearInitializedTime()
     }
-
 
     private fun closeSoftKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
     }
 
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        openGalleryResultLauncher.launch(intent)
-    }
-
-    private fun openCamera() {
-        val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-        openCameraResultLauncher.launch(intent)
-    }
-
     private fun setDefaultValue() {
         with(binding) {
+            edtPrompt.setText(getString(DEFAULT_PROMPT))
             edtIterations.setText(DEFAULT_ITERATION.toString())
             edtSeed.setText(DEFAULT_SEED.toString())
             radioDisplayOptions.check(DEFAULT_DISPLAY_OPTIONS)
@@ -240,15 +165,8 @@ class PluginActivity : AppCompatActivity() {
 
     private fun randomSeed() {
         val random = Random()
-        val seed = abs(random.nextInt())
+        val seed = Math.abs(random.nextInt())
         binding.edtSeed.setText(seed.toString())
-    }
-
-    private fun cropBitmapToSquare(bitmap: Bitmap): Bitmap {
-        val width = bitmap.width
-        val height = bitmap.height
-        val cropSize = if (width > height) height else width
-        return Bitmap.createScaledBitmap(bitmap, cropSize, cropSize, false)
     }
 
     override fun onDestroy() {

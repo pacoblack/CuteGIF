@@ -6,7 +6,7 @@
     android:background="@color/toolbar_background"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".image_generation.diffusion.DiffusionActivity">
+    tools:context=".generation.image_generation.diffusion.DiffusionActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

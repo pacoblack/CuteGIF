@@ -1,11 +1,11 @@
-package com.cv.pic.face.image_generation.diffusion
+package com.cv.pic.face.generation.diffusion
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
-import com.cv.pic.face.image_generation.ImageGenerationHelper
+import com.cv.pic.face.generation.ImageGenerationHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

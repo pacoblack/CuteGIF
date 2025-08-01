@@ -1,4 +1,4 @@
-package com.cv.pic.face.image_generation.diffusion
+package com.cv.pic.face.generation.loraweights
 
 import android.os.Bundle
 import android.view.View
@@ -10,26 +10,26 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.cv.pic.face.R
-import com.cv.pic.face.databinding.ActivityDiffusionBinding
+import com.cv.pic.face.generation.R
+import com.cv.pic.face.generation.databinding.ActivityLoraBinding
 import kotlinx.coroutines.launch
 import java.util.*
 
-class DiffusionActivity : AppCompatActivity() {
+class LoRAWeightActivity : AppCompatActivity() {
     companion object {
         private const val DEFAULT_DISPLAY_ITERATION = 5
         private const val DEFAULT_ITERATION = 20
         private const val DEFAULT_SEED = 0
-        private val DEFAULT_PROMPT = R.string.default_prompt_diffusion
+        private val DEFAULT_PROMPT = R.string.default_lora_plugin
         private val DEFAULT_DISPLAY_OPTIONS = R.id.radio_final // FINAL
     }
 
-    private lateinit var binding: ActivityDiffusionBinding
-    private val viewModel: DiffusionViewModel by viewModels()
+    private lateinit var binding: ActivityLoraBinding
+    private val viewModel: LoRAWeightViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDiffusionBinding.inflate(layoutInflater)
+        binding = ActivityLoraBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel.createImageGenerationHelper(this)
 
@@ -62,6 +62,7 @@ class DiffusionActivity : AppCompatActivity() {
                         }
                     }
                     binding.imgOutput.setImageBitmap(uiState.outputBitmap)
+
                     showError(uiState.error)
                     showGenerateTime(uiState.generateTime)
                     showInitializedTime(uiState.initializedTime)
@@ -131,7 +132,7 @@ class DiffusionActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        // prevent showing generate time twice
+        // prevent showing error message twice
         viewModel.clearGenerateTime()
     }
 
@@ -144,7 +145,7 @@ class DiffusionActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        // prevent showing initialized time twice
+        // prevent showing error message twice
         viewModel.clearInitializedTime()
     }
 

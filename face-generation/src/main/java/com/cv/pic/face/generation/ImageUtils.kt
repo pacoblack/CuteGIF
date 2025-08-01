@@ -1,4 +1,4 @@
-package com.cv.pic.face.image_generation
+package com.cv.pic.face.generation
 
 import android.content.Context
 import android.graphics.Bitmap

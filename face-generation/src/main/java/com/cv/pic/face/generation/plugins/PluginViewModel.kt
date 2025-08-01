@@ -1,11 +1,11 @@
-package com.cv.pic.face.image_generation.plugins
+package com.cv.pic.face.generation.plugins
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
-import com.cv.pic.face.image_generation.ImageGenerationHelper
+import com.cv.pic.face.generation.ImageGenerationHelper
 import com.google.mediapipe.framework.image.BitmapImageBuilder
 import com.google.mediapipe.tasks.vision.imagegenerator.ImageGenerator
 import kotlinx.coroutines.GlobalScope
