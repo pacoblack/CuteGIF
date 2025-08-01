@@ -158,7 +158,8 @@
     <string name="goto_web">网页</string>
   <string name="goto_video">视频</string>
   <string name="goto_other">其他</string>
-  <string-array name="page_types">
+    <string name="goto_image_gen">Goto Image Generation</string>
+    <string-array name="page_types">
       <item>Web</item>
       <item>Video</item>
       <item>Other</item>

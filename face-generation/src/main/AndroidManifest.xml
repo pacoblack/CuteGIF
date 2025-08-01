@@ -15,5 +15,9 @@
       android:keepScreenOn="true" />
     <activity android:name="com.cv.pic.face.generation.loraweights.LoRAWeightActivity"
       android:keepScreenOn="true" />
+    <activity
+      android:name="com.cv.pic.face.generation.ImageGenerationActivity"
+      android:exported="true" >
+    </activity>
   </application>
 </manifest>

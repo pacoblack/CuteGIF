@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import com.cv.pic.ai.deepseek.DeepSeekActivity
+import com.cv.pic.face.generation.ImageGenerationActivity
 import com.cv.pic.log.LogViewerActivity
 import me.tasy5kg.cutegif.activity.GifMergeActivity
 import me.tasy5kg.cutegif.databinding.FragmentOtherBinding
@@ -42,7 +43,7 @@ class InfoFragment: BaseFragment()  {
         GifMergeActivity.start(requireActivity(), it)
       }
     }
-
+    binding.mcvImageGen.onClick { ImageGenerationActivity.start(requireActivity()) }
     binding.mcvDeepSeek.onClick { DeepSeekActivity.start(requireActivity()) }
     binding.mcvLog.onClick { LogViewerActivity.start(requireActivity()) }
 
