@@ -8,7 +8,8 @@ android {
 }
 
 dependencies {
-  implementation files('libs/deviceinfo-0.1.5.aar')
+//  implementation files('libs/deviceinfo-0.1.5.aar')
+  implementation project(':LocalRepo:deviceInfo')
   implementation 'com.jakewharton.timber:timber:5.0.1'
 
 }
